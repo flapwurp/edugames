@@ -1,6 +1,6 @@
 # EduGames
 
-Info-Gap-Spiele für den Englischunterricht. Zwei Spieler:innen sitzen Rücken an Rücken,
+Lernspiele für Englisch und Geschichte. Die ersten beiden sind Info-Gap-Spiele: Zwei Spieler:innen sitzen Rücken an Rücken,
 jede Person sieht nur die Hälfte der Informationen – gelöst wird das Spiel nur durch Sprechen.
 
 Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicherung.
