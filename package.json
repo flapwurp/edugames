@@ -1,0 +1,10 @@
+{
+  "name": "edugames",
+  "private": true,
+  "type": "module",
+  "description": "Info-gap games for English lessons – plain HTML/CSS/JS, runs on iPad Safari via GitHub Pages",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "serve": "python3 -m http.server 8000"
+  }
+}

@@ -1,0 +1,9 @@
+/* Fonts are loaded from this repository only (no Google servers – data protection).
+   Put the .woff2 files into shared/fonts/ (see shared/fonts/README.md).
+   Until they are there, the games use the iPad's system fonts. */
+@font-face{font-family:"Bungee";src:url("fonts/bungee-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Nunito";src:url("fonts/nunito-variable.woff2") format("woff2");font-weight:200 1000;font-display:swap}
+@font-face{font-family:"Atkinson Hyperlegible";src:url("fonts/atkinson-hyperlegible-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Atkinson Hyperlegible";src:url("fonts/atkinson-hyperlegible-700.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Chakra Petch";src:url("fonts/chakra-petch-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Chakra Petch";src:url("fonts/chakra-petch-700.woff2") format("woff2");font-weight:700;font-display:swap}

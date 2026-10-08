@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EduGames</title>
+<link rel="stylesheet" href="shared/fonts.css">
+<style>
+:root{--bg:#eef2f6;--surface:#fff;--ink:#17202c;--muted:#566476;--line:#d0d8e2;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0e141e;--surface:#18212e;--ink:#e6ecf3;--muted:#9ba9bb;--line:#2b3748;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:860px;margin:0 auto;padding:32px 16px 48px}
+h1{font-family:"Chakra Petch","Arial Narrow",system-ui,sans-serif;font-size:clamp(36px,8vw,56px);margin:0 0 6px}
+p.lead{color:var(--muted);margin:0 0 28px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+a.game{display:block;text-decoration:none;color:inherit;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 0 var(--line)}
+a.game:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+a.game h2{margin:0 0 6px;font-size:1.5rem}
+a.game p{margin:0;color:var(--muted)}
+a.game .tag{display:inline-block;margin-top:12px;font-weight:700;font-size:.9rem;border-radius:999px;padding:3px 10px;background:var(--bg)}
+.wio h2{font-family:"Bungee","Arial Black",sans-serif;font-weight:400}
+.rr h2{font-family:"Chakra Petch","Arial Narrow",sans-serif}
+</style>
+</head>
+<body>
+<main>
+  <h1>EduGames</h1>
+  <p class="lead">Games for two players. Sit back to back, talk – in English – and solve it together.</p>
+  <div class="games">
+    <a class="game wio" href="who-is-it/">
+      <h2>Who is it?</h2>
+      <p>One of you sees one person, the other one sees many. Describe, ask and find the right one.</p>
+      <span class="tag">2 players · 10–15 min</span>
+    </a>
+    <a class="game rr" href="reactor-rescue/">
+      <h2>Reactor Rescue</h2>
+      <p>One of you sees the reactor, the other one has the manual. Keep it stable before it explodes!</p>
+      <span class="tag">2 players · 15–20 min</span>
+    </a>
+  </div>
+</main>
+</body>
+</html>
