@@ -60,4 +60,4 @@ genauso, wenn man den Fachinhalt austauscht, ist der Inhalt nur Verpackung – s
 - Vor jedem Commit `npm test` ausführen; neue Spiellogik bekommt Tests (z. B. „jede Runde lösbar“, „gleicher Code = gleiche Welt“).
 - Änderungen im Browser prüfen (Playwright/Chromium, mehrere Breiten inkl. iPad hochkant 768 px), über einen lokalen Webserver (`npm run serve`).
 - Neue grundsätzliche Entscheidungen von Rob hier bzw. in der passenden `DESIGN.md` festhalten.
-- Commit-Messages auf Deutsch, kurz und konkret.
+- Commit-Messages auf Deutsch, kurz und konkret, ohne Link zur Code Session
