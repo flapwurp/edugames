@@ -24,7 +24,8 @@ export const C = {
   palmTrunk: "#9a7148", palmLeaf: "#4f8a3a", palmLeafDark: "#3a6b2b", date: "#c4622d",
   papyrus: "#6e9e3c", papyrusDark: "#4f7a2a",
   stone: "#cbbfa6", stoneDark: "#9e9178",
-  ox: "#b06d3f", oxDark: "#8d5330", oxSpot: "#f1e6d0"
+  ox: "#b06d3f", oxDark: "#8d5330", oxSpot: "#f1e6d0",
+  copper: "#d07a3a", copperLight: "#eba468", reed: "#c9b06a", reedDark: "#9c8443"
 };
 
 const R = Math.PI / 180;
@@ -58,6 +59,9 @@ export const POSES = {
   hacken:   { lean: 32, legB: [-18, -6],  legF: [16, 6],   armB: [62, 34],   armF: [74, 44], prop: "hacke" },
   saeen:    { lean: 6,  legB: [-20, -8],  legF: [18, 4],   armB: [-6, 70],   armF: [100, 118], prop: "saat" },
   ernten:   { lean: 42, legB: [-16, -4],  legF: [24, 12],  armB: [70, 50],   armF: [58, 96],  prop: "sichel" },
+  ernten2:  { lean: 42, legB: [-16, -4],  legF: [24, 12],  armB: [70, 50],   armF: [58, 96],  prop: "kupfersichel" },
+  spannen:  { lean: -12, legB: [-26, -10], legF: [26, 14], armB: [82, 92],   armF: [88, 98] },
+  flechten: { lean: 14, legB: [84, -2],   legF: [92, 4],   armB: [60, 110],  armF: [50, 120], sit: true },
   pfluegen: { lean: 28, legB: [-22, -6],  legF: [14, 4],   armB: [58, 40],   armF: [66, 46] },
   ziehen:   { lean: 8,  legB: [-12, -4],  legF: [14, 4],   armB: [158, 172], armF: [150, 168] },
   tragen:   { lean: 0,  legB: [-18, -6],  legF: [16, 4],   armB: [165, 180], armF: [160, 176], prop: "korb" },
@@ -68,6 +72,18 @@ export const POSES = {
   bauen:    { lean: 22, legB: [-16, -6],  legF: [18, 8],   armB: [70, 120],  armF: [64, 112], prop: "ziegel" },
   winken:   { lean: 0,  legB: [-5, -3],   legF: [5, 2],    armB: [-10, -4],  armF: [150, 170] }
 };
+
+/* Lage der Hände relativ zum Fußpunkt (ohne Skalierung) – für Seile, Werkzeuge usw. */
+export function hands(pose){
+  const P = typeof pose === "string" ? POSES[pose] : pose;
+  const TH = 18, SH = 17, TOR = 24, UA = 13, LA = 13;
+  const legPts = L => { const k = dir(TH, L[0]); const a = add(k, dir(SH, L[1])); return [[0, 0], k, a]; };
+  const low = Math.max(legPts(P.legB)[2][1], legPts(P.legF)[2][1]);
+  const hip = [0, -low - 2];
+  const shoulder = add(hip, [Math.sin(P.lean * R) * TOR, -Math.cos(P.lean * R) * TOR]);
+  const arm = A => add(add(shoulder, dir(UA, A[0])), dir(LA, A[1]));
+  return { front: arm(P.armF), back: arm(P.armB), hip };
+}
 
 /* person({ x, y, pose, n (Nummer: Hautton/Schärpe), scale, flip, kind }) – y = Boden unter den Füßen */
 export function person({ x = 0, y = 0, pose = "stehen", n = 0, scale = 1, flip = false, kind = false, sash = true } = {}){
@@ -148,6 +164,18 @@ function prop(name, aF, aB, head, P){
         <path d="M${pt(add(h, dir(-6, la + 8)))} L${pt(end)}" stroke="${C.wood}" stroke-width="2.4" stroke-linecap="round"/>
         <path d="M${pt(end)} L${pt(blade)}" stroke="${C.woodDark}" stroke-width="5" stroke-linecap="round"/>
         <path d="M${pt(add(end, dir(-12, la + 8)))} L${pt(add(end, dir(7, la - 120)))}" stroke="${C.ink}" stroke-width="1.2"/>`;
+    }
+    case "kupfersichel": {
+      const a = add(h, dir(4, la)), b = add(h, dir(17, la + 40)), c = add(h, dir(15, la + 95));
+      return `<path d="M${pt(h)} L${pt(a)}" stroke="${C.woodDark}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M${pt(a)} Q ${pt(b)} ${pt(c)}" fill="none" stroke="${C.ink}" stroke-width="4.8" stroke-linecap="round"/>
+        <path d="M${pt(a)} Q ${pt(b)} ${pt(c)}" fill="none" stroke="${C.copper}" stroke-width="2.8" stroke-linecap="round"/>`;
+    }
+    case "seilrolle": {
+      const hp = add(hb, [-8, 10]);
+      return `<ellipse cx="${f(hp[0])}" cy="${f(hp[1])}" rx="6.5" ry="5" fill="none" stroke="${C.goldDark}" stroke-width="2.6"/>
+        <ellipse cx="${f(hp[0])}" cy="${f(hp[1])}" rx="3.6" ry="2.8" fill="none" stroke="${C.gold}" stroke-width="1.6"/>
+        <path d="M${pt(hb)} Q ${f(hp[0] + 2)} ${f(hp[1] - 6)} ${f(hp[0] + 4)} ${f(hp[1] - 3)}" fill="none" stroke="${C.goldDark}" stroke-width="2"/>`;
     }
     case "sichel": {
       const a = add(h, dir(4, la)), b = add(h, dir(16, la + 40)), c = add(h, dir(14, la + 95));
@@ -658,11 +686,78 @@ export function weaver({ x = 0, y = 0, n = 3 } = {}){
     <path d="M${x + 28} ${y - 30} L ${x + 64} ${y - 30} M ${x + 28} ${y - 20} L ${x + 64} ${y - 20}" stroke="${C.linenShade}" stroke-width="1"/>`;
 }
 
+/* Landvermesser („Seilspanner“): eine Person spannt das geknotete Messseil von einem Pflock aus.
+   Neben dem Pflock steht der neue Grenzstein. */
 export function surveyor({ x = 0, y = 0, n = 4 } = {}){
-  return `${person({ x, y, pose: "seil", n })}
-    <path d="M${x + 70} ${y + 2} L ${x + 72} ${y - 26}" stroke="${C.woodDark}" stroke-width="3.4" stroke-linecap="round"/>
-    ${[0, 1, 2, 3].map(i => `<circle cx="${x + 24 + i * 12}" cy="${y - 25 + i * 1.4}" r="1.8" fill="${C.goldDark}"/>`).join("")}
-    <path d="M${x + 86} ${y} L ${x + 90} ${y - 10} L ${x + 98} ${y - 10} L ${x + 102} ${y} Z" fill="${C.stone}" ${stroke(1.5)}/>`;
+  const hd = hands("spannen").front;
+  const hx = x + hd[0], hy = y + hd[1];
+  const px = x + 88, py = y - 16;                  // Pflockkopf
+  let knots = "";
+  for (let i = 1; i < 7; i++){
+    const t = i / 7, kx = hx + (px - hx) * t, ky = hy + (py - hy) * t + Math.sin(t * Math.PI) * 1.5;
+    knots += `<circle cx="${f(kx)}" cy="${f(ky)}" r="2.1" fill="${C.goldDark}" ${stroke(0.8)}/>`;
+  }
+  return `<path d="M${px} ${y + 3} L ${px - 2.5} ${py} L ${px + 2.5} ${py} Z" fill="${C.wood}" ${stroke(1.4)}/>
+    <path d="M${px - 3.5} ${py} L ${px + 3.5} ${py}" ${stroke(2.2)}/>
+    <path d="M${f(hx)} ${f(hy)} Q ${f((hx + px) / 2)} ${f((hy + py) / 2 + 3)} ${px} ${py + 2}" fill="none" stroke="${C.goldDark}" stroke-width="2.2"/>
+    ${knots}
+    ${person({ x, y, pose: "spannen", n })}
+    <ellipse cx="${x - 9}" cy="${y - 27}" rx="5.5" ry="7" fill="none" stroke="${C.goldDark}" stroke-width="2.6"/>
+    <ellipse cx="${x - 9}" cy="${y - 27}" rx="3" ry="4.2" fill="none" stroke="${C.gold}" stroke-width="1.5"/>
+    <path d="M${px + 8} ${y} L ${px + 10} ${y - 15} L ${px + 20} ${y - 15} L ${px + 22} ${y} Z" fill="${C.stone}" ${stroke(1.5)}/>
+    <path d="M${px + 13} ${y - 10} L ${px + 17} ${y - 10} M ${px + 15} ${y - 12} L ${px + 15} ${y - 6}" stroke="${C.stoneDark}" stroke-width="1.3"/>`;
+}
+
+/* Korb mit Ladung, Mittelpunkt (0|0) – wird beim Ziehen mitgeführt */
+export function basketLoad(kind = "erde"){
+  const top = kind === "ziegel"
+    ? `<rect x="-11" y="-14" width="10" height="6" fill="${C.brick}" ${stroke(1.1)}/><rect x="1" y="-14" width="10" height="6" fill="${C.brickLight}" ${stroke(1.1)}/><rect x="-5" y="-19" width="10" height="6" fill="${C.brick}" ${stroke(1.1)}/>`
+    : `<path d="M-13 -8 Q 0 -22 13 -8 Z" fill="${C.soilDark}" ${stroke(1.3)}/>`;
+  return `${top}<path d="M-15 -8 L 15 -8 L 11 8 L -11 8 Z" fill="${C.reed}" ${stroke(1.6)}/>
+    <path d="M-13 -2 L 13 -2 M -12 3 L 12 3" stroke="${C.reedDark}" stroke-width="1.2"/>`;
+}
+
+/* Haufen mit Erde oder Lehmziegeln, daneben ein gefüllter Korb (Startpunkt fürs Ziehen) */
+export function loadPile({ x = 0, y = 0, kind = "erde" } = {}){
+  const pile = kind === "ziegel"
+    ? [0, 1, 2].map(r => [0, 1, 2 - r].slice(0, 3 - r).map((_, c) => `<rect x="${x - 26 + r * 9 + c * 18}" y="${y - 8 - r * 8}" width="17" height="8" fill="${(r + c) % 2 ? C.brickLight : C.brick}" ${stroke(1.2)}/>`).join("")).join("")
+    : `<path d="M${x - 30} ${y} Q ${x - 14} ${y - 26} ${x} ${y - 26} Q ${x + 16} ${y - 24} ${x + 30} ${y} Z" fill="${C.soilDark}" ${stroke(1.8)}/>
+       <path d="M${x - 12} ${y - 14} l 7 -2 M ${x + 6} ${y - 18} l 6 1 M ${x - 2} ${y - 8} l 8 0" stroke="${C.kemetShine}" stroke-width="1.4"/>`;
+  return pile + `<g transform="translate(${x + 40} ${y - 8})">${basketLoad(kind)}</g>`;
+}
+
+/* Korb zum Flechten; p = 0..1 fertig */
+export function weaveBasket({ x = 0, y = 0, p = 0 } = {}){
+  let s = `<path d="M${x - 18} ${y} L ${x + 18} ${y}" ${stroke(2)}/>`;
+  for (let i = 0; i < 7; i++){ const sx = x - 15 + i * 5; s += `<path d="M${sx} ${y} L ${sx - (3 - i) * 1.4} ${y - 26}" stroke="${C.reedDark}" stroke-width="1.8"/>`; }
+  const rows = Math.round(p * 8);
+  for (let r = 0; r < rows; r++){
+    const ry = y - 3 - r * 3, w = 15 + r * 0.6;
+    s += `<path d="M${f(x - w)} ${ry} Q ${x} ${ry + 2} ${f(x + w)} ${ry}" fill="none" stroke="${r % 2 ? C.reed : C.reedDark}" stroke-width="2.6" stroke-linecap="round"/>`;
+  }
+  // Schilfbündel daneben
+  s += `<path d="M${x + 24} ${y} L ${x + 44} ${y - 30} M ${x + 28} ${y} L ${x + 46} ${y - 27} M ${x + 32} ${y} L ${x + 48} ${y - 24}" stroke="${C.reed}" stroke-width="2.4" stroke-linecap="round"/>`;
+  return s;
+}
+
+/* fertige Körbe in einer Reihe (für die Trockenzeit) */
+export function basketRow({ x = 0, y = 0, n = 0 } = {}){
+  let s = "";
+  for (let i = 0; i < n; i++){
+    const bx = x + (i % 6) * 22, by = y - Math.floor(i / 6) * 16;
+    s += `<path d="M${bx - 9} ${by - 12} L ${bx + 9} ${by - 12} L ${bx + 7} ${by} L ${bx - 7} ${by} Z" fill="${C.reed}" ${stroke(1.3)}/><path d="M${bx - 8} ${by - 6} L ${bx + 8} ${by - 6}" stroke="${C.reedDark}" stroke-width="1.1"/>`;
+  }
+  return s;
+}
+
+/* Tauschware für Jahr 4: Leinen und Kupfersicheln */
+export function linenBolt({ x = 0, y = 0 } = {}){
+  return `<path d="M${x - 16} ${y} L ${x + 16} ${y} L ${x + 16} ${y - 12} L ${x - 16} ${y - 12} Z" fill="${C.linen}" ${stroke(1.5)}/>
+    <ellipse cx="${x + 16}" cy="${y - 6}" rx="3.5" ry="6" fill="${C.linenShade}" ${stroke(1.3)}/>`;
+}
+export function copperSickles({ x = 0, y = 0 } = {}){
+  return [0, 1].map(i => `<g transform="translate(${x + i * 16} ${y})"><path d="M0 0 L 0 -8" stroke="${C.woodDark}" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M0 -8 Q 12 -20 2 -26" fill="none" stroke="${C.ink}" stroke-width="4.4" stroke-linecap="round"/><path d="M0 -8 Q 12 -20 2 -26" fill="none" stroke="${C.copper}" stroke-width="2.6" stroke-linecap="round"/></g>`).join("");
 }
 
 export function steward({ x = 0, y = 0, n = 5 } = {}){

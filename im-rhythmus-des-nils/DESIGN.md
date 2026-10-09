@@ -1,9 +1,66 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
-**Stand:** Version 0.3 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
-`im-rhythmus-des-nils-v0.1/` und `im-rhythmus-des-nils-v0.2/` (Branches `archiv/nil-v0.1`, `archiv/nil-v0.2`).
+**Stand:** Version 0.4 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
+`im-rhythmus-des-nils-v0.1/`, `-v0.2/`, `-v0.3/` (Branches `archiv/nil-v0.1` bis `archiv/nil-v0.3`).
 
-## Neu in 0.3 (Robs Rückmeldung zu 0.2)
+## Neu in 0.4 (Robs Entscheidungen vom 9.10.2026)
+- **Arbeitskraft als knappe Größe.** Die Familie hat pro Jahr 22 Kraft (Anzeige als Kästchen: verbraucht – noch
+  nötig – frei). Jede Arbeit kostet Kraft. Ein Feld kann man nur anfangen, wenn die Kraft bis zur Ernte reicht.
+  Übrige Kraft wird in der Trockenzeit eingesetzt. Ziel: Die Arbeit der Menschen wird sichtbar („Der Nil schenkt
+  Wasser und Schlamm, aber nicht die Arbeit“).
+- **Gesten statt Tippen, ohne Zeitdruck** (Rob: „Quicktimeevent war ungeschickt gewählt, kein Zeitdruck“).
+  Grenzstein aufrichten = nach oben wischen · pflügen = Gespann über das Feld ziehen · säen = hin und her wischen ·
+  ernten = mit der Sichel durch die Halme wischen · Schaduf = am Seil ziehen und loslassen · Deich/Erdwall/Haus =
+  Korb vom Haufen ans Ziel ziehen · Körbe flechten = Zickzack. Abbrechen ist erlaubt, der Fortschritt bleibt.
+  Antippen zeigt nur einen Hinweis. Tastatur: Enter erledigt die Arbeit (Barrierefreiheit). Code: `gesture.js`.
+- **Kein Fischfang** (Rob: führt vom Lernziel weg). Die einzige allgemeine Verwendung übriger Kraft ist
+  „Körbe flechten und tauschen“ (Schilf vom Nilufer, 1 Kraft → 1 Sack) – und das nur in guten Jahren (J1, J4),
+  denn nach schlechten Fluten hat niemand Getreide zum Tauschen. Daneben: Erdwall, Deich.
+- **Schaduf kostet Kraft statt Getreide** (Bau 2, jeder Eimer 1). Weniger Eimer sind jetzt eine echte Wahl:
+  Kraft, die man in J2 schöpft, fehlt in der Trockenzeit für Deich oder Erdwall.
+- **Dorf kostet Kraft für den Deich** (Rob). Ins Dorf: 4 Kraft am Deich + 1 Sack Beitrag. Fehlt Kraft, wird sie im
+  nächsten Jahr nachgeholt (in der Trockenzeit, vor allem anderen). Im Dorf in J3: Deich ausbessern (1 Kraft).
+  Allein: Nur ein **fertiger** Erdwall (4 Kraft, über J1 und J2 baubar) schützt Haus und Vorrat. Ohne ihn zerstört das
+  Hochwasser den Hof; der Wiederaufbau kostet 8 Kraft – dann reicht es nur noch für zwei Felder.
+- **Jahr 3 ohne Landvermesser** (Rob: Arbeitsteilung erst am Ende): Nach dem Hochwasser sind alle Grenzsteine fort,
+  man streitet mit den Nachbarn und misst selbst nach (2 Kraft je Feld, Geste: Messseil ziehen). Das erlebte Problem
+  begründet den Beruf.
+- **Jahr 4, normale Flut wie in Jahr 1.** Jede Familie im Dorf stellt **einen** Beruf, der **einen** Vorteil bringt;
+  alle Vorteile sind gleich groß (+3), damit der Klassenvergleich offen bleibt:
+
+| Beruf | Vorteil in Jahr 4 | sichtbar als |
+|---|---|---|
+| Töpfer | Krüge aus Nilschlamm werden beim Händler gegen 3 Säcke Getreide getauscht | Töpfer, Buchung im Speicher |
+| Weberin | Leinen gegen Kupfersicheln: Ernten kostet 1 statt 2 Kraft je Feld (3 Kraft frei → 3 Körbe) | Kupfersichel bei der Ernte |
+| Landvermesser | misst nach der Flut alles aus, setzt die Grenzsteine: 0 statt 3 Kraft (3 Kraft frei) | Seilspanner am Feld, Steine stehen schon |
+| Speicherverwalter | misst, schreibt auf, verteilt gerecht, hält den Speicher bereit; dafür Lohn aus dem Dorfspeicher: 3 Säcke | Verwalter mit Messgefäß, Buchung „Lohn“ |
+
+  Landvermesser **ohne** Kanalbau (Rob: Grenzsteine und weniger Chaos reichen). Speicherverwalter: Deutung als
+  bezahlte Verwaltungsarbeit (Umverteilung aus dem Speicher) – zur Abnahme durch Rob. Allein gibt es keinen Beruf.
+- **Kleine Korrekturen:** J3-Flut steigt über vier Monate sichtbar über die Marke „gut“; J2 (und alle Jahre) wachsen
+  Monat für Monat; die hackende Person steht auf einem bestellten Feld; nicht bestellte Felder zeigen keine Pflanzen;
+  Landvermesser neu gezeichnet: **eine** Person spannt das geknotete Messseil vom Pflock aus, daneben der Grenzstein.
+- **Bilanz:** Tabelle über alle vier Jahre (Ernte, Kraft für Felder/Schaduf/Schutz/Körbe, Hilfe, Ergebnis, Vorrat)
+  und der Vergleich Jahr 1 – Jahr 4 (gleiche Flut, Unterschied = Beruf).
+- Neue Merksätze: „kraft“ (nach der ersten Ernte), „teilung“ (Arbeitsteilung, Trockenzeit J4).
+
+### Wege durch das Spiel (Zahlen aus `content.js`, geprüft mit `simulate()` in den Tests)
+J1: Felder 18 Kraft, 4 frei → Körbe (+4) oder Erdwall. Ernte 12, Bedarf 10.
+J2: Uferfeld 3 Säcke; mittleres Feld mit Schaduf 2 (3 Eimer) bzw. 4 (6 Eimer). Felder + Schaduf voll = 19 Kraft.
+
+| J1 | Schaduf | Dorf/allein | J2 | J3 | Ende |
+|---|---|---|---|---|---|
+| Körbe | kein | Dorf | Hunger | geholfen | J4: 9 Säcke |
+| Körbe | 3 Eimer | allein + Erdwall in J2 | knapp | knapp (Wall hält) | J4: 6 |
+| Körbe | 6 Eimer | allein (Wall wird nicht fertig) | knapp | Hof zerstört, Hunger | J4: 6 |
+| Körbe | 6 Eimer | Dorf | knapp, Deich 1 Kraft nachholen | knapp | J4: 9 |
+| halber Wall | 6 Eimer | allein + Wall fertig | knapp | knapp | J4: 6 |
+| ganzer Wall | jede | allein | Hunger | Hunger → **Hof verlassen** | – |
+
+Im Dorf hungert in J3 niemand. Allein überlebt nur, wer vorgesorgt hat (Erdwall **und** Vorrat).
+Jahr 4: Dorf mit Beruf 8–9 Säcke, allein 6.
+
+## Neu in 0.3 (Robs Rückmeldung zu 0.2) – Stand vor 0.4
 - **Mehr echte Entscheidungen**, alle als Karte mit zwei Möglichkeiten; Getreide ist die einzige mitlaufende Größe:
 
 | Wann | Entscheidung | Kosten | Folge |
@@ -30,7 +87,7 @@
 **Kompetenz:** SK – den Einfluss naturgegebener Voraussetzungen auf die Entstehung der Hochkultur Ägyptens erklären;
 UK3 – historisches Handeln unter Berücksichtigung von Handlungsspielräumen beurteilen; Quelle und eigene Erfahrung unterscheiden
 **Platz in der Reihe:** ersetzt Forum Geschichte 6, S. 44–45 („Das alte Ägypten – ein Geschenk des Nils?“).
-**Dauer:** Ziel 15–18 Min., höchstens 20 Min. · Bedienoberfläche auf Deutsch
+**Dauer:** Ziel 15–20 Min. (vier Jahre), höchstens 25 Min. – beim Test mit der 6e messen · Bedienoberfläche auf Deutsch
 
 ## Warum Version 0.2
 Robs Rückmeldung zu 0.1: Grafik zu abstrakt (Schaduf nur als Wort), Ablauf bis zur Quellenarbeit zu verschachtelt –
@@ -160,13 +217,16 @@ Gefahr einer zu hohen Flut).
 | Anbau, Land liegt brach | J1 Peret/Schemu |
 | Kalender, Sirius | Kalenderband, Sirius zu Jahresbeginn |
 | Flut zu hoch / zu niedrig, Hungersnot | J2, J3 |
-| Deiche, Dämme als Gemeinschaftsarbeit | J2 Brache, J3 |
+| Deiche, Dämme als Gemeinschaftsarbeit | J2 Trockenzeit (Deich kostet Kraft), J3 |
 | Schaduf (M2) | J2 |
 | Vorräte in Speichern für schlechte Jahre | J1–J3 |
-| Arbeitsteilung, Handwerk, Landvermesser | J3 |
-| Händler, Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
+| Arbeitsteilung, Handwerk, Landvermesser | J3 Streit um Grenzen, Berufswahl; J4 Vorteile der Berufe |
+| Händler (Tausch) | J4: Krüge gegen Getreide, Leinen gegen Kupfersicheln |
+| Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
 ## Offen
-- Entscheidungen und Verlieren (0.3) im Test mit der 6e prüfen: Wird anders entschieden, wird verloren, hilft die Wiederholung?
+- 0.4 im Test mit der 6e prüfen: Spieldauer mit vier Jahren und Gesten; werden die Gesten verstanden (Hinweis „So geht's“)?
+  Wird anders entschieden, wird verloren, hilft die Wiederholung? Funktionieren die Gesten auf den Schul-iPads (Safari)?
+- Speicherverwalter: Deutung „Lohn aus dem Dorfspeicher“ von Rob abnehmen lassen.
 - Übersetzung von M3 beschaffen und den Platzhalter ersetzen.
 - Werte nach dem ersten Test anpassen; Spieldauer messen.

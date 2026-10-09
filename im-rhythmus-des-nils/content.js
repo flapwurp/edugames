@@ -1,31 +1,50 @@
-/* Im Rhythmus des Nils 0.2 – alle Texte und Zahlen.
+/* Im Rhythmus des Nils 0.4 – alle Texte und Zahlen.
    Hier darf geändert werden: nur die Wörter zwischen den Anführungszeichen und die Zahlen.
    Kommas, Klammern und Namen links vom Doppelpunkt bitte stehen lassen.
-   {n}, {s} usw. sind Platzhalter, die das Spiel selbst ausfüllt. */
+   {n}, {k} usw. sind Platzhalter, die das Spiel selbst ausfüllt. */
 
-/* ---------- Zahlen (Säcke Getreide) ---------- */
+/* ---------- Zahlen ---------- */
 export const NUM = {
-  startVorrat: 0,       // Vorrat zu Beginn (leerer Speicher)
-  bedarf: 10,           // so viel braucht die Familie (4 Personen) in einem Jahr
-  ertragGut: 4,         // je Feld bei normaler Flut
-  ertragNiedrig: 4,     // Uferfeld bei zu niedriger Flut
-  ertragBewaessert: 2,  // mittleres Feld, mit dem Schaduf voll bewässert
-  ertragSpaet: 2,       // je Feld nach zu hoher Flut (späte Aussaat)
-  schadufHalb: 3,       // so viele Eimer, damit das mittlere Feld überhaupt wächst
-  schadufVoll: 6,       // so viele Eimer für eine volle Ernte auf dem mittleren Feld
-  schadufKosten: 1,     // Holz und Seil für den Schaduf (Säcke Getreide)
-  kruegeTausch: 3,      // Tauschgetreide für die Krüge (Entscheidung 1)
-  dorfBeitrag: 1,       // Beitrag zum Dorfspeicher beim Einzug ins Dorf (falls vorhanden)
-  dorfspeicher: 8       // so viel kann der Dorfspeicher in Jahr 3 einer Familie geben
+  startVorrat: 0,        // Säcke im Speicher zu Beginn
+  bedarf: 10,            // so viele Säcke braucht die Familie (4 Personen) in einem Jahr
+  ertragGut: 4,          // Säcke je Feld bei normaler Flut (Jahr 1 und 4)
+  ertragNiedrig: 3,      // Uferfeld bei zu niedriger Flut (Jahr 2)
+  ertragSchadufHalb: 2,  // mittleres Feld, mit dem Schaduf halb bewässert
+  ertragSchadufVoll: 4,  // mittleres Feld, mit dem Schaduf voll bewässert
+  ertragSpaet: 3,        // je Feld nach zu hoher Flut (späte Aussaat, Jahr 3)
+  schadufHalb: 3,        // so viele Eimer, damit das mittlere Feld überhaupt wächst
+  schadufVoll: 6,        // so viele Eimer für eine volle Ernte auf dem mittleren Feld
+  dorfBeitrag: 1,        // Säcke für den Dorfspeicher beim Einzug ins Dorf (falls vorhanden)
+  dorfspeicher: 8,       // so viel kann der Dorfspeicher in Jahr 3 einer Familie geben
+  kraft: 22,             // Arbeitskraft der Familie in einem Jahr
+  kosten: {              // Arbeitskraft für jede Arbeit
+    grenzstein: 1,       //   umgeworfenen Grenzstein aufrichten (je Feld)
+    grenzeStreit: 2,     //   Grenze nach dem Hochwasser neu festlegen (je Feld)
+    pfluegen: 2,         //   ein Feld pflügen
+    saeen: 1,            //   ein Feld säen
+    ernten: 2,           //   ein Feld ernten
+    ernteKupfer: 1,      //   ein Feld ernten mit Kupfersicheln (Weberin)
+    schadufBau: 2,       //   den Schaduf bauen
+    eimer: 1,            //   ein Eimer mit dem Schaduf
+    korb: 1,             //   einen Korb flechten
+    erdwall: 4,          //   Erdwall um den Hof (insgesamt, auch über zwei Jahre)
+    deich: 4,            //   Anteil einer Familie am Deich
+    deichAusbessern: 1,  //   Deich nach dem Hochwasser ausbessern
+    haus: 8              //   zerstörtes Haus wieder aufbauen
+  },
+  hausLadung: 2,         // so viel Kraft kostet eine Ladung Lehmziegel beim Hausbau
+  korbTausch: 1,         // Säcke Getreide für einen Korb (nur in guten Jahren)
+  toepferTausch: 3,      // Säcke für die Krüge des Töpfers (Jahr 4)
+  verwalterLohn: 3       // Säcke Lohn für den Speicherverwalter (Jahr 4)
 };
 
 export const GAME = {
   title: "Im Rhythmus des Nils",
-  subtitle: "Drei Jahre auf einem Bauernhof im alten Ägypten",
+  subtitle: "Vier Jahre auf einem Bauernhof im alten Ägypten",
   leitfrage: "Das alte Ägypten – ein Geschenk des Nils?",
   intro: [
     "Du lebst mit deiner Familie am Nil. Um euch herum ist Wüste, Regen gibt es fast nie.",
-    "Drei Jahre lang bestellt ihr eure drei Felder. Du entscheidest, was deine Familie tut – und erlebst, was der Nil mit euch macht.",
+    "Vier Jahre lang bestellt ihr eure drei Felder. Jede Arbeit kostet Kraft – und eure Kraft ist begrenzt. Du entscheidest, was deine Familie tut, und erlebst, was der Nil mit euch macht.",
     "Am Ende beantwortest du die Frage: War der Nil ein Geschenk?"
   ],
   hochkant: "Halte das iPad am besten quer."
@@ -53,31 +72,47 @@ export const UI = {
   rolleLeer: "Hier sammelst du, was du über den Nil herausfindest.",
   vorrat: "Euer Speicher",
   familie: "Deine Familie: 4 Personen",
+  kraft: "Arbeitskraft",
+  kraftRest: "{n} von {k} übrig",
+  kraftReserve: "{n} davon braucht ihr noch, um eure Felder fertig zu bestellen und zu ernten.",
+  kraftNeu: "Ein neues Jahr: Deine Familie hat wieder {k} Kraft.",
+  kraftSchuld: "Im letzten Jahr ist Arbeit am Deich liegen geblieben: {n} Kraft holt ihr in der Trockenzeit nach.",
+  verbrauch: {
+    felder: "Felder",
+    schaduf: "Schaduf",
+    schutz: "Deich, Erdwall, Haus",
+    koerbe: "Körbe",
+    nachholen: "Deich nachgeholt"
+  },
   buchung: {
     ueberschuss: "Überschuss aus der Ernte",
     gegessen: "aus dem Vorrat gegessen",
-    kruege: "Tausch: Krüge gegen Getreide",
-    schaduf: "Holz und Seil für den Schaduf",
+    koerbe: "Körbe gegen Getreide getauscht",
     dorf: "Beitrag zum Dorfspeicher",
-    flut: "vom Hochwasser verdorben"
+    flut: "vom Hochwasser verdorben",
+    toepfer: "Krüge gegen Getreide getauscht",
+    verwalter: "Lohn für den Speicherverwalter"
   },
   saecke: "{n} Säcke",
-  sack: "1 Sack"
+  sack: "1 Sack",
+  geste: "So geht's:"
 };
 
 /* ---------- Merksätze (Papyrusrolle) ---------- */
 export const MERKSAETZE = {
   steigt:   "Vier Monate lang steigt der Nil und überschwemmt das Land.",
   schlamm:  "Zurück bleibt fruchtbarer Schlamm. Er wird untergepflügt und es wird gesät. Vier Monate später wird geerntet.",
+  kraft:    "Ohne die Arbeit der Menschen wächst nichts. Pflügen, säen, ernten: Jede Arbeit kostet Kraft, und die Kraft einer Familie ist begrenzt.",
   brache:   "Danach liegen die Felder vier Monate brach. Die Menschen erledigen andere Arbeiten.",
   kalender: "Nach diesem Rhythmus teilten die Ägypter ihr Jahr in drei Jahreszeiten zu je vier Monaten.",
   niedrig:  "Steigt der Nil zu wenig, bleiben Felder trocken. Dann droht Hunger.",
   hoch:     "Steigt der Nil zu hoch, zerstört das Wasser Häuser, Vorräte und Felder.",
   deich:    "Gemeinsam bauen die Menschen Dörfer und Deiche und schützen sich so vor dem Hochwasser.",
   vorrat:   "Im Dorf werden Vorräte angelegt und an alle verteilt, die in Not sind.",
-  berufe:   "Weil das Dorf Vorräte hat und gemeinsam arbeitet, müssen nicht mehr alle auf dem Feld arbeiten. Es entstehen neue Berufe."
+  berufe:   "Weil das Dorf Vorräte hat und gemeinsam arbeitet, müssen nicht mehr alle auf dem Feld arbeiten. Es entstehen neue Berufe.",
+  teilung:  "Wenn Menschen verschiedene Arbeiten übernehmen und tauschen, sparen alle Kraft und haben mehr. Das nennt man Arbeitsteilung."
 };
-export const ROLLE_REIHENFOLGE = ["steigt", "schlamm", "brache", "kalender", "niedrig", "hoch", "deich", "vorrat", "berufe"];
+export const ROLLE_REIHENFOLGE = ["steigt", "schlamm", "kraft", "brache", "kalender", "niedrig", "hoch", "deich", "vorrat", "berufe", "teilung"];
 
 /* ---------- Texte der Phasen ---------- */
 export const TEXT = {
@@ -85,53 +120,79 @@ export const TEXT = {
     1: { titel: "Der Sirius erscheint", text: "Kurz vor Sonnenaufgang ist der helle Stern Sirius wieder am Himmel zu sehen. Für die Menschen in Ägypten heißt das: Ein neues Jahr beginnt – und bald kommt die Flut. Noch ist der Nil niedrig, eure Felder liegen trocken.", knopf: "Das Jahr beginnt" },
     2: { titel: "Jahr 2: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt. Ihr wartet auf die Flut.", knopf: "Das Jahr beginnt" },
     3: { titel: "Jahr 3: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt – zum ersten Mal lebt ihr im Dorf.", knopf: "Das Jahr beginnt" },
-    allein: { titel: "Jahr 3: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt. Ihr lebt weiter allein auf eurem Hof. Die Nachbarn wohnen jetzt im Dorf hinter dem Deich.", knopf: "Das Jahr beginnt" }
+    "3allein": { titel: "Jahr 3: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt. Ihr lebt weiter allein auf eurem Hof. Die Nachbarn wohnen jetzt im Dorf hinter dem Deich.", knopf: "Das Jahr beginnt" },
+    4: { titel: "Jahr 4: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt. Im Dorf arbeitet jetzt jemand aus deiner Familie als {beruf}.", knopf: "Das Jahr beginnt" },
+    "4allein": { titel: "Jahr 4: Der Sirius erscheint wieder", text: "Ein neues Jahr beginnt. Ihr lebt weiter allein auf eurem Hof.", knopf: "Das Jahr beginnt" }
   },
   achet: {
-    monate: [
+    1: { titel: "Achet", monate: [
       "Der Nil beginnt zu steigen. Schau auf den Nilmesser.",
       "Das Wasser steigt weiter. Bald erreicht es das erste Feld.",
       "Das Feld am Ufer und das mittlere Feld stehen unter Wasser.",
       "Höchststand. Alle drei Felder sind überschwemmt. Euer Hof liegt höher und bleibt trocken."
-    ],
-    knopf1: "Das Wasser sinkt",
+    ], knopf: "Das Wasser sinkt" },
     2: { titel: "Jahr 2, Achet", monate: [
       "Der Nil beginnt zu steigen – wie jedes Jahr.",
       "Das Wasser steigt nur langsam. Jeden Tag schaut deine Familie auf den Nilmesser.",
       "Eigentlich müsste das Wasser längst höher stehen. Alle hoffen auf mehr.",
       "Höchststand – aber unter der Marke. Nur das Feld am Ufer wird überschwemmt. Mehr Wasser kommt nicht."
     ], knopf: "Das Wasser sinkt" },
-    3: { titel: "Jahr 3, Achet: Der Nil steigt zu hoch", text: "Das Wasser steigt und steigt – höher als bei jeder Flut, die ihr kennt. Es steht bis an die Krone des Deiches. Die Feldhütte am oberen Feld wird weggerissen. Hinter dem Deich bleibt das Dorf trocken.", knopf: "Das Wasser sinkt" },
-    allein: {
-      titel: "Jahr 3, Achet: Der Nil steigt zu hoch",
-      wall: "Das Wasser steigt und steigt – höher als bei jeder Flut, die ihr kennt. Euer Erdwall hält es eine Weile auf, dann läuft es darüber. Das Haus bleibt stehen, aber im Speicher verdirbt Getreide.",
-      ohne: "Das Wasser steigt und steigt – höher als bei jeder Flut, die ihr kennt. Es reißt die Lehmmauern eures Hauses ein und dringt in den Speicher. Euer Hof ist zerstört.",
-      dorf: "Die Nachbarn im Dorf hinter dem Deich bleiben trocken.",
-      knopf: "Das Wasser sinkt"
-    }
+    3: { titel: "Jahr 3, Achet", monate: [
+      "Der Nil beginnt zu steigen – schneller als sonst.",
+      "Das Wasser steigt und steigt. Alle drei Felder stehen schon unter Wasser.",
+      "Das Wasser steht schon höher als in einem guten Jahr – über der Marke „gut“. Und es steigt weiter."
+    ],
+      dorf: "Höchststand – weit über der Marke. Das Wasser reicht bis an die Krone des Deiches. Die Feldhütte am oberen Feld wird weggerissen. Hinter dem Deich bleibt das Dorf trocken.",
+      wall: "Höchststand – weit über der Marke. Das Wasser steht bis an euren Erdwall. Er hält! Haus und Speicher bleiben trocken. Auch das Dorf der Nachbarn hinter dem Deich bleibt trocken.",
+      ohne: "Höchststand – weit über der Marke. Das Wasser reißt die Lehmmauern eures Hauses ein und dringt in den Speicher. Euer Hof ist zerstört, der Vorrat verdorben. Die Nachbarn im Dorf hinter dem Deich bleiben trocken.",
+      halbWall: "Euer Erdwall war nicht fertig geworden.",
+      knopf: "Das Wasser sinkt" },
+    4: { titel: "Jahr 4, Achet", monate: [
+      "Der Nil beginnt zu steigen. Alle schauen auf den Nilmesser.",
+      "Das Wasser steigt gleichmäßig.",
+      "Das Feld am Ufer und das mittlere Feld stehen unter Wasser.",
+      "Höchststand – genau an der Marke „gut“. Alle drei Felder sind überschwemmt. Ein gutes Jahr!"
+    ], knopf: "Das Wasser sinkt" }
   },
   aussaat: {
-    1: { titel: "Peret: Pflügen und säen", text: "Das Wasser ist zurückgegangen. Auf den Feldern liegt schwarzer, nasser Schlamm. Tippe jedes Feld zweimal an: erst pflügen, dann säen." },
-    2: { titel: "Jahr 2, Peret: Pflügen und säen", text: "Bestellt die Felder, die genug Wasser bekommen haben. Tippe ein Feld zweimal an: erst pflügen, dann säen." },
-    3: { titel: "Jahr 3, Peret: Endlich säen", text: "Das Wasser stand zwei Monate länger auf den Feldern. Jetzt ist es spät – schnell pflügen und säen!" },
-    pfluegen: "pflügen",
-    saeen: "säen",
+    1: { titel: "Peret: Die Felder bestellen", text: "Das Wasser ist zurückgegangen. Auf den Feldern liegt schwarzer, nasser Schlamm. Die Flut hat die Grenzsteine umgeworfen. Bestelle jedes Feld – jede Arbeit kostet Kraft." },
+    2: { titel: "Jahr 2, Peret: Die Felder bestellen", text: "Bestellt die Felder, die genug Wasser bekommen haben." },
+    3: { titel: "Jahr 3, Peret: Die Grenzen sind fort", text: "Das Wasser stand zwei Monate länger auf den Feldern. Die Flut hat alle Grenzsteine fortgespült. Mit den Nachbarn streitet ihr: Wo war die Grenze? Ihr messt mühsam selbst nach. Das kostet Zeit und Kraft. Dann schnell pflügen und säen!" },
+    4: { titel: "Jahr 4, Peret: Die Felder bestellen", text: "Wieder liegt fruchtbarer Schlamm auf den Feldern. Die Flut hat die Grenzsteine umgeworfen." },
+    landvermesser: "Euer Landvermesser hat die Felder schon neu ausgemessen und die Grenzsteine gesetzt. Kein Streit, und ihr spart die Kraft dafür.",
+    schritte: {
+      grenzstein: { name: "Grenzstein aufrichten", hint: "Wische auf dem Stein nach oben." },
+      grenzeNeu:  { name: "Grenze neu festlegen", hint: "Zieh das Messseil vom Stein aus am Feld entlang bis zum Ende." },
+      pfluegen:   { name: "pflügen", hint: "Zieh das Rindergespann mit dem Finger über das ganze Feld." },
+      saeen:      { name: "säen", hint: "Wische hin und her über das Feld, bis überall Saat liegt." }
+    },
+    namen: ["Feld am Ufer", "mittleres Feld", "oberes Feld"],
     fertig: "Alle Felder bestellt",
     zuTrocken: "Zu trocken: Hierhin ist kein Wasser gekommen. Ohne Wasser wächst nichts.",
     zuHoch: "Das obere Feld liegt zu hoch. Das Wasser aus dem Graben kommt nicht hinauf.",
-    schonGesaet: "Dieses Feld ist schon gesät."
+    schonGesaet: "Dieses Feld ist schon gesät.",
+    keineKraft: "Dafür reicht eure Kraft nicht mehr. Ein Feld bestellt ihr nur, wenn ihr es auch ernten könnt.",
+    nichtBestellt: "keine Kraft mehr",
+    zuTrockenKurz: "zu trocken",
+    bestellt: "gesät",
+    offen: "noch nicht bestellt",
+    tippen: "Nicht tippen – wische! "
   },
   wachsen: {
     monate: ["Die ersten Keime sind zu sehen.", "Die Halme wachsen.", "Die Ähren bilden sich."],
     fertig: "Vier Monate sind vergangen. Das Getreide ist reif.",
-    2: "Das Getreide wächst. Auf dem Feld am Ufer und dort, wo ihr Wasser geschöpft habt, wird es grün.",
-    3: "Das Getreide wächst – aber spät. Die Halme sind kürzer als sonst."
+    2: "Wo kein Wasser hingekommen ist, bleibt die Erde kahl und rissig.",
+    3: "Weil spät gesät wurde, bleiben die Halme kürzer als sonst.",
+    zur: "Zur Ernte"
   },
   ernte: {
     titel: "Schemu: Ernte",
-    text: "Tippe die Felder an. Deine Familie erntet mit Sicheln und trägt das Getreide in den Speicher.",
-    3: "Spät, aber endlich: Ernte. Tippe die Felder an.",
+    text: "Wische über ein Feld, um es zu ernten. Deine Familie schneidet das Getreide mit Sicheln und trägt es in den Speicher.",
+    3: "Spät, aber endlich: Ernte. Wische über die Felder.",
+    kupfer: "Mit den Kupfersicheln aus dem Tausch gegen Leinen geht die Ernte doppelt so schnell: nur {n} Kraft pro Feld.",
+    hint: "Wische mit der Sichel durch die Halme, bis das ganze Feld abgeerntet ist.",
     nichts: "Hier gibt es nichts zu ernten.",
+    geerntet: "Geerntet: {n} Säcke",
     fertig: "Alles eingebracht"
   },
   versorgung: {
@@ -139,88 +200,97 @@ export const TEXT = {
     ernte: "Ihr habt {n} Säcke geerntet.",
     bedarf: "Deine Familie braucht {n} Säcke, um ein Jahr lang satt zu werden.",
     satt: "Es reicht. {n} Säcke kommen als Vorrat in den Speicher.",
-    knapp: "Die Ernte allein reicht nicht. Ihr nehmt {n} Säcke aus dem Vorrat. Jetzt ist der Speicher leer – und damit gerade so genug.",
+    knapp: "Die Ernte allein reicht nicht. Ihr nehmt {n} Säcke aus dem Vorrat. Es reicht gerade so.",
     hunger: "Es fehlen {n} Säcke. Der Vorrat ist aufgebraucht. Bis zur nächsten Ernte hat deine Familie oft zu wenig zu essen.",
     nachbarn: "Den Nachbarn geht es genauso. Niemand hat etwas übrig, um euch zu helfen.",
     geholfen: "Die Ernte war klein. Aus dem Dorfspeicher bekommt deine Familie {n} Säcke. Auch andere Familien werden versorgt. Niemand muss hungern.",
-    alleinHunger: "Es fehlen {n} Säcke. Niemand hilft euch: Die Familien im Dorf versorgen sich aus ihrem gemeinsamen Speicher – ihr gehört nicht dazu.",
-    vorrat1: "Euer Vorrat: {n} Säcke."
+    dorfAndere: "Auch die anderen Familien im Dorf hatten wenig. Wer nicht genug hat, bekommt Getreide aus dem Dorfspeicher. Niemand muss hungern.",
+    alleinHunger: "Es fehlen {n} Säcke. Niemand hilft euch: Die Familien im Dorf versorgen sich aus ihrem gemeinsamen Speicher – ihr gehört nicht dazu."
   },
-  brache: {
-    titel: "Schemu: Die Felder liegen brach",
-    text: "Die Felder sind abgeerntet. Bis zur nächsten Flut wächst hier nichts mehr. Vier Monate Zeit für andere Arbeiten. Was soll deine Familie tun?",
-    optionen: {
-      kruege: { name: "Krüge töpfern und tauschen", text: "Aus Nilschlamm Krüge formen und brennen. Die Krüge tauscht ihr bei Nachbarn gegen Getreide." },
-      wall: { name: "Einen Erdwall um den Hof aufschütten", text: "Ein Wall aus Erde soll den Hof schützen, falls der Nil einmal zu hoch steigt." }
+  trockenzeit: {
+    titel: { 1: "Schemu: Die Felder liegen brach", 2: "Jahr 2, Trockenzeit: Allein auf dem Hof", 3: "Jahr 3, Trockenzeit: Arbeit am Deich", 4: "Jahr 4, Trockenzeit" },
+    text: "Die Felder sind abgeerntet. Bis zur nächsten Flut wächst hier nichts. Was macht deine Familie mit der übrigen Kraft?",
+    arbeiten: {
+      nachholen:  { name: "Arbeit am Deich nachholen", text: "Im letzten Jahr hat euch Kraft für den Deich gefehlt. Das holt ihr jetzt nach: noch {n} Kraft.", hint: "Zieh Körbe mit Erde vom Haufen auf den Deich." },
+      ausbessern: { name: "Den Deich ausbessern", text: "Das Hochwasser hat am Deich gerissen. Jede Familie hilft beim Ausbessern: {n} Kraft.", hint: "Zieh einen Korb mit Erde vom Haufen auf den Deich." },
+      koerbe:     { name: "Körbe flechten und tauschen", text: "Aus Schilf vom Nilufer flechtet ihr Körbe. Die Nachbarn geben euch für jeden Korb {n} Sack Getreide. Jeder Korb kostet 1 Kraft.", hint: "Wische im Zickzack über den Korb.", nein: "Niemand hat Getreide übrig, um Körbe einzutauschen." },
+      erdwall:    { name: "Am Erdwall bauen", text: "Ein Wall aus Erde um den Hof soll Haus und Speicher schützen, falls der Nil einmal zu hoch steigt. Geschafft: {w} von {n} Kraft.", hint: "Zieh Körbe mit Erde vom Haufen auf den Wall.", fertig: "Der Erdwall ist fertig. Ob er nötig sein wird? Das weiß niemand." }
     },
-    ergebnis: {
-      kruege: "Ihr tauscht eure Krüge gegen {n} Säcke Getreide. Euer Vorrat wächst.",
-      wall: "Rund um den Hof steht jetzt ein Erdwall. Ob er nötig sein wird? Das weiß niemand."
-    }
+    pflichtZuerst: "Zuerst die Arbeit am Deich – das Dorf verlässt sich auf euch.",
+    keineKraft: "Eure Kraft für dieses Jahr ist aufgebraucht.",
+    nochSchuld: "Es fehlen noch {n} Kraft. Die holt ihr im nächsten Jahr nach.",
+    gemacht: "Diese Trockenzeit: {liste}.",
+    ende: "Trockenzeit beenden",
+    rest: "Übrige Kraft: {n}. Damit ruht ihr euch aus.",
+    toepfer: "Euer Töpfer hat aus Nilschlamm Krüge geformt und gebrannt. Ein Händler aus dem Nachbardorf tauscht sie gegen {n} Säcke Getreide.",
+    verwalter: "Euer Speicherverwalter misst jede Ernte, schreibt auf, was jede Familie abgibt und bekommt, und hält den Dorfspeicher für das nächste schlechte Jahr bereit. Für diese Arbeit bekommt deine Familie {n} Säcke Lohn aus dem Dorfspeicher.",
+    weberin: "Eure Weberin hat Leinen gewebt. Das Dorf hat es gegen Kupfersicheln getauscht. Mit ihnen hat die Ernte {n} Kraft weniger gekostet – diese Kraft habt ihr jetzt übrig.",
+    landvermesser: "Euer Landvermesser hat nach der Flut alle Felder ausgemessen und die Grenzsteine gesetzt. Es gab keinen Streit, und ihr habt {n} Kraft gespart – diese Kraft habt ihr jetzt übrig."
   },
   jahresende: {
-    titel: "Ein Jahr ist vorbei",
-    text: "Flut, Aussaat und Ernte, Trockenzeit – und dann erscheint wieder der Sirius. Achet, Peret, Schemu: Jede Jahreszeit dauert vier Monate.",
-    knopf: "Weiter zu Jahr 2"
+    1: { titel: "Ein Jahr ist vorbei", text: "Flut, Aussaat und Ernte, Trockenzeit – und dann erscheint wieder der Sirius. Achet, Peret, Schemu: Jede Jahreszeit dauert vier Monate.", knopf: "Weiter zu Jahr 2" },
+    4: { titel: "Vier Jahre sind vorbei", text: "Jahr 1 und Jahr 4 hatten die gleiche, gute Flut. Vergleiche in der Bilanz, was anders war.", knopf: "Zur Bilanz" }
   },
   schadufWahl: {
     titel: "Jahr 2, Peret: Eine neue Erfindung",
-    text: "Das mittlere und das obere Feld sind trocken geblieben. Nur im Graben am Uferfeld steht noch Wasser. Ein Nachbar zeigt euch eine Erfindung: den Schaduf – einen langen Hebel mit Eimer und Gegengewicht. Damit kann man Wasser aus dem Graben auf das mittlere Feld heben. Für Holz und Seil müsstet ihr {n} Sack Getreide eintauschen.",
+    text: "Das mittlere und das obere Feld sind trocken geblieben. Nur im Graben am Uferfeld steht noch Wasser. Ein Nachbar zeigt euch eine Erfindung: den Schaduf – einen langen Hebel mit Eimer und Gegengewicht. Damit kann man Wasser aus dem Graben auf das mittlere Feld heben.",
     optionen: {
-      bauen: { name: "Den Schaduf bauen", text: "Kostet {n} Sack Getreide. Danach schöpft die Familie Eimer für Eimer – harte Arbeit." },
-      lassen: { name: "Keinen Schaduf bauen", text: "Das Getreide bleibt im Speicher. Das mittlere Feld bleibt trocken." }
+      bauen: { name: "Den Schaduf bauen", text: "Aus Palmholz und Seil: {n} Kraft. Danach schöpft die Familie Eimer für Eimer – jeder Eimer kostet 1 Kraft." },
+      lassen: { name: "Keinen Schaduf bauen", text: "Ihr spart eure Kraft. Das mittlere Feld bleibt trocken." }
     },
-    gebaut: "Ihr tauscht {n} Sack gegen Holz und Seil und baut den Schaduf am Rand des mittleren Feldes.",
-    gelassen: "Ihr behaltet euer Getreide. Das mittlere Feld bleibt in diesem Jahr trocken."
+    gebaut: "Ihr baut den Schaduf am Rand des mittleren Feldes.",
+    gelassen: "Ihr spart eure Kraft. Das mittlere Feld bleibt in diesem Jahr trocken."
   },
   schaduf: {
     titel: "Jahr 2, Peret: Der Schaduf",
-    text: "Tippe den Schaduf an, um Wasser zu schöpfen. Jeder Eimer kostet Kraft.",
+    text: "Zieh das Seil nach unten und lass los: Das Gegengewicht hebt den Eimer, das Wasser fließt aufs Feld. Ab {h} Eimern kann das Feld gesät werden, mit {v} Eimern bringt es eine volle Ernte.",
+    plan: "Denk daran: Kraft, die ihr jetzt verbraucht, fehlt euch nach der Ernte in der Trockenzeit.",
     eimer: "Eimer: {n}",
-    halb: "Das mittlere Feld wird feucht. Es reicht für eine kleine Ernte.",
+    halb: "Das mittlere Feld ist feucht genug für eine kleine Ernte.",
     voll: "Das mittlere Feld ist gut bewässert. Mehr Wasser braucht es nicht.",
-    muede: "Eimer für Eimer – das ist harte Arbeit für die ganze Familie.",
+    muede: "Eimer für Eimer – harte Arbeit für die ganze Familie.",
     weiter: "Weiter zur Aussaat",
-    zuWenig: "Noch zu trocken zum Säen."
+    hint: "Zieh am Seil nach unten und lass los."
   },
   dorfWahl: {
     titel: "Jahr 2, Trockenzeit: Ins Dorf oder allein?",
     text: "Nach diesem schlechten Jahr treffen sich die Familien. Die Ältesten zeigen am Nilmesser eine alte Marke ganz oben: So hoch stand der Nil einmal, als er Häuser fortriss. Einige Familien wollen gemeinsam ein Dorf bauen – mit Deich und gemeinsamem Speicher. Was macht deine Familie?",
     optionen: {
-      dorf: { name: "Ins Dorf ziehen", text: "Ihr arbeitet am Deich mit und gebt {n} Sack in den gemeinsamen Speicher. Auch in guten Jahren gebt ihr einen Teil ab." },
-      allein: { name: "Allein auf dem Hof bleiben", text: "Ihr behaltet alles, was ihr erntet, für euch – und müsst euch auch allein helfen." }
+      dorf: { name: "Ins Dorf ziehen", text: "Ihr arbeitet am Deich mit: {d} Kraft. Dazu gebt ihr {n} Sack in den gemeinsamen Speicher. Fehlt euch Kraft, holt ihr die Arbeit im nächsten Jahr nach." },
+      allein: { name: "Allein auf dem Hof bleiben", text: "Ihr behaltet eure Kraft und euer Getreide. Euren Hof schützt nur ein eigener Erdwall – geschafft sind {w} von {e} Kraft." }
     },
-    nichtsDa: "Ihr habt kein Getreide mehr übrig. Statt Getreide gebt ihr mehr Arbeit am Deich.",
+    kraftInfo: "Ihr habt noch {k} Kraft übrig.",
     allein: "Ihr bleibt auf eurem Hof. Die Nachbarn bauen ihr Dorf ohne euch, weiter oben hinter einem Deich."
   },
   dorfbau: {
     titel: "Jahr 2: Ihr baut gemeinsam ein Dorf",
-    text: "Viele Familien packen mit an. Tippe auf die Knöpfe, um mitzubauen.",
     schritte: [
-      { knopf: "Den Deich aufschütten", text: "Viele Familien schleppen Erde und Schilf. Der Deich wächst." },
-      { knopf: "Häuser bauen", text: "Aus Nilschlamm und Stroh formen alle zusammen Lehmziegel. Die Häuser stehen hinter dem Deich." },
-      { knopf: "Den Dorfspeicher bauen", text: "Jede Familie gibt etwas Getreide. Im gemeinsamen Speicher liegt jetzt ein Vorrat für das ganze Dorf." }
+      { name: "Den Deich aufschütten", text: "Viele Familien schleppen Erde und Schilf. Euer Anteil: {n} Kraft.", hint: "Zieh Körbe mit Erde vom Haufen auf den Deich.", fertig: "Der Deich wächst." },
+      { name: "Häuser bauen", text: "Aus Nilschlamm und Stroh formen alle zusammen Lehmziegel. Die Häuser stehen hinter dem Deich.", knopf: "Mitbauen" },
+      { name: "Den Dorfspeicher füllen", text: "Jede Familie gibt etwas Getreide. Im gemeinsamen Speicher liegt jetzt ein Vorrat für das ganze Dorf.", knopf: "Getreide abgeben" }
     ],
+    fehlt: "Eure Kraft ist aufgebraucht. Die fehlenden {n} Kraft für den Deich holt ihr im nächsten Jahr nach.",
+    weiterBauen: "Weiter",
     fertig: "Allein hätte das Jahre gedauert. Gemeinsam war es in einer Trockenzeit geschafft.",
     weiter: "Weiter zu Jahr 3"
   },
-  vermessen: {
-    titel: "Jahr 3, Peret: Die Felder sind verschwunden",
-    text: "Das Wasser ist endlich gesunken. Aber die Flut hat die Grenzsteine zwischen den Feldern fortgespült. Wem gehört welches Feld? Im Dorf gibt es jemanden, der das ausmessen kann.",
-    knopf: "Den Landvermesser holen",
-    fertig: "Mit seinem Messseil misst der Landvermesser die Felder neu aus und setzt die Grenzsteine."
+  hausbau: {
+    titel: "Jahr 3: Ihr baut euer Haus wieder auf",
+    text: "Bevor ihr säen könnt, braucht ihr wieder ein Dach über dem Kopf. Das kostet {n} Kraft – Kraft, die euch auf den Feldern fehlt.",
+    hint: "Zieh Körbe mit Lehmziegeln zum Haus.",
+    fertig: "Das Haus steht wieder. Jetzt schnell auf die Felder!"
   },
   beruf: {
     titel: "Jahr 3, Trockenzeit: Neue Berufe im Dorf",
-    text: "Das Dorf hat einen Vorrat, und viele Arbeiten erledigen die Familien gemeinsam. Deshalb müssen nicht mehr alle auf dem Feld arbeiten. Das Dorf braucht Menschen für andere Aufgaben. Wer aus deiner Familie übernimmt einen neuen Beruf?",
+    text: "Das Dorf hat einen Vorrat, und viele Arbeiten erledigen die Familien gemeinsam. Deshalb müssen nicht mehr alle auf dem Feld arbeiten. Wer aus deiner Familie übernimmt einen neuen Beruf? Was er oder sie tut, merkt ihr im nächsten Jahr.",
     optionen: {
-      toepfer: { name: "Töpfer", text: "Das Dorf braucht viele Krüge, um Getreide, Wasser und Öl aufzubewahren." },
-      weberin: { name: "Weberin", text: "Aus Flachs vom Feld wird Leinen für Kleidung gewebt." },
-      landvermesser: { name: "Landvermesser", text: "Nach jeder Flut müssen die Felder neu ausgemessen werden." },
-      verwalter: { name: "Speicherverwalter", text: "Jemand muss das Getreide im Dorfspeicher messen, aufschreiben und gerecht ausgeben." }
+      toepfer: { name: "Töpfer", text: "Formt Krüge aus Nilschlamm. Die Krüge tauscht das Dorf bei Händlern gegen Getreide." },
+      weberin: { name: "Weberin", text: "Webt Leinen aus Flachs. Das Leinen tauscht das Dorf gegen Sicheln aus Kupfer." },
+      landvermesser: { name: "Landvermesser", text: "Misst nach jeder Flut die Felder neu aus und setzt die Grenzsteine. Dann gibt es keinen Streit mehr." },
+      verwalter: { name: "Speicherverwalter", text: "Misst das Getreide im Dorfspeicher, schreibt alles auf und gibt es gerecht aus. Dafür bekommt er Lohn aus dem Speicher." }
     },
-    ergebnis: "Jemand aus deiner Familie arbeitet jetzt als {name}. Dafür bekommt ihr Getreide aus dem Dorfspeicher. Eure Felder bestellen die anderen aus der Familie.",
-    weiter: "Zur Bilanz",
+    ergebnis: "Jemand aus deiner Familie arbeitet jetzt als {name}. Die anderen bestellen weiter eure Felder. Im nächsten Jahr zeigt sich, was das bringt.",
+    weiter: "Weiter zu Jahr 4",
     alleinTitel: "Jahr 3, Trockenzeit: Allein auf dem Hof",
     allein: "Im Dorf arbeiten jetzt ein Töpfer, eine Weberin, ein Landvermesser und ein Speicherverwalter. Sie bekommen Getreide aus dem Dorfspeicher. Deine Familie kann niemanden entbehren: Wer nicht auf dem Feld arbeitet, bekommt bei euch nichts zu essen."
   },
@@ -235,13 +305,31 @@ export const TEXT = {
 
 /* ---------- Bilanz ---------- */
 export const BILANZ = {
-  titel: "Drei Jahre am Nil",
+  titel: "Vier Jahre am Nil",
   rolle: "Deine Papyrusrolle",
-  vergleich: "Jahr 2 und Jahr 3 im Vergleich",
-  allein: "Jahr 2 – allein",
-  dorf: "Jahr 3 – im Dorf",
-  dorfAllein: "Jahr 3 – allein",
-  zeilen: ["Flut", "Schutz", "Ernte", "Hilfe von anderen", "Ergebnis"],
+  tabelle: "Deine vier Jahre",
+  zeilen: {
+    flut: "Flut",
+    ernte: "Ernte",
+    felder: "Kraft für die Felder",
+    schaduf: "Kraft für den Schaduf",
+    schutz: "Kraft für Deich, Erdwall, Haus",
+    koerbe: "Kraft für Körbe",
+    frei: "Kraft übrig",
+    hilfe: "Hilfe von anderen",
+    ergebnis: "Ergebnis",
+    vorrat: "Vorrat am Jahresende"
+  },
+  flut: { gut: "gut", niedrig: "zu niedrig", hoch: "zu hoch" },
+  vergleich: "Jahr 1 und Jahr 4: gleiche Flut",
+  vergleichDorf: "Durch den Beruf in deiner Familie kamen in Jahr 4 {n} Säcke mehr in euren Speicher. {grund}",
+  vergleichAllein: "Allein auf dem Hof war Jahr 4 wie Jahr 1. Im Dorf haben die Familien in diesem Jahr durch die Berufe mehr übrig.",
+  gruende: {
+    toepfer: "Die Krüge eures Töpfers wurden gegen Getreide getauscht.",
+    weberin: "Mit den Kupfersicheln (gegen Leinen getauscht) kostete die Ernte weniger Kraft. Die freie Kraft steckte deine Familie in Körbe.",
+    landvermesser: "Der Landvermesser hat die Grenzsteine gesetzt. Die gesparte Kraft steckte deine Familie in Körbe.",
+    verwalter: "Der Speicherverwalter bekam Lohn aus dem Dorfspeicher."
+  },
   entscheidungen: "Deine Entscheidungen",
   weiter: "Weiter zur Quelle"
 };
@@ -332,16 +420,20 @@ export const ALLERDINGS = [
 export const SPIELBELEGE = {
   schlamm: "nach der Flut fruchtbarer Schlamm auf den Feldern lag und dort Getreide wuchs",
   ernte1: "wir im normalen Jahr {n} Säcke geerntet haben – genug für ein ganzes Jahr",
+  kraft: "jede Arbeit auf dem Feld Kraft gekostet hat und unsere Kraft nicht für alles gereicht hat",
   niedrig: "in Jahr 2 die Flut zu niedrig war und Felder trocken blieben",
   hunger: "meine Familie in Jahr 2 hungern musste",
-  knapp: "in Jahr 2 unser ganzer Vorrat aufgebraucht wurde",
+  knapp: "in Jahr 2 die Ernte nicht gereicht hat und wir vom Vorrat leben mussten",
+  satt2: "wir in Jahr 2 nur mit dem Schaduf genug geerntet haben",
   schaduf: "wir in Jahr 2 mit dem Schaduf Eimer für Eimer Wasser schöpfen mussten",
   hoch: "in Jahr 3 die Flut zu hoch war und die Feldhütte fortriss",
   alleinZerstoert: "unser Hof in Jahr 3 vom Hochwasser zerstört wurde, weil wir allein geblieben sind",
+  alleinWall: "uns in Jahr 3 nur unser Erdwall vor dem Hochwasser geschützt hat",
   alleinHunger: "uns in Jahr 3 niemand geholfen hat, weil wir nicht im Dorf waren",
   dorfGeschuetzt: "das Dorf hinter dem Deich in Jahr 3 trocken geblieben ist",
   deich: "der Deich in Jahr 3 das Dorf vor dem Hochwasser geschützt hat",
-  speicher: "der Dorfspeicher in Jahr 3 alle Familien versorgt hat"
+  speicher: "der Dorfspeicher in Jahr 3 allen Familien geholfen hat, die zu wenig hatten",
+  beruf: "durch die Arbeitsteilung im Dorf in Jahr 4 mehr übrig blieb als in Jahr 1"
 };
 
 export const IMPULS = {
@@ -349,14 +441,16 @@ export const IMPULS = {
   text: "Dieses Spiel wurde heute gemacht. Es zeigt das alte Ägypten vereinfacht. Was war damals wohl anders als im Spiel?",
   zurueck: "Zurück zum Urteil",
   fragen: [
-    { frage: "Im Spiel entsteht das Dorf in einer einzigen Trockenzeit. Wie lange hat das wohl wirklich gedauert?",
-      hinweis: "Dörfer am Nil entstanden über viele Generationen. Das Spiel drängt diese lange Zeit in drei Jahre zusammen." },
+    { frage: "Im Spiel entstehen das Dorf und die Berufe in zwei Jahren. Wie lange hat das wohl wirklich gedauert?",
+      hinweis: "Dörfer und Berufe am Nil entstanden über viele Generationen. Das Spiel drängt diese lange Zeit in vier Jahre zusammen." },
     { frage: "Den Schaduf nutzten die Ägypter erst etwa ab 2000 v. Chr. – lange nach den ersten Dörfern. Warum zeigt ihn das Spiel trotzdem?",
       hinweis: "Spiele wählen aus und ordnen neu, damit man etwas erleben kann. Hier soll man spüren, wie viel Arbeit Bewässerung kostete." },
     { frage: "Wer bestimmte, wie viel Land eine Familie hatte?",
       hinweis: "Im Spiel hat deine Familie einfach drei Felder. Damals gehörte viel Land Tempeln, Beamten oder dem Pharao." },
     { frage: "Konnten die Menschen damals wissen, wie hoch die Flut wird?",
-      hinweis: "Sie beobachteten den Fluss, maßen den Wasserstand und verglichen ihn mit früheren Jahren – sicher wissen konnten sie es nicht." }
+      hinweis: "Sie beobachteten den Fluss, maßen den Wasserstand und verglichen ihn mit früheren Jahren – sicher wissen konnten sie es nicht." },
+    { frage: "Im Spiel hat deine Familie jedes Jahr genau 22 Kraft. Was ist an dieser Zahl ausgedacht?",
+      hinweis: "Die Zahl ist ausgedacht, damit man vergleichen kann. Wie viel eine Familie schaffte, hing von vielem ab: Wie viele Menschen mithalfen, ob jemand krank war, ob sie Rinder hatten." }
   ]
 };
 
@@ -375,5 +469,9 @@ export const BEGRIFFE = [
   ["Deich", "ein Damm aus Erde, der Häuser und Felder vor Hochwasser schützt"],
   ["Vorrat", "Getreide, das man für später speichert"],
   ["Überschuss", "was übrig bleibt, wenn alle satt sind"],
-  ["Arbeitsteilung", "nicht alle machen dasselbe: Manche bauen Getreide an, andere töpfern, weben oder vermessen Land"]
+  ["Arbeitskraft", "wie viel Arbeit eine Familie in einem Jahr schaffen kann; im Spiel kostet jede Arbeit Kraft"],
+  ["Grenzstein", "ein Stein am Rand eines Feldes; er zeigt, wo ein Feld aufhört und das nächste anfängt"],
+  ["Erdwall", "ein Wall aus aufgeschütteter Erde rund um einen Hof"],
+  ["Kupfer", "ein Metall; Sicheln aus Kupfer schneiden besser als Sicheln aus Feuerstein"],
+  ["Arbeitsteilung", "nicht alle machen dasselbe: Manche bauen Getreide an, andere töpfern, weben oder vermessen Land – und sie tauschen untereinander"]
 ];

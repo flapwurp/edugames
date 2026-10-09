@@ -113,18 +113,35 @@ function waterFront(level, kind, reach){
 export const K = 1.32;
 export const big = (svg, x, y, k = K) => `<g transform="translate(${x} ${y}) scale(${k}) translate(${-x} ${-y})">${svg}</g>`;
 
+/* Bereich eines Feldes (für Zeichnung und Gesten) */
+export function fieldRange(i){
+  const F = [G.f1, G.f2, G.f3][i];
+  return { x0: F.x0 + 6, x1: (i === 0 ? G.ditch.x0 : F.x1) - 4, y: F.y };
+}
+/* Lage des Grenzsteins am linken Feldrand */
+export function stonePos(i){
+  const F = [G.f1, G.f2, G.f3][i];
+  const x = F.x0 + 3;
+  return { x, y: groundY(x + 2) };
+}
+export function stoneSVG(x, y, state = "steht"){
+  if (state === "liegt") return `<path d="M${x - 4} ${y} L ${x - 4} ${y - 6} L ${x + 9} ${y - 6} L ${x + 10} ${y} Z" fill="${C.stone}" stroke="${C.ink}" stroke-width="1.4"/>`;
+  return `<path d="M${x - 5} ${y} L ${x - 4} ${y - 12} L ${x + 4} ${y - 12} L ${x + 5} ${y} Z" fill="${C.stone}" stroke="${C.ink}" stroke-width="1.4"/>`;
+}
+
+/* boundary: true | "steht" = Grenzstein steht · "liegt" = umgeworfen · false = fortgespült */
 function field(i, st, seed, level){
   const F = [G.f1, G.f2, G.f3][i];
-  const x0 = F.x0 + 6, x1 = (i === 0 ? G.ditch.x0 : F.x1) - 4;
+  const { x0, x1 } = fieldRange(i);
   if (!st) return "";
   if (F.y > level) st = { ...st, soil: "schlamm", plants: st.plants && st.plants !== "saat" ? st.plants : null };
   let s = "";
-  if (st.plants && st.plants !== "saat") s += A.fieldPlants(st.plants, x0, x1, F.y - 1, seed, 1.3);
+  if (st.plants && st.plants !== "saat") s += `<g class="plants-f${i}">${A.fieldPlants(st.plants, x0, x1, F.y - 1, seed, 1.3)}</g>`;
   s += A.fieldSoil(st.soil || "trocken", x0, x1, F.y, seed + 4);
   if (st.plants === "saat") s += A.fieldSoil("gesaet", x0, x1, F.y, seed + 4);
   if (st.boundary !== false){
-    const x = F.x0 + 3, y = groundY(x + 2);
-    s += `<path d="M${x - 5} ${y} L ${x - 4} ${y - 12} L ${x + 4} ${y - 12} L ${x + 5} ${y} Z" fill="${C.stone}" stroke="${C.ink}" stroke-width="1.4"/>`;
+    const p = stonePos(i);
+    s += `<g class="stone-f${i}">${stoneSVG(p.x, p.y, st.boundary === "liegt" ? "liegt" : "steht")}</g>`;
   }
   return s;
 }
@@ -137,8 +154,9 @@ function label(x, y, text, dx = 0, dy = -34){
     <text x="${(x + dx).toFixed(0)}" y="${ly + 18}" text-anchor="middle" class="tag-text">${text}</text></g>`;
 }
 
-const DIKE = { x0: 792, x1: 836, top: 226 };
-const SHADUF_X = 473;
+export const DIKE = { x0: 792, x1: 836, top: 226 };
+export const SHADUF_X = 473;
+export const WALL = { x: 826, top: 232 };   // fertiger Erdwall um den Hof
 
 /* Zustand (alles optional):
    sky: "achet" | "peret" | "schemu" | "dawn"
@@ -154,7 +172,9 @@ export function scene(st = {}){
   const dike = st.village && st.village.dike ? DIKE : null;
   const lvl = st.water ? st.water.level : LEVEL.normal;
   const kind = st.water ? st.water.kind || "nil" : "nil";
-  const reach = waterReach(lvl, dike && (st.village.stage ?? 1) >= 1 ? dike : null);
+  const wallDone = st.hof && st.hof.wall >= 1;
+  const barrier = dike && (st.village.stage ?? 1) >= 1 ? dike : wallDone ? { x0: WALL.x - 8, top: WALL.top } : null;
+  const reach = waterReach(lvl, barrier);
   const labels = new Set(st.labels || []);
   const site = G.site.y;
   let s = `<svg class="scene" viewBox="0 ${VIEW.y} ${W} ${VIEW.h}" role="img" aria-label="${st.alt || "Querschnitt durch das Niltal"}" xmlns="http://www.w3.org/2000/svg">`;
@@ -171,10 +191,10 @@ export function scene(st = {}){
   // Hof bzw. Dorf
   s += big(A.palm({ x: 1130, y: groundY(1130), h: 100, lean: -6 }), 1130, groundY(1130), 1.05);
   if (st.hof){
-    if (st.hof.wall) s += big(A.earthWall({ x: 826, y: site, w: 30, h: 15 }), 826, site);
+    if (st.hof.wall > 0) s += big(A.earthWall({ x: WALL.x, y: site, w: 30, h: 4 + 21 * Math.min(1, st.hof.wall) }), WALL.x, site);
     s += big(A.house({ x: 856, y: site, w: 80, h: 48, ruined: !!st.hof.ruined }), 856, site);
     s += big(A.granary({ x: 1000, y: site, w: 46, h: 60, fill: st.hof.fill ?? 0.3 }), 1000, site);
-    s += big(A.palm({ x: 1066, y: site, h: 92, lean: 8 }), 1066, site, 1.12);
+    if (!st.hof.noPalm) s += big(A.palm({ x: 1066, y: site, h: 92, lean: 8 }), 1066, site, 1.12);
   }
   if (st.hut || st.hutRuined) s += big(A.fieldHut({ x: 752, y: G.f3.y, ruined: !!st.hutRuined }), 752, G.f3.y);
   if (st.village){
@@ -189,7 +209,8 @@ export function scene(st = {}){
       if (k > 0.3) s += big(A.granary({ x: 1050, y: site, w: 44, h: 60 * k, fill: 0, ladder: false }), 1050, site);
     }
     if (dike){
-      const top = k >= 1 ? dike.top : G.f3.y - (G.f3.y - dike.top) * k;
+      const dk = v.dikeK ?? k;
+      const top = dk >= 1 ? dike.top : G.f3.y - (G.f3.y - dike.top) * dk;
       s += A.dike({ x0: dike.x0 - 26, x1: dike.x1 + 12, y: G.f3.y + 2, top });
     }
   }
@@ -199,8 +220,8 @@ export function scene(st = {}){
     const F = [G.f1, G.f2, G.f3][st.plow.field ?? 1];
     s += big(A.plowTeam({ x: st.plow.x ?? F.x0 + 130, y: F.y, scale: 1, n: st.plow.n ?? 0 }), st.plow.x ?? F.x0 + 130, F.y, 0.92);
   }
-  if (st.shaduf) s += big(A.shaduf({ x: SHADUF_X, y: G.f2.y, t: st.shaduf.t ?? 0, n: st.shaduf.n ?? 1, rope: 110 }), SHADUF_X, G.f2.y, 1.18);
-  for (const p of st.people || []) s += A.person({ x: p.x, y: groundY(p.x), pose: p.pose, n: p.n ?? 0, flip: p.flip, kind: p.kind, scale: p.scale ?? K });
+  if (st.shaduf) s += `<g class="shaduf-static">${big(A.shaduf({ x: SHADUF_X, y: G.f2.y, t: st.shaduf.t ?? 0, n: st.shaduf.n ?? 1, rope: 110 }), SHADUF_X, G.f2.y, 1.18)}</g>`;
+  for (const p of st.people || []) s += A.person({ x: p.x, y: p.y ?? groundY(p.x), pose: p.pose, n: p.n ?? 0, flip: p.flip, kind: p.kind, scale: p.scale ?? K });
   if (st.extra) s += st.extra;
   s += waterFront(lvl, kind, reach);
   if (st.front) s += st.front;
@@ -230,19 +251,28 @@ export function scene(st = {}){
 
 /* ---------- Tippflächen ---------- */
 
-/* Liefert unsichtbare Tippflächen (mit Hinweis-Rahmen) für Felder und Schaduf.
-   hot: [{ id: "f0" | "f1" | "f2" | "schaduf", label }] */
+/* Liefert unsichtbare Tippflächen (mit Hinweis-Rahmen).
+   hot: [{ id, label, act | g, done, rect: {x,y,w,h}, data: {…} }]
+   id "f0".."f2" = ganzes Feld, "schaduf" = Schaduf; sonst rect angeben.
+   g = Geste (siehe gesture.js), data = zusätzliche Angaben für die Geste */
 export function hotspots(hot = []){
   let s = "";
   for (const h of hot){
     let x, y, w, hh;
-    if (h.id[0] === "f"){
+    const data = { ...(h.data || {}) };
+    if (h.rect) ({ x, y, w, h: hh } = h.rect);
+    else if (h.id[0] === "f" && h.id.length === 2){
       const F = [G.f1, G.f2, G.f3][+h.id[1]];
+      const r = fieldRange(+h.id[1]);
       x = F.x0 + 2; w = (h.id === "f0" ? G.ditch.x0 : F.x1) - F.x0 - 4; y = F.y - 96; hh = 112;
+      Object.assign(data, { x0: r.x0, x1: r.x1, y: r.y });
     } else if (h.id === "schaduf"){
-      x = SHADUF_X - 130; y = G.f2.y - 190; w = 190; hh = 200;
+      x = SHADUF_X - 150; y = G.f2.y - 190; w = 210; hh = 200;
+      Object.assign(data, { sx: SHADUF_X, sy: G.f2.y });
     } else continue;
-    s += `<g class="hot${h.done ? " done" : ""}" data-act="${h.act || "tap"}" data-id="${h.id}" role="button" tabindex="0" aria-label="${h.label || ""}">
+    const attrs = Object.entries(data).map(([k, v]) => ` data-${k}="${v}"`).join("");
+    const act = h.g ? ` data-g="${h.g}"` : ` data-act="${h.act || "tap"}"`;
+    s += `<g class="hot${h.done ? " done" : ""}${h.g ? " gesture" : ""}"${act} data-id="${h.id}"${attrs} role="button" tabindex="0" aria-label="${h.label || ""}">
       <rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="14" class="hot-area"/>
       <rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${hh - 6}" rx="12" class="hot-ring"/></g>`;
   }

@@ -43,18 +43,27 @@ const STORY = [
   { year: 2, season: "schemu", month: 9, title: "Jahr 2, Schemu: Eine kleine Ernte",
     does: "Das obere Feld ist vertrocknet. Der Speicher wird leer, die Schalen der Familie bleiben halb leer.",
     st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("gepflueg", "reif"), F("gepflueg", "reif"), F("trocken", "verdorrt")], hof: { fill: 0.05, wall: true }, labels: ["speicher"], people: [fam(700, "stehen", 2), fam(728, "stehen", 3, { kind: true })] } },
-  { year: 2, season: "schemu", month: 11, title: "Jahr 2, Brache: Die Familien bauen gemeinsam ein Dorf",
-    does: "Antippen: Deich, Häuser und Dorfspeicher wachsen – viele Hände bauen mit. Am Nilmesser zeigt eine alte Marke, wie hoch der Nil einmal stand.",
+  { year: 2, season: "schemu", month: 11, title: "Jahr 2, Trockenzeit: Die Familien bauen gemeinsam ein Dorf",
+    does: "Körbe mit Erde auf den Deich ziehen (kostet Kraft), dann wachsen Häuser und Dorfspeicher – viele Hände bauen mit. Am Nilmesser zeigt eine alte Marke, wie hoch der Nil einmal stand.",
     st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("brache", "stoppel"), F("brache", "stoppel"), F("trocken", "verdorrt")], village: { stage: 0.6, dike: true }, oldMark: true, people: [fam(770, "bauen", 0), fam(880, "tragen", 4), fam(1000, "bauen", 5), fam(1090, "tragen", 2)] } },
   { year: 3, season: "achet", month: 4, title: "Jahr 3, Achet: Der Nil steigt zu hoch",
     does: "Das Wasser steht bis an die Deichkrone. Gestrichelt: So hoch stünde es ohne Deich im Dorf.",
     st: { sky: "achet", water: { level: LEVEL.hoch, kind: "flut" }, fields: all("brache"), village: { dike: true, fill: 0.55 }, ghost: LEVEL.hoch, hutRuined: true, labels: ["deich", "nilmesser"], nmLabels: true, people: [fam(1124, "stehen", 1)] } },
-  { year: 3, season: "peret", month: 7, title: "Jahr 3, Peret: Spät gesät – der Landvermesser misst neu",
-    does: "Die Flut hat die Grenzsteine weggespült. Das Wasser stand lange, die Saat kommt spät.",
-    st: { sky: "peret", water: { level: LEVEL.normal }, fields: [F("schlamm", null), F("gepflueg", "keim"), F("gepflueg", "keim")].map(x => ({ ...x, boundary: false })), village: { dike: true, fill: 0.55 }, hutRuined: true, extra: big(A.surveyor({ x: 420, y: GROUND.f2.y, n: 4 }), 420, GROUND.f2.y) } },
+  { year: 3, season: "peret", month: 6, title: "Jahr 3, Peret: Die Grenzen sind fort – Streit mit den Nachbarn",
+    does: "Die Flut hat die Grenzsteine weggespült. Die Familie zieht selbst das Messseil am Feld entlang (Geste), ein Nachbar streitet mit. Das kostet Kraft.",
+    st: { sky: "peret", water: { level: LEVEL.normal }, fields: [F("schlamm", null), F("schlamm", null), F("schlamm", null)].map(x => ({ ...x, boundary: false })), village: { dike: true, fill: 0.55 }, hutRuined: true,
+      extra: `<path d="M190 358 L 300 358" stroke="${A.C.goldDark}" stroke-width="3" stroke-dasharray="9 3"/>` + A.person({ x: 308, y: GROUND.f1.y, pose: "seil", n: 0, scale: 1.32 }), people: [fam(362, "winken", 4, { flip: true })] } },
   { year: 3, season: "schemu", month: 11, title: "Jahr 3, Schemu: Das Dorf versorgt alle – neue Berufe",
-    does: "Nahansicht des Dorfes. Entscheidung 2: Wer aus deiner Familie übernimmt einen neuen Beruf? Hier: Töpfer.",
-    view: "dorf", st: { fill: 0.4, mine: "toepfer", n: 0 } }
+    does: "Nahansicht des Dorfes. Wer aus deiner Familie übernimmt einen neuen Beruf? Was er bringt, zeigt sich in Jahr 4. Hier: Töpfer.",
+    view: "dorf", st: { fill: 0.4, mine: "toepfer", n: 0 } },
+  { year: 4, season: "peret", month: 5, title: "Jahr 4, Peret: Der Landvermesser hat schon ausgemessen",
+    does: "Gleiche Flut wie in Jahr 1. Wer einen Landvermesser in der Familie hat, findet die Grenzsteine schon gesetzt – das spart Kraft.",
+    st: { sky: "peret", water: { level: LEVEL.normal }, fields: all("schlamm"), village: { dike: true, fill: 0.55 }, hutRuined: true, extra: big(A.surveyor({ x: 420, y: GROUND.f2.y, n: 0 }), 420, GROUND.f2.y, 1.2) } },
+  { year: 4, season: "schemu", month: 10, title: "Jahr 4, Trockenzeit: Körbe flechten und tauschen",
+    does: "Übrige Kraft wird zu Körben (Zickzack-Geste), die Nachbarn tauschen sie gegen Getreide. Am Haufen: Erde für Deich oder Erdwall (ziehen).",
+    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), hof: { fill: 0.5, wall: 0.75 }, hutRuined: true,
+      extra: big(A.loadPile({ x: 548, y: GROUND.f2.y }), 548, GROUND.f2.y, 1.1) + big(A.weaveBasket({ x: 772, y: GROUND.f3.y, p: 0.5 }), 772, GROUND.f3.y, 1.5) + big(A.basketRow({ x: 630, y: GROUND.f3.y, n: 3 }), 630, GROUND.f3.y, 1.2),
+      people: [fam(738, "flechten", 3, { kind: true })] } }
 ];
 
 const SEASON = { achet: "Achet", peret: "Peret", schemu: "Schemu" };
@@ -86,13 +95,16 @@ function tile(svgInner, vb, title, wide = false){
 function parts(){
   let h = "";
   h += `<h3>Familie und Arbeit</h3><div class="tiles">`;
-  for (const [p, t] of [["stehen", "stehen"], ["gehen", "gehen"], ["hacken", "hacken"], ["saeen", "säen"], ["ernten", "ernten (Sichel)"], ["tragen", "tragen (Korb)"], ["bauen", "bauen (Lehmziegel)"], ["winken", "zeigen"]])
+  for (const [p, t] of [["stehen", "stehen"], ["gehen", "gehen"], ["hacken", "hacken"], ["saeen", "säen"], ["ernten", "ernten (Sichel)"], ["ernten2", "ernten (Kupfersichel)"], ["tragen", "tragen (Korb)"], ["bauen", "bauen (Lehmziegel)"], ["flechten", "Körbe flechten"], ["winken", "zeigen"]])
     h += tile(A.person({ x: 40, y: 92, pose: p, n: ["stehen", "hacken", "ernten", "bauen"].indexOf(p) >= 0 ? 0 : 2, scale: 1 }), "0 0 90 100", t);
   h += tile([0, 1, 2, 3].map(i => A.person({ x: 22 + i * 44, y: 92, pose: "stehen", n: i, kind: i === 3 })).join(""), "0 0 180 100", "die vier Familienmitglieder");
   h += `</div><h3>Feldarbeit</h3><div class="tiles">`;
   h += tile(A.fieldSoil("gepflueg", 0, 360, 110) + A.plowTeam({ x: 260, y: 110, scale: 1 }), "0 0 360 130", "Pflügen mit dem Rindergespann", true);
   h += tile(A.shaduf({ x: 150, y: 150, t: 0 }) + `<rect x="0" y="150" width="78" height="40" fill="${A.C.water}"/><path d="M0 150 L78 150 L78 190" fill="none" stroke="${A.C.ink}" stroke-width="2"/>`, "0 0 220 200", "Schaduf: Eimer unten");
   h += tile(A.shaduf({ x: 150, y: 150, t: 1 }) + `<rect x="0" y="160" width="78" height="30" fill="${A.C.water}"/>`, "0 0 220 200", "Schaduf: Eimer oben, gießt in den Trog");
+  h += tile([0, 0.5, 1].map((p, i) => A.weaveBasket({ x: 30 + i * 80, y: 60, p })).join(""), "0 0 250 70", "Korb flechten: Anfang · halb · fertig");
+  h += tile(A.loadPile({ x: 40, y: 60, kind: "erde" }) + A.loadPile({ x: 150, y: 60, kind: "ziegel" }), "0 0 210 70", "Haufen mit Erde und Lehmziegeln (zum Ziehen)");
+  h += tile(`<path d="M10 40 L 110 40" stroke="${A.C.ink}" stroke-width="2"/><path d="M20 40 L 21 28 L 29 28 L 30 40 Z" fill="${A.C.stone}" stroke="${A.C.ink}" stroke-width="1.4"/><path d="M70 40 L 70 34 L 83 34 L 84 40 Z" fill="${A.C.stone}" stroke="${A.C.ink}" stroke-width="1.4"/>`, "0 0 120 50", "Grenzstein steht · umgeworfen");
   h += `</div><h3>Getreide</h3><div class="tiles">`;
   const st = [["saat", "Saat"], ["keim", "Keim"], ["jung", "jung"], ["halm", "Halm"], ["aehre", "Ähre"], ["reif", "reif"], ["stoppel", "Stoppeln"], ["verdorrt", "vertrocknet"], ["verfault", "verfault"]];
   h += tile(st.map(([k], i) => `<g transform="translate(${30 + i * 58} 84) scale(2)">${A.plant(k, 0, 0, A.rand(i + 3))}</g><path d="M${8 + i * 58} 84 l 44 0" stroke="${A.C.ink}" stroke-width="2.4"/>` +
@@ -113,8 +125,9 @@ function parts(){
   h += `</div><h3>Berufe im Dorf</h3><div class="tiles">`;
   h += tile(A.potter({ x: 26, y: 90 }), "0 0 130 100", "Töpfer");
   h += tile(A.weaver({ x: 10, y: 92 }), "0 0 90 100", "Weberin");
-  h += tile(A.surveyor({ x: 26, y: 92 }), "0 0 140 100", "Landvermesser (Messseil)");
+  h += tile(A.surveyor({ x: 26, y: 92 }), "0 0 160 100", "Landvermesser: spannt das geknotete Messseil vom Pflock aus");
   h += tile(A.steward({ x: 26, y: 92 }), "0 0 110 100", "Speicherverwalter (Messgefäß)");
+  h += tile(A.linenBolt({ x: 30, y: 50 }) + A.copperSickles({ x: 80, y: 50 }), "0 0 130 60", "Tauschware: Leinen gegen Kupfersicheln");
   h += `</div><h3>Natur</h3><div class="tiles">`;
   h += tile(A.palm({ x: 60, y: 150, h: 120 }), "0 0 120 160", "Dattelpalme");
   h += tile(A.papyrus({ x: 50, y: 90, h: 70 }), "0 0 100 100", "Papyrus");
