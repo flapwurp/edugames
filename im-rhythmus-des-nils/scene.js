@@ -203,6 +203,7 @@ export function scene(st = {}){
   for (const p of st.people || []) s += A.person({ x: p.x, y: groundY(p.x), pose: p.pose, n: p.n ?? 0, flip: p.flip, kind: p.kind, scale: p.scale ?? K });
   if (st.extra) s += st.extra;
   s += waterFront(lvl, kind, reach);
+  if (st.front) s += st.front;
   if (st.nmLabels){
     const t = (y, txt, col) => `<text x="84" y="${y + 5}" class="nm-label" fill="${col}">${txt}</text>`;
     s += t(326, "zu wenig", "#a3461f") + t(286, "gut", "#2f6b1f") + t(254, "zu viel", "#a3461f");
@@ -222,6 +223,69 @@ export function scene(st = {}){
   if (labels.has("hof")) s += label(910, site - 70, "euer Hof", -40, -40);
   if (labels.has("felder")) s += label(278, G.f1.y, "Feld am Ufer", 0, -66) + label(498, G.f2.y, "mittleres Feld", 0, -66) + label(703, G.f3.y, "oberes Feld", 0, -66);
   if (labels.has("graben")) s += label(376, G.ditch.y - 24, "Graben", -60, -56);
+  if (st.hot) s += hotspots(st.hot);
+  s += `</svg>`;
+  return s;
+}
+
+/* ---------- Tippflächen ---------- */
+
+/* Liefert unsichtbare Tippflächen (mit Hinweis-Rahmen) für Felder und Schaduf.
+   hot: [{ id: "f0" | "f1" | "f2" | "schaduf", label }] */
+export function hotspots(hot = []){
+  let s = "";
+  for (const h of hot){
+    let x, y, w, hh;
+    if (h.id[0] === "f"){
+      const F = [G.f1, G.f2, G.f3][+h.id[1]];
+      x = F.x0 + 2; w = (h.id === "f0" ? G.ditch.x0 : F.x1) - F.x0 - 4; y = F.y - 96; hh = 112;
+    } else if (h.id === "schaduf"){
+      x = SHADUF_X - 130; y = G.f2.y - 190; w = 190; hh = 200;
+    } else continue;
+    s += `<g class="hot${h.done ? " done" : ""}" data-act="${h.act || "tap"}" data-id="${h.id}" role="button" tabindex="0" aria-label="${h.label || ""}">
+      <rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="14" class="hot-area"/>
+      <rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${hh - 6}" rx="12" class="hot-ring"/></g>`;
+  }
+  return s;
+}
+
+/* ---------- Dorf in der Nahansicht ---------- */
+
+/* jobs: welche Berufe zu sehen sind; mine: Beruf, den jemand aus der eigenen Familie übernimmt; n: Farbe der Familie */
+export function villageView({ sky = "schemu", fill = 0.5, jobs = ["toepfer", "weberin", "landvermesser", "verwalter"], mine = null, n = 0, labels = true, alt = "Das Dorf" } = {}){
+  const gy = 444;
+  let s = `<svg class="scene" viewBox="0 ${VIEW.y} ${W} ${VIEW.h}" role="img" aria-label="${alt}" xmlns="http://www.w3.org/2000/svg"><defs>${A.skyDefs()}</defs>`;
+  s += background(sky);
+  // Boden des Dorfplatzes, links der Deich und dahinter der Nil
+  s += `<rect x="0" y="${gy - 70}" width="70" height="200" fill="${C.water}"/><path d="M0 ${gy - 70} q 10 -4 20 0 t 20 0 t 20 0" stroke="${C.waterHi}" stroke-width="3" fill="none"/>`;
+  s += A.dike({ x0: 30, x1: 130, y: gy, top: gy - 92 });
+  s += `<path d="M120 ${gy} L ${W} ${gy} L ${W} ${H} L 0 ${H} L 0 ${gy + 40} L 40 ${gy} Z" fill="${C.sand}"/>`;
+  s += `<path d="M0 ${gy + 20} L ${W} ${gy + 20} L ${W} ${H} L 0 ${H} Z" fill="${C.sandDark}"/>`;
+  s += `<path d="M120 ${gy} L ${W} ${gy}" stroke="${C.ink}" stroke-width="2.4"/>`;
+  // Gebäude
+  s += big(A.house({ x: 150, y: gy, w: 78, h: 52, door: "left", seed: 21 }), 150, gy);
+  s += big(A.storeYard({ x: 290, y: gy, fill }), 290, gy, 1.15);
+  s += big(A.house({ x: 560, y: gy, w: 86, h: 56, seed: 22 }), 560, gy);
+  s += big(A.palm({ x: 740, y: gy, h: 100, lean: -6 }), 740, gy, 1.1);
+  s += big(A.house({ x: 860, y: gy, w: 76, h: 50, door: "left", seed: 23 }), 860, gy);
+  s += big(A.palm({ x: 1110, y: gy, h: 90, lean: 8, dates: false }), 1110, gy, 1.1);
+  // Berufe (vor den Gebäuden)
+  const nn = j => (mine === j ? n : { toepfer: 2, weberin: 3, landvermesser: 4, verwalter: 5 }[j]);
+  const pos = { verwalter: [330, gy + 26], toepfer: [560, gy + 26], weberin: [760, gy + 24], landvermesser: [920, gy + 30] };
+  if (jobs.includes("verwalter")) s += big(A.steward({ x: pos.verwalter[0], y: pos.verwalter[1], n: nn("verwalter") }), pos.verwalter[0], pos.verwalter[1]) +
+    A.person({ x: 470, y: pos.verwalter[1], pose: "tragen", n: 1, flip: true, scale: K });
+  if (jobs.includes("toepfer")) s += big(A.potter({ x: pos.toepfer[0], y: pos.toepfer[1], n: nn("toepfer") }), pos.toepfer[0], pos.toepfer[1]);
+  if (jobs.includes("weberin")) s += big(A.weaver({ x: pos.weberin[0], y: pos.weberin[1], n: nn("weberin") }), pos.weberin[0], pos.weberin[1]);
+  if (jobs.includes("landvermesser")) s += big(A.surveyor({ x: pos.landvermesser[0], y: pos.landvermesser[1], n: nn("landvermesser") }), pos.landvermesser[0], pos.landvermesser[1]);
+  if (labels){
+    const name = { verwalter: "Speicherverwalter", toepfer: "Töpfer", weberin: "Weberin", landvermesser: "Landvermesser" };
+    const at = { verwalter: [360, gy - 60], toepfer: [600, gy - 54], weberin: [780, gy - 66], landvermesser: [990, gy - 44] };
+    for (const j of jobs){
+      const [x, y] = at[j];
+      const t = mine === j ? `${name[j]} (deine Familie)` : name[j];
+      s += label(x, y, t, 0, -40).replace('fill="#fffaf0"', mine === j ? 'fill="#f6d77a"' : 'fill="#fffaf0"');
+    }
+  }
   s += `</svg>`;
   return s;
 }

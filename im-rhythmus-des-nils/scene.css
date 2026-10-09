@@ -27,3 +27,14 @@
 .scroll ol{margin:0;padding-left:1.3em;font-family:Georgia,"Times New Roman",serif;font-size:1rem;line-height:1.5}
 .scroll li{margin:4px 0}
 .scroll li.todo{color:#9b8053;list-style:none}
+
+/* Tippflächen in der Szene */
+.scene .hot{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scene .hot-area{fill:transparent}
+.scene .hot-ring{fill:rgba(255,236,170,.10);stroke:#f3c440;stroke-width:4;stroke-dasharray:14 9;animation:hotdash 1.2s linear infinite}
+.scene .hot:active .hot-ring{fill:rgba(255,236,170,.35)}
+.scene .hot.done .hot-ring{display:none}
+.scene .hot:focus-visible{outline:none}
+.scene .hot:focus-visible .hot-ring{stroke:#1f5f86}
+@keyframes hotdash{to{stroke-dashoffset:-23}}
+@media (prefers-reduced-motion:reduce){.scene .hot-ring{animation:none}}

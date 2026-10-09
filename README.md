@@ -11,7 +11,7 @@ Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicher
 |---|---|---|
 | [Who is it?](who-is-it/) | Kl. 5–7 | Personen beschreiben (has got, is wearing), Fragen stellen |
 | [Reactor Rescue](reactor-rescue/) | Kl. 8–9 | Bedienungsanleitung lesen, Konditionalsätze, präzise beschreiben und anweisen |
-| [Im Rhythmus des Nils](im-rhythmus-des-nils/) | Geschichte Kl. 6 | Einzelspiel: Nilflut, Bewässerung, Vorräte, Dorfgemeinschaft; Quellencheck und Urteil „Ein Geschenk des Nils?“ |
+| [Im Rhythmus des Nils](im-rhythmus-des-nils/) | Geschichte Kl. 6 | Einzelspiel (iPad quer): drei Jahre am Nil – Flut, Schlamm, Kalender, Schaduf, Deich, Vorräte, Berufe; Quellencheck und Urteil „Ein Geschenk des Nils?“ · [Grafik-Galerie](im-rhythmus-des-nils/galerie.html) · [Version 0.1](im-rhythmus-des-nils-v0.1/) |
 
 ## So funktioniert das Zusammenspiel ohne Server
 
@@ -26,7 +26,7 @@ Texte, Redemittel, Zeiten und Level stehen jeweils in `content.js`:
 
 - `who-is-it/content.js` – Level, Redemittel, Merkmale der Personen
 - `reactor-rescue/content.js` – Level, Zeiten, Redemittel, Glossar
-- `im-rhythmus-des-nils/content.js` – alle Texte, Ernte- und Vorratswerte, Quelle M3 (noch Platzhalter), Begriffe
+- `im-rhythmus-des-nils/content.js` – alle Texte, Zahlen (Ernte, Bedarf, Schaduf-Eimer, Dorfspeicher), Merksätze, Quelle M3 (noch Platzhalter), Begriffe
 
 Nur die Wörter zwischen den Anführungszeichen ändern, Kommas und Klammern stehen lassen.
 Die Regeln im Reactor-Handbuch stehen in `reactor-rescue/rules.js`, weil jeder Regeltext
@@ -39,7 +39,7 @@ index.html            Startseite
 shared/               gemeinsamer Code (Zufall aus dem Spielcode, Sitzung, Sync, Dialoge, Schriften)
 who-is-it/            app.js (Bildschirme) · people.js (Personen erzeugen/zeichnen) · content.js · style.css
 reactor-rescue/       app.js (Bildschirme) · rules.js (Reaktor + Regeln) · manual.js (Handbuch) · content.js · style.css
-im-rhythmus-des-nils/ app.js (Bildschirme) · sim.js (Flut, Ernte, Versorgung) · content.js · style.css
+im-rhythmus-des-nils/ app.js (Bildschirme) · sim.js (Ablauf, Ernte, Versorgung) · scene.js (Querschnitt) · assets.js (Zeichnungen) · galerie.html · content.js
 tests/                automatische Prüfungen (z. B. „jeder Reaktor ist lösbar“)
 ```
 

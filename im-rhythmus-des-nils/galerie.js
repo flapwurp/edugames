@@ -1,6 +1,6 @@
 /* Galerie zur Abnahme der Grafik: Storyboard + einzelne Bausteine */
 import * as A from "./assets.js";
-import { scene, LEVEL, GROUND, big } from "./scene.js";
+import { scene, villageView, LEVEL, GROUND, big } from "./scene.js";
 
 const F = (soil, plants) => ({ soil, plants });
 const all = (soil, plants) => [F(soil, plants), F(soil, plants), F(soil, plants)];
@@ -53,9 +53,8 @@ const STORY = [
     does: "Die Flut hat die Grenzsteine weggespült. Das Wasser stand lange, die Saat kommt spät.",
     st: { sky: "peret", water: { level: LEVEL.normal }, fields: [F("schlamm", null), F("gepflueg", "keim"), F("gepflueg", "keim")].map(x => ({ ...x, boundary: false })), village: { dike: true, fill: 0.55 }, hutRuined: true, extra: big(A.surveyor({ x: 420, y: GROUND.f2.y, n: 4 }), 420, GROUND.f2.y) } },
   { year: 3, season: "schemu", month: 11, title: "Jahr 3, Schemu: Das Dorf versorgt alle – neue Berufe",
-    does: "Der Dorfspeicher verteilt Getreide. Entscheidung 2: Wer aus deiner Familie übernimmt einen neuen Beruf?",
-    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), village: { dike: true, fill: 0.4 }, labels: ["dorfspeicher"],
-      extra: big(A.steward({ x: 960, y: GROUND.site.y, n: 5 }), 960, GROUND.site.y) + big(A.potter({ x: 640, y: GROUND.f3.y, n: 2 }), 640, GROUND.f3.y) + big(A.weaver({ x: 420, y: GROUND.f2.y, n: 3 }), 420, GROUND.f2.y) } }
+    does: "Nahansicht des Dorfes. Entscheidung 2: Wer aus deiner Familie übernimmt einen neuen Beruf? Hier: Töpfer.",
+    view: "dorf", st: { fill: 0.4, mine: "toepfer", n: 0 } }
 ];
 
 const SEASON = { achet: "Achet", peret: "Peret", schemu: "Schemu" };
@@ -74,7 +73,7 @@ function storyboard(){
     const known = x.year > 1 ? 3 : Math.floor(x.month / 4);
     return `<figure class="shot">
       <div class="shot-head"><span class="num">${i + 1}</span><span class="yr">Jahr ${x.year}</span>${calendar(x.month, known)}</div>
-      ${scene({ ...x.st, alt: x.title })}
+      ${x.view === "dorf" ? villageView({ ...x.st, alt: x.title }) : scene({ ...x.st, alt: x.title })}
       <figcaption><b>${x.title}</b><span>${x.does}</span></figcaption>
     </figure>`;
   }).join("");

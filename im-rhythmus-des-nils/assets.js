@@ -92,6 +92,8 @@ export function person({ x = 0, y = 0, pose = "stehen", n = 0, scale = 1, flip =
   s += limb(aB, skinBack, 5);
   s += `<circle cx="${f(aB[2][0])}" cy="${f(aB[2][1])}" r="3" fill="${skinBack}" ${stroke(1.4)}/>`;
   s += limb(foot(legB), skinBack, 6);
+  // vorderes Bein vor dem Schurz zeichnen, damit Schurz und Gürtel darüber liegen
+  s += limb(foot(legF), skin, 6);
   // Rumpf mit Leinengewand
   s += limb([hip, shoulder], C.linen, 14);
   // Rock / Schurz
@@ -106,8 +108,7 @@ export function person({ x = 0, y = 0, pose = "stehen", n = 0, scale = 1, flip =
   ];
   s += `<path d="M${skirt.map(pt).join(" L")} Z" fill="${C.linen}" ${stroke(1.6)}/>`;
   s += `<path d="M${pt(add(hem, [-Math.cos(sk * R) * (w1 - 3), Math.sin(sk * R) * (w1 - 3)]))} L${pt(add(hip, [0, 3]))}" stroke="${C.linenShade}" stroke-width="1.4" fill="none"/>`;
-  s += limb(foot(legF), skin, 6);
-  if (sash) s += `<path d="M${pt(add(hip, [-px[0] * 7, -px[1] * 7 - 1]))} L${pt(add(hip, [px[0] * 7, px[1] * 7 - 1]))}" stroke="${C.sash[n % C.sash.length]}" stroke-width="4" stroke-linecap="round"/>`;
+  if (sash) s += `<path d="M${pt(add(hip, [-px[0] * 6.5, -px[1] * 6.5 - 1]))} L${pt(add(hip, [px[0] * 6.5, px[1] * 6.5 - 1]))}" stroke="${C.sash[n % C.sash.length]}" stroke-width="4" stroke-linecap="round"/>`;
   // Hals + Kopf
   s += limb([shoulder, neck], skin, 5);
   s += headSVG(head, P.lean, skin, n);

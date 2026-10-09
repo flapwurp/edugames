@@ -1,6 +1,6 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
-**Stand:** Version 0.2 in Arbeit (Galerie und Storyboard zur Abnahme). Version 0.1 bleibt spielbar unter
+**Stand:** Version 0.2 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Version 0.1 bleibt spielbar unter
 `im-rhythmus-des-nils-v0.1/` (Branch `archiv/nil-v0.1`).
 
 **Fach / Gruppe:** Geschichte, Klasse 6 (Pilot: 6e) · **Sozialform:** Einzelarbeit, ein iPad pro Person
@@ -60,7 +60,7 @@ Papyrusrolle gesammelt (jederzeit aufrufbar, in der Bilanz vollständig). Die Ro
 Berufe werden immer mit dem Bedarf des Dorfes begründet (Töpfer: Vorratskrüge; Landvermesser: Feldgrenzen nach der Flut;
 Speicherverwalter: Getreide messen und ausgeben; Weberin: Leinen) – keine Gleichung „mehr Getreide = mehr Berufe“.
 
-## Ablauf (Entwurf, ca. 17–19 Min.)
+## Ablauf (umgesetzt in 0.2, Zielzeit 17–19 Min., noch nicht gemessen)
 1. **Start** (½ Min.): Leitfrage, die Familie, der Hof am Nil.
 2. **Jahr 1 – ein normales Jahr** (5–6 Min.), Monat für Monat:
    Sirius → Achet (4 Tipps, Wasser steigt bis über alle drei Felder, Hof bleibt trocken) →
@@ -92,7 +92,7 @@ Kürzen, falls zu lang: zuerst Peret in Jahr 1 auf 3 Tipps, nie die Quellenarbei
   **Keine Tastatureingabe:** Das Urteil wird im Heft formuliert.
 - **Dekonstruktion:** im Unterrichtsgespräch. Im Spiel nur ein Impuls für Schnelle mit Denkanstößen zum Aufklappen.
   Neu: „Im Spiel entsteht das Dorf in einem Jahr – wie lange hat das wirklich gedauert?“ und „Den Schaduf gab es in
-  Ägypten erst viel später als die ersten Dörfer (im Neuen Reich, ab etwa 1500 v. Chr.). Warum zeigt ihn das Spiel trotzdem?“ – Datierung vor Verwendung noch einmal prüfen.
+  Ägypten erst viel später als die ersten Dörfer (etwa ab 2000 v. Chr., Angabe Rob). Warum zeigt ihn das Spiel trotzdem?“
 - **Kalender:** Achet (Überschwemmung) · Peret (Aussaat und Wachstum) · **Schemu (Ernte und Trockenzeit)** – Ernte im
   ersten Monat von Schemu, danach Brache. Ägyptischer Name oben, deutsche Übersetzung direkt darunter.
 - **Schaduf bleibt** (Rob): zeigt die Innovation; als Gerät im Profil gezeichnet, bei der Arbeit animiert.
@@ -103,6 +103,15 @@ Kürzen, falls zu lang: zuerst Peret in Jahr 1 auf 3 Tipps, nie die Quellenarbei
 - **Grafik:** eigene SVGs, einheitlicher flächiger Stil, Querschnitt; Abnahme über `galerie.html`, bevor das Gameplay
   gebaut wird. Canva oder externe Bilder nur im Notfall (Rob).
 - **Pause** jederzeit; Zustand nur in `sessionStorage`.
+- **Querformat** (Rob): Das Spiel wird auf dem iPad quer gespielt. Oben Kalenderband, darunter die Szene, unten
+  Text links und Knöpfe, Vorrat und neue Merksätze rechts. Hochkant funktioniert es auch, mit Hinweis „quer halten“.
+- **Berufe** in einer eigenen Nahansicht des Dorfes (nicht auf den Feldern).
+- **Dorfgründung** ist gemeinsames Bauen, keine Entscheidung (Rob bestätigt) – so lernen alle dasselbe über Schutz und Vorräte.
+- **Schaduf-Datierung** im Denkanstoß: in Ägypten etwa ab 2000 v. Chr. (Angabe Rob).
+- **Zahlen 0.2** (`content.js`, `NUM`): Bedarf 10 Säcke/Jahr; Jahr 1: 3 × 4 = 12; Jahr 2: Uferfeld 3, mittleres Feld
+  mit Schaduf 2 (6 Eimer) bzw. 1 (3 Eimer), oberes 0; Krüge bringen 2 Säcke; Jahr 3: 3 × 2 (späte Aussaat),
+  Dorfspeicher 8. Folge: Jahr 2 reicht nur mit Krügen **und** vollem Schaduf gerade so (Vorrat danach leer), sonst
+  Hunger; Jahr 3 versorgt der Dorfspeicher alle. Getestet in `tests/im-rhythmus-des-nils.test.js`.
 
 ## Quelle M3 (Nilhymnus)
 Ägyptisches Lied über den Nil, 2. Jahrtausend v. Chr. Im Schulbuch nach Jan Assmann (1975) – **diese Übersetzung wird
@@ -136,7 +145,7 @@ Gefahr einer zu hohen Flut).
 | Händler, Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
 ## Offen
-- Abnahme der Galerie (Stil, Erkennbarkeit, Storyboard).
-- Dorfgründung als gemeinsames Bauen statt als Entscheidung – so lernen alle dasselbe; Rob bestätigt.
+- **Mehr echte Entscheidungen** (Robs Sorge nach 0.2: „Nacherzählen durch Klicken“). Idee Rob: Das Spiel kann verloren
+  werden, wenn nicht genug Nahrung da ist. Wird nach dem ersten Test nachgeschärft.
 - Übersetzung von M3 beschaffen und den Platzhalter ersetzen.
 - Werte nach dem ersten Test anpassen; Spieldauer messen.
