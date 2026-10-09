@@ -1,7 +1,29 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
-**Stand:** Version 0.2 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Version 0.1 bleibt spielbar unter
-`im-rhythmus-des-nils-v0.1/` (Branch `archiv/nil-v0.1`).
+**Stand:** Version 0.3 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
+`im-rhythmus-des-nils-v0.1/` und `im-rhythmus-des-nils-v0.2/` (Branches `archiv/nil-v0.1`, `archiv/nil-v0.2`).
+
+## Neu in 0.3 (Robs Rückmeldung zu 0.2)
+- **Mehr echte Entscheidungen**, alle als Karte mit zwei Möglichkeiten; Getreide ist die einzige mitlaufende Größe:
+
+| Wann | Entscheidung | Kosten | Folge |
+|---|---|---|---|
+| J1 Brache | Krüge tauschen (+3) oder Erdwall | Zeit | Krüge helfen in J2; Wall nur, wenn man in J3 allein bleibt (Haus bleibt stehen, Vorrat halb) |
+| J2 Peret | Schaduf bauen oder nicht | 1 Sack, dann Eimer schöpfen | mittleres Feld trägt (2 bei 6 Eimern, 1 bei 3) |
+| J2 Brache | Ins Dorf oder allein bleiben | Dorf: 1 Sack + Arbeit am Deich | J3: im Dorf hält der Deich, der Speicher hilft; allein: Hof/Vorrat zerstört, keine Hilfe |
+| J3 Brache | Neuer Beruf (nur im Dorf) | 1 Person weniger auf dem Feld | Arbeitsteilung; allein nicht möglich |
+
+- Die Dorfgründung ist damit doch eine Entscheidung (Rob, 9.10.: „genau so bauen“).
+- **Verlieren:** zwei Hungerjahre hintereinander → „Deine Familie muss den Hof verlassen“ mit Gründen; danach
+  „Noch einmal ab ‚Ins Dorf oder allein?‘“ oder trotzdem weiter zur Bilanz.
+- **Zahlen:** Start mit leerem Speicher; jede Änderung wird im Speicher sichtbar verbucht (letzte vier Buchungen).
+  Bedarf 10; J1 3 × 4; J2 Uferfeld 4, mittleres Feld 0/1/2; J3 3 × 2; Dorfspeicher hilft bis 8.
+  J2 reicht nur mit Krügen + Schaduf + 6 Eimern gerade so; sonst Hunger. Im Dorf hungert in J3 niemand, allein immer.
+- **Jahr 2, Achet** in vier Klicks: Die Familie wartet Monat für Monat, das Wasser bleibt unter der Marke.
+- **Familie mit Schalen:** vier Figuren mit je einer Schale, „Deine Familie: 4 Personen“.
+- **Kein Doppeltipp-Zoom** (Ursache des „Zoom-Effekts“ am Schaduf).
+- **Quellenarbeit:** Aussagen zufällig gemischt; per Ziehen oder Antippen an die passende Stelle im Lied bzw. in das
+  Feld „Steht nicht im Lied – das zeigt nur mein Spiel“. Falsche Zuordnung → Tipp, Karte bleibt liegen.
 
 **Fach / Gruppe:** Geschichte, Klasse 6 (Pilot: 6e) · **Sozialform:** Einzelarbeit, ein iPad pro Person
 **Leitfrage:** Das alte Ägypten – ein Geschenk des Nils?
@@ -145,7 +167,6 @@ Gefahr einer zu hohen Flut).
 | Händler, Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
 ## Offen
-- **Mehr echte Entscheidungen** (Robs Sorge nach 0.2: „Nacherzählen durch Klicken“). Idee Rob: Das Spiel kann verloren
-  werden, wenn nicht genug Nahrung da ist. Wird nach dem ersten Test nachgeschärft.
+- Entscheidungen und Verlieren (0.3) im Test mit der 6e prüfen: Wird anders entschieden, wird verloren, hilft die Wiederholung?
 - Übersetzung von M3 beschaffen und den Platzhalter ersetzen.
 - Werte nach dem ersten Test anpassen; Spieldauer messen.
