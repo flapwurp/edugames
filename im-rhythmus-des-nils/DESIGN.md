@@ -1,62 +1,114 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
+**Stand:** Version 0.2 in Arbeit (Galerie und Storyboard zur Abnahme). Version 0.1 bleibt spielbar unter
+`im-rhythmus-des-nils-v0.1/` (Branch `archiv/nil-v0.1`).
+
 **Fach / Gruppe:** Geschichte, Klasse 6 (Pilot: 6e) · **Sozialform:** Einzelarbeit, ein iPad pro Person
 **Leitfrage:** Das alte Ägypten – ein Geschenk des Nils?
 **Kompetenz:** SK – den Einfluss naturgegebener Voraussetzungen auf die Entstehung der Hochkultur Ägyptens erklären;
 UK3 – historisches Handeln unter Berücksichtigung von Handlungsspielräumen beurteilen; Quelle und eigene Erfahrung unterscheiden
-**Platz in der Reihe:** ersetzt Forum Geschichte 6, S. 44–45 („Das alte Ägypten – ein Geschenk des Nils?“). Was dort im
-Verfassertext steht, erfahren die SuS im Spiel selbst (siehe Abdeckung unten).
+**Platz in der Reihe:** ersetzt Forum Geschichte 6, S. 44–45 („Das alte Ägypten – ein Geschenk des Nils?“).
 **Dauer:** Ziel 15–18 Min., höchstens 20 Min. · Bedienoberfläche auf Deutsch
 
-Ausgangskonzept: Robs Projektinstruktionen „Im Rhythmus des Nils“ (Okt. 2026). Diese Datei hält fest, was davon gilt
-und was seither entschieden wurde.
+## Warum Version 0.2
+Robs Rückmeldung zu 0.1: Grafik zu abstrakt (Schaduf nur als Wort), Ablauf bis zur Quellenarbeit zu verschachtelt –
+die Kinder lösen ein Verteilungsrätsel (6 Felder, 4 Personen, 8 Orte) statt den Rhythmus des Nils zu erleben.
+Zeit ist nicht spürbar, Deutungen werden nicht gesichert, das Dorf ist Nebensache statt Antwort auf ein Problem.
+
+## Sachwissen am Ende (von Rob festgelegt)
+1. Der Nil steigt vier Monate lang deutlich an.
+2. Danach bleibt fruchtbarer Schlamm zurück; er wird untergepflügt, es wird gesät (vereinfacht: Getreide),
+   vier Monate später wird geerntet.
+3. Danach liegen die Felder vier Monate brach; man widmet sich anderen Aufgaben.
+4. Dieser Rhythmus führte zum Kalender: drei Jahreszeiten zu je vier Monaten.
+5. Die Flut war unsicher: zu stark → Zerstörung, zu schwach → Versorgungsprobleme.
+6. Als Antwort entstanden Dörfer: Schutz vor Überflutung; Vorräte anlegen und verteilen; daraus Arbeitsteilung
+   und neue Berufe.
 
 ## Spielprinzip
-Die SuS führen einen kleinen Bauernhof am Nil durch **zwei Jahre**. Jedes Jahr läuft im ägyptischen Kalender ab:
-Sirius erscheint → Überschwemmung → Aussaat und Wachstum → Ernte. Sie entscheiden, welche Felder sie bestellen,
-wo die Familie arbeitet, wohin die Ernte geht und ob sie Leute für die Gemeinschaftsarbeit des Dorfes schicken.
-Am Ende stehen eine Bilanz, ein Quellencheck mit M3 und ein Satzgeländer. Das Urteil schreiben die SuS ins Heft.
+Querschnitt durch das Niltal: links der Nil mit Nilmesser, nach rechts ansteigend drei Felder (Ufer, Mitte, oben),
+dann der Hof bzw. später das Dorf, dahinter die Wüste. Wasserstand, Schlamm, Pflanzen und Vorräte sind direkt sichtbar.
+Drei Jahre, drei Lernschritte:
 
-Struktur jeder Entscheidung: Entscheidung → sichtbare Folge auf der Spielfläche → kurze Deutung → Anpassung im nächsten Jahr.
+| Jahr | Flut | Lernschritt |
+|---|---|---|
+| 1 | normal | **Rhythmus** – Flut, Schlamm, Aussaat, Ernte, Brache; der Kalender entsteht |
+| 2 | **zu niedrig** | **Unsicherheit, allein** – Felder bleiben trocken, Schaduf als mühsame Hilfe, Hunger |
+| 3 | **zu hoch** | **Das Dorf als Antwort** – Deich hält, Speicher verteilt, neue Berufe |
+
+**Kein Zufall** (Rob, 9.10.): Alle Kinder spielen dieselbe Abfolge. Begründung der Reihenfolge: Jahr 2 zeigt die
+schleichende Gefahr (Hunger), die die Familie allein nicht auffangen kann; Jahr 3 zeigt die dramatische Gefahr
+(Zerstörung) – und dass das Dorf beides auffängt: Der Deich schützt vor dem Hochwasser, der Speicher gleicht die späte,
+kleine Ernte aus. So wird jede Antwort des Dorfes an einer erlebten Gefahr geprüft.
+
+## Merksätze (Papyrusrolle)
+Jeder Punkt des Sachwissens wird an einer festen Stelle erlebt; danach erscheint ein Merksatz und wird auf einer
+Papyrusrolle gesammelt (jederzeit aufrufbar, in der Bilanz vollständig). Die Rolle ersetzt verstreute Rückmeldungen.
+
+| Sachwissen | erlebt in | Merksatz (Entwurf) |
+|---|---|---|
+| 1 | J1 Achet: Monat für Monat steigt das Wasser am Nilmesser, ein Feld nach dem anderen verschwindet | „Vier Monate lang steigt der Nil und überschwemmt das Land.“ |
+| 2 | J1 Peret: Wasser sinkt, Schlamm glänzt; Pflügen (Ochsengespann), Säen, vier Wachstumsstufen, Ernte | „Zurück bleibt fruchtbarer Schlamm. Er wird untergepflügt und es wird gesät. Vier Monate später wird geerntet.“ |
+| 3 | J1 Schemu: Felder reißen auf; Entscheidung 1 (was tut die Familie jetzt?) | „Danach liegen die Felder brach. Die Menschen erledigen andere Arbeiten.“ |
+| 4 | Kalenderband: 12 leere Monatsfelder; jeder Block erhält seinen Namen, wenn er erlebt wurde; Sirius eröffnet das Jahr | „Nach diesem Rhythmus teilten die Ägypter ihr Jahr in drei Jahreszeiten zu je vier Monaten.“ |
+| 5a | J2: Pegel bleibt unter der Marke, obere Felder trocken | „Steigt der Nil zu wenig, bleiben Felder trocken. Dann droht Hunger.“ |
+| 5b | J3: Pegel steigt über die Marke | „Steigt der Nil zu hoch, zerstört das Wasser Häuser, Vorräte und Felder.“ |
+| 6a | J2 Brache: Dorfgründung, Deich wird gemeinsam gebaut; J3: Deich hält | „Gemeinsam bauen die Menschen Dörfer und Deiche und schützen sich vor dem Hochwasser.“ |
+| 6b | J3: Speicher versorgt alle Familien nach der späten Ernte | „Im Dorf werden Vorräte angelegt und verteilt.“ |
+| 6c | J3 Brache: Berufe | „Einige Menschen müssen nicht mehr auf dem Feld arbeiten. Es entstehen neue Berufe.“ |
+
+Berufe werden immer mit dem Bedarf des Dorfes begründet (Töpfer: Vorratskrüge; Landvermesser: Feldgrenzen nach der Flut;
+Speicherverwalter: Getreide messen und ausgeben; Weberin: Leinen) – keine Gleichung „mehr Getreide = mehr Berufe“.
+
+## Ablauf (Entwurf, ca. 17–19 Min.)
+1. **Start** (½ Min.): Leitfrage, die Familie, der Hof am Nil.
+2. **Jahr 1 – ein normales Jahr** (5–6 Min.), Monat für Monat:
+   Sirius → Achet (4 Tipps, Wasser steigt bis über alle drei Felder, Hof bleibt trocken) →
+   Peret (Wasser sinkt, Schlamm; Pflügen und Säen per Tipp; 4 Wachstumsstufen) →
+   Schemu (Ernte im 1. Monat, Säcke in den Kuppelspeicher am Hof; danach Brache).
+   **Entscheidung 1** (allein, Brache): Krüge töpfern und gegen Getreide tauschen (mehr Vorrat)
+   oder einen Erdwall um den Hof aufschütten (Schutz vor Hochwasser).
+3. **Jahr 2 – allein, Flut zu niedrig** (3–4 Min.), ein Tipp pro Jahreszeit:
+   Pegel bleibt tief, nur das Uferfeld wird überschwemmt. Ein Nachbar zeigt den **Schaduf** (Innovation): Mit ihm
+   heben die Kinder Eimer für Eimer Wasser aus dem Restwasser am Ufer auf das mittlere Feld – mühsam, aber es rettet
+   das Feld. Das obere Feld liegt zu hoch und vertrocknet. Kleine Ernte, Vorrat wird aufgebraucht, die Familie hungert;
+   den Nachbarn geht es genauso. Folge von Entscheidung 1: Tauschgetreide hilft; der Erdwall nützt in diesem Jahr nichts.
+   Brache: Die Familien schließen sich zusammen und **bauen gemeinsam** Deich, Kornspeicher und Häuser (antippen, die
+   Nachbarn bauen mit; „Allein hätte das Jahre gedauert“). Die Alten zeigen am Nilmesser die Marke einer großen Flut.
+4. **Jahr 3 – im Dorf, Flut zu hoch** (3 Min.):
+   Wasser steigt bis an die Deichkrone; gestrichelt ist zu sehen, wo es ohne Deich stünde. Was außerhalb lag
+   (Feldhütte, Schaduf, Grenzsteine) ist zerstört. Späte Aussaat, kleine Ernte, der Landvermesser misst die Felder neu
+   aus, der Speicher verteilt – niemand hungert. Ein Teil der Ernte geht wieder in den Speicher.
+   **Entscheidung 2** (Brache): Ein Familienmitglied übernimmt einen neuen Beruf (Töpfer, Weberin, Landvermesser,
+   Speicherverwalter); das Dorfbild zeigt die Folge.
+5. **Bilanz** (1 Min.): Papyrusrolle mit allen Merksätzen; Jahr 2 („allein“) und Jahr 3 („im Dorf“) nebeneinander.
+6. **Quellencheck M3, Satzgeländer, Denkanstoß** wie in 0.1; zusätzliche Aussage „Die Menschen schließen sich zu
+   Dörfern zusammen“ (steht nicht im Lied).
+
+Kürzen, falls zu lang: zuerst Peret in Jahr 1 auf 3 Tipps, nie die Quellenarbeit.
 
 ## Festgelegte Entscheidungen
-- **Reflexion im Spiel (Ausnahme von der Grundregel):** Bilanz, Quellencheck und Satzgeländer gehören hier ins Spiel.
-  **Keine Tastatureingabe:** Das Spiel liefert Bilanz und Satzgeländer; das Urteil wird im Heft formuliert.
-- **Dekonstruktion:** im Unterrichtsgespräch danach. Im Spiel nur ein Impuls für Schnelle auf dem letzten Bildschirm:
-  „Das Spiel ist eine Darstellung von heute. Was war damals wohl anders als im Spiel?“ mit 2–3 Denkanstößen zum
-  Aufklappen (z. B. „Wer bestimmte, wie viel Land eine Familie hatte?“), ohne Eingabefeld.
-- **Zwei Jahre.** Jahr 1: Flut für alle **„gut“**. Jahr 2: **begrenzter Zufall** – „zu niedrig“ oder „zu hoch“.
-  Jedes Kind erlebt ein Problem, aber nicht alle dasselbe (Anlass fürs Unterrichtsgespräch). Zufall über
-  `shared/random.js` aus einem Startcode, nicht `Math.random()`; der Code steht klein auf der Bilanz.
-- **Arbeitskraft = Familienmitglieder** (4 Figuren), die man Feldern, Graben oder Schaduf zuteilt – keine Punkte.
-- **Ressourcen:** Wasser/Wasserzugang, Arbeitskraft, Getreide. Getreide wird in Säcken angezeigt, ohne Kilo- oder
-  Mengenangaben, die Genauigkeit vortäuschen. Alle Werte stehen in `content.js` und sind vorläufig (Test).
-- **Kornspeicher in Phase 3:** Der Überschuss geht in den eigenen Vorrat oder in den Dorfspeicher.
-- **Phase 4 = Gemeinschaftsarbeit an Deich und Hauptkanal** (eine Entscheidung). Gegenoption „auf dem Hof bleiben“
-  (Flachs spinnen, Garn gegen 1 Sack Getreide tauschen): sicherer kleiner Nutzen für die eigene Familie gegen
-  Gemeinschaftsarbeit, deren Nutzen von der unbekannten nächsten Flut abhängt. (Ursprünglich „eigenen Graben
-  vorbereiten“ – verworfen, weil es bei vier Personen nie einen Vorteil brachte.) Berufe erscheinen als sichtbare Folge
-  im Dorfbild, nie als Zähler. Keine Gleichung „mehr Getreide = mehr Berufe“.
-- **Kein Staat, keine Abgaben** (gehört zu den Stationen „Pharao“ und „Schrift“; ggf. eigenes Nil-Schreiber-Spiel).
-- **Kalender und Sirius werden abgebildet:** Jahreszeitenleiste oben mit den ägyptischen Namen und der deutschen
-  Übersetzung direkt darunter: **Achet** (Überschwemmung) · **Peret** (Aussaat und Wachstum) · **Schemu** (Ernte);
-  jedes Jahr beginnt mit dem Sirius am Morgenhimmel.
-- **Kein Saatgut-Posten** bei der Ernteverteilung (bewusst vereinfacht).
+- **Reflexion im Spiel (Ausnahme von der Grundregel):** Bilanz, Quellencheck und Satzgeländer gehören ins Spiel.
+  **Keine Tastatureingabe:** Das Urteil wird im Heft formuliert.
+- **Dekonstruktion:** im Unterrichtsgespräch. Im Spiel nur ein Impuls für Schnelle mit Denkanstößen zum Aufklappen.
+  Neu: „Im Spiel entsteht das Dorf in einem Jahr – wie lange hat das wirklich gedauert?“ und „Den Schaduf gab es in
+  Ägypten erst viel später als die ersten Dörfer (im Neuen Reich, ab etwa 1500 v. Chr.). Warum zeigt ihn das Spiel trotzdem?“ – Datierung vor Verwendung noch einmal prüfen.
+- **Kalender:** Achet (Überschwemmung) · Peret (Aussaat und Wachstum) · **Schemu (Ernte und Trockenzeit)** – Ernte im
+  ersten Monat von Schemu, danach Brache. Ägyptischer Name oben, deutsche Übersetzung direkt darunter.
+- **Schaduf bleibt** (Rob): zeigt die Innovation; als Gerät im Profil gezeichnet, bei der Arbeit animiert.
+- **Getreide** als Füllstand im aufgeschnittenen Kuppelspeicher und als Schalen der Familie (voll / halb / leer),
+  kein Sackrechnen. Zahlen nur intern in `content.js`.
 - **Familie:** vier Figuren ohne feste Geschlechterrollen; alle arbeiten auf dem Feld.
-- **Kein endgültiges Scheitern.** Eine schlechte Ernte hat Folgen (Hunger, Hilfe aus dem Speicher), das Spiel geht weiter.
-- **Wortschatz von S. 45** (Wasserstand steigt/sinkt, Feld wird überschwemmt, Wasser schöpfen, pflügen/bewässern,
-  Aussaat, ernten, brach liegen, Vorräte speichern, Überschuss erwirtschaften) taucht in Rückmeldungen und im
-  Satzgeländer auf und ist jederzeit über „Begriffe“ erreichbar.
+- **Kein Staat, keine Abgaben.** Kein Saatgut-Posten. Kein endgültiges Scheitern.
+- **Grafik:** eigene SVGs, einheitlicher flächiger Stil, Querschnitt; Abnahme über `galerie.html`, bevor das Gameplay
+  gebaut wird. Canva oder externe Bilder nur im Notfall (Rob).
 - **Pause** jederzeit; Zustand nur in `sessionStorage`.
 
 ## Quelle M3 (Nilhymnus)
 Ägyptisches Lied über den Nil, 2. Jahrtausend v. Chr. Im Schulbuch nach Jan Assmann (1975) – **diese Übersetzung wird
 nicht verwendet** (urheberrechtlich geschützt, Repo ist öffentlich). Verwendet wird eine gemeinfreie oder offen lizenzierte
 Übersetzung (Erman 1923 oder Thesaurus Linguae Aegyptiae), Kürzungen mit […] gekennzeichnet, mit vollständiger Angabe.
-**Bis dahin steht in `content.js` ein deutlich markierter Platzhalter** (Inhalt der Blöcke nur sinngemäß beschrieben,
-kein Quellentext); das Spiel zeigt ihn als Platzhalter an.
-
-Auszüge (Zeilen nach der Schulbuchfassung):
+**Bis dahin steht in `content.js` ein deutlich markierter Platzhalter.**
 
 | Block | Z. | Funktion |
 |---|---|---|
@@ -66,61 +118,25 @@ Auszüge (Zeilen nach der Schulbuchfassung):
 | „kommt zu seiner Zeit“ | 10–11 | Regelmäßigkeit, Rhythmus |
 | „Man opfert dir … Komm nach Ägypten!“ | 15–17 | Perspektive: Gebet an einen Gott |
 
-Nicht verwendet: Fische/Zugvögel, „habgierig“; „Nasen verstopft“ wird gekürzt oder erklärt.
-
-Quellencheck – drei Fragen:
-- **Sagt die Quelle:** Der Nil gibt Leben und Nahrung, kommt regelmäßig; bleibt er aus, herrscht Not.
-- **Zeigt mein Spiel:** Ernte braucht Arbeit und Organisation (Graben, Schaduf, Deich, Speicher).
-- **Belegt die Quelle nicht:** die Arbeit der Menschen; die Gefahr einer zu hohen Flut.
-
-## Spielfläche
-Eine gemeinsame Karte (iPad hochkant): Nil am Rand, davor **Uferfelder** (2), **mittlere Felder** (2),
-**Randfelder** (2) zur Wüste hin; Bewässerungsgraben mit Schaduf, Hof, eigener Vorrat, Dorf mit Dorfspeicher und Deich.
-Wasser, Schlamm und Pflanzen verändern sich sichtbar. Oben die Jahreszeitenleiste, unten die Familienfiguren.
-
-Ertragsmodell (vorläufig): überschwemmt mit Schlamm = beste Ernte; nur bewässert = mittlere Ernte; bestellt, aber
-trocken = keine Ernte (die Arbeit war umsonst). Jedes bestellte Feld braucht 1 Person; Graben instand setzen bzw.
-Schaduf bedienen je 1 Person.
-Vorläufige Werte (`content.js`): Flut gut 4 Säcke, niedrig/hoch 3, nur bewässert 2; Bedarf der Familie 8 je Jahr;
-Dorfspeicher: Nachbarn geben 6, Handwerk braucht 3, der Rest hilft Familien in Not (je Familie höchstens die Hälfte).
-Hochwasser ohne Deich verdirbt die Hälfte des eigenen Vorrats; der Dorfspeicher liegt am Wüstenrand und bleibt trocken.
-Getestet (`tests/im-rhythmus-des-nils.test.js`): Jede Flut ist mit guter Planung ohne Hunger zu schaffen; wer in Jahr 2
-einfach wie in Jahr 1 sät, kommt bei beiden Fluten nicht auf den Bedarf.
-
-| Flut | Uferfelder | mittlere Felder | Randfelder |
-|---|---|---|---|
-| gut (Jahr 1) | überschwemmt | überschwemmt | trocken – nur über Graben |
-| zu niedrig | überschwemmt | trocken – über Graben/Schaduf, mit Hauptkanal leichter | trocken – nur mit Hauptkanal |
-| zu hoch | zu lange unter Wasser, Hof bedroht – ohne Deich späte Aussaat, schwächere Ernte | überschwemmt | überschwemmt |
-
-## Ablauf und Interaktionen
-
-| # | Phase | Entscheidung | Bedingungen | Folge im Spiel | Historischer Zusammenhang | Rückmeldung (Beispiel) | Beitrag zur Leitfrage |
-|---|---|---|---|---|---|---|---|
-| 0 | Sirius (Jahr 1) | – (antippen) | – | Sirius erscheint, Kalender startet, Wasser steigt | Ägypter richteten den Kalender nach Flut und Sirius aus | „Wenn der Sirius vor Sonnenaufgang erscheint, kommt bald die Flut.“ | Natur: Rhythmus |
-| 1 | Die Nilflut kommt (2–3 Min.) | Probefelder: an einem Uferfeld und einem Randfeld je säen | Lage zum Fluss | Wasser sinkt, Uferfeld schwarz von Schlamm und grün; Randfeld vertrocknet | Flut bringt Wasser und Schlamm, aber nicht überall hin | „Am Fluss blieb fruchtbarer Schlamm liegen. Weiter weg kam kein Wasser an.“ | Natur |
-| 2 | Wasser auf die Felder, Jahr 1 (3–4 Min.) | Felder wählen, 4 Familienmitglieder auf Felder / Graben / Schaduf verteilen | 4 Personen, Flut „gut“ | Felder wachsen sichtbar oder vertrocknen | Ernte braucht Wasser **und** Arbeit | erst nach dem Wachstum, z. B. „Du hast mehr Felder bestellt, aber niemand hat das Wasser dorthin gebracht.“ | Arbeit |
-| 3 | Ernten, lagern, versorgen (3 Min.) | Überschuss nach der Versorgung der Familie: eigener Vorrat oder Dorfspeicher | Ernte aus #2 | Säcke wandern in Vorrat bzw. Dorfspeicher; im Dorf sind Weberin, Töpfer, Landvermesser zu sehen, die selbst kein Getreide anbauen | Überschüsse ermöglichen Vorräte und Arbeitsteilung | „Die Weberin baut kein Getreide an. Sie lebt vom Speicher und stellt Leinen her.“ | Gesellschaft |
-| 4 | Ein Dorf am Nil (2–3 Min.) | 2 Familienmitglieder einteilen: Deich ausbessern, Hauptkanal vertiefen (je für das ganze Dorf) oder auf dem Hof bleiben (Flachs spinnen, gegen je 1 Sack tauschen) | Familie, Ruf des Dorfes, unbekannte nächste Flut | Deich / Kanal wird nur mit deiner Hilfe fertig; Hof bringt sicher, aber wenig | Deiche und Kanäle baute die Dorfgemeinschaft gemeinsam | „Mit deiner Hilfe reicht es: Der Hauptkanal führt jetzt weiter ins Land.“ | Gesellschaft, Arbeit |
-| 5 | Jahr 2 (3–4 Min.) | wie #2, mit Wissen aus Jahr 1 | zufällige Flut (niedrig/hoch), Deich/Kanal aus #4, Graben | Folgen der Flut; Landvermesser setzt nach der Flut die Feldgrenzen neu; Versorgung: Ernte + Vorrat + ggf. Hilfe aus dem Dorfspeicher | Abhängigkeit von der Flut; Vorräte und Gemeinschaft fangen schlechte Jahre auf | „Die Flut war zu niedrig. Der Kanal brachte trotzdem Wasser zu den mittleren Feldern.“ | Natur, Arbeit, Gesellschaft |
-| 6 | Bilanz (1 Min.) | – | eigene Ereignisse | Belegkarten in drei Spalten: Natur · Arbeit · Gesellschaft | – | – | Material für das Urteil |
-| 7 | Quellencheck M3 (2 Min.) | Aussagen in „sagt die Quelle / zeigt mein Spiel / sagt die Quelle nicht“ einordnen | Auszug M3, eigene Belegkarten | Rückmeldung mit Begründung, keine Punkte | Quelle zeigt eine Perspektive (Gebet), keine vollständige Beschreibung | „Im Lied kommt die Arbeit der Bauern nicht vor. Warum wohl?“ | Quellenbeleg |
-| 8 | Satzgeländer (1–2 Min.) | je einen Spielbeleg, Quellenbeleg und ein „Allerdings“ antippen | Belegkarten, M3 | Satzgeländer mit gewählten Stichpunkten: „Der Nil war ein Geschenk, weil … Das zeigt sich daran, dass … Allerdings …“ | begründetes Urteil | – | Urteil ins Heft |
-| 9 | Impuls für Schnelle | Denkanstöße aufklappen | – | – | Spiel als Darstellung | – | Vorbereitung Unterrichtsgespräch |
+Quellencheck: **Sagt die Quelle** (Leben, Nahrung, Regelmäßigkeit, Not bei schwacher Flut) ·
+**Zeigt mein Spiel** (Arbeit, Schaduf, Deich, Speicher, Dorf) · **Belegt die Quelle nicht** (Arbeit der Menschen,
+Gefahr einer zu hohen Flut).
 
 ## Abdeckung des Verfassertexts S. 44–45
 | Inhalt im Buch | im Spiel |
 |---|---|
-| Nilschwemme, Schlamm, fruchtbares Land | #1, #2 |
-| Anbau, Land liegt brach | #2 (unbestellte Felder liegen brach) |
-| Kalender, Sirius | #0, Jahreszeitenleiste |
-| Flut zu hoch / zu niedrig, Hungersnot | #5 |
-| Deiche, Dämme, Kanäle als Gemeinschaftsarbeit | #4 |
-| Schaduf (M2) | #2, #5 |
-| Vorräte in Speichern für schlechte Jahre | #3, #5 |
-| Arbeitsteilung, Handwerk, Landvermesser | #3, #5 (Dorfbild) |
+| Nilschwemme, Schlamm, fruchtbares Land | J1 Achet/Peret |
+| Anbau, Land liegt brach | J1 Peret/Schemu |
+| Kalender, Sirius | Kalenderband, Sirius zu Jahresbeginn |
+| Flut zu hoch / zu niedrig, Hungersnot | J2, J3 |
+| Deiche, Dämme als Gemeinschaftsarbeit | J2 Brache, J3 |
+| Schaduf (M2) | J2 |
+| Vorräte in Speichern für schlechte Jahre | J1–J3 |
+| Arbeitsteilung, Handwerk, Landvermesser | J3 |
 | Händler, Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
-## Offen / geplant
-- Übersetzung von M3 beschaffen, gegen die Schulbuchfassung abgleichen und den Platzhalter ersetzen.
-- Werte im Ertragsmodell nach dem ersten Test anpassen; tatsächliche Spieldauer messen.
+## Offen
+- Abnahme der Galerie (Stil, Erkennbarkeit, Storyboard).
+- Dorfgründung als gemeinsames Bauen statt als Entscheidung – so lernen alle dasselbe; Rob bestätigt.
+- Übersetzung von M3 beschaffen und den Platzhalter ersetzen.
+- Werte nach dem ersten Test anpassen; Spieldauer messen.

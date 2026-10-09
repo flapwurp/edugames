@@ -1,0 +1,29 @@
+/* Gemeinsame Gestaltung für Szene, Kalender und Papyrusrolle (Spiel und Galerie) */
+.scene{display:block;width:100%;height:auto}
+.scene .tag-text{font:700 15px "Atkinson Hyperlegible",system-ui,sans-serif;fill:#3b2718}
+.scene .nm-label{font:700 15px "Atkinson Hyperlegible",system-ui,sans-serif;paint-order:stroke;stroke:#fffaf0;stroke-width:4px}
+.scene .ghost-text{font:700 16px "Atkinson Hyperlegible",system-ui,sans-serif;fill:#2b6b87;paint-order:stroke;stroke:#fffaf0;stroke-width:4px}
+
+/* Kalenderband: 3 Jahreszeiten × 4 Monate */
+.cal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:min(100%,420px)}
+.cal .season{background:rgba(255,255,255,.08);border:1.5px solid rgba(246,234,209,.35);border-radius:8px;padding:4px 6px 3px;text-align:center;color:#f6ead1}
+.cal .season.on{background:#e3b23c;border-color:#e3b23c;color:#2b2014}
+.cal .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:3px}
+.cal .m{height:7px;border-radius:2px;background:rgba(246,234,209,.25)}
+.cal .m.past{background:rgba(246,234,209,.7)}
+.cal .season.on .m{background:rgba(43,32,20,.22)}
+.cal .season.on .m.past{background:#2b2014}
+.cal .m.now{background:#fff;box-shadow:0 0 0 2px #2b2014 inset}
+.cal b{display:block;font-size:.95rem;line-height:1.1;letter-spacing:.02em}
+.cal b.unknown{opacity:.6}
+.cal small{display:block;font-size:.72rem;line-height:1.15}
+.pad .cal{background:#3a2a1b;border-radius:10px;padding:8px}
+
+/* Papyrusrolle */
+.scroll{position:relative;background:#ecdcb0;background-image:repeating-linear-gradient(90deg,rgba(150,120,60,.10) 0 2px,transparent 2px 9px),repeating-linear-gradient(0deg,rgba(150,120,60,.08) 0 2px,transparent 2px 11px);border-left:2px solid #b89a5e;border-right:2px solid #b89a5e;padding:14px 18px;margin:0 10px;color:#3b2718}
+.scroll .rod{position:absolute;top:-8px;bottom:-8px;width:14px;border-radius:7px;background:linear-gradient(90deg,#8a6a3a,#c9a565,#8a6a3a);border:1.5px solid #3b2718}
+.scroll .rod:first-child{left:-14px}
+.scroll .rod:last-child{right:-14px}
+.scroll ol{margin:0;padding-left:1.3em;font-family:Georgia,"Times New Roman",serif;font-size:1rem;line-height:1.5}
+.scroll li{margin:4px 0}
+.scroll li.todo{color:#9b8053;list-style:none}
