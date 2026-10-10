@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nil-Galerie</title>
+<link rel="stylesheet" href="../shared/fonts.css">
+<link rel="stylesheet" href="scene.css">
+<style>
+:root{--paper:#f1e6cf;--card:#fbf5e8;--ink:#3b2718;--muted:#7a5f45;--line:#d9c6a2;--nile:#2b6b87;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.5}
+header{padding:28px 16px 8px;max-width:1100px;margin:0 auto}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(30px,6vw,46px);margin:0 0 6px}
+header p{max-width:62ch;margin:6px 0;color:var(--muted)}
+h2{font-family:Georgia,serif;font-weight:400;font-size:1.7rem;margin:34px 0 4px}
+h2 + p{margin:0 0 14px;color:var(--muted);max-width:62ch}
+h3{margin:22px 0 8px;font-size:1.05rem}
+main{max-width:1100px;margin:0 auto;padding:0 16px 60px}
+.shot{margin:0 0 26px;background:var(--card);border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.shot-head{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#3a2a1b;color:#f6ead1;flex-wrap:wrap}
+.shot-head .num{font-family:Georgia,serif;font-size:1.3rem;min-width:1.6em;text-align:center}
+.shot-head .yr{font-weight:700;margin-right:auto}
+.shot figcaption{padding:10px 14px 14px}
+.shot figcaption b{display:block;font-size:1.08rem}
+.shot figcaption span{color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.tile{margin:0;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;justify-content:space-between}
+.tile.wide{grid-column:span 2}
+.tile.full{grid-column:1/-1}
+.tile.full svg{max-height:200px}
+.tile svg{width:100%;height:auto;max-height:240px}
+.tile figcaption{font-size:.9rem;color:var(--muted);margin-top:6px}
+.mini{font-size:12px;fill:var(--muted)}
+.ui-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:12px}
+.pad{padding:8px 0}
+.bowls{display:flex;gap:10px;align-items:flex-end}
+@media (max-width:560px){.tile.wide{grid-column:span 1}}
+</style>
+<script type="module" src="galerie.js"></script>
+</head>
+<body>
+<header>
+  <h1>Im Rhythmus des Nils – Grafik</h1>
+  <p>Zur Abnahme. Oben das Storyboard der drei Jahre im Querschnitt, darunter alle Bausteine einzeln. Noch keine Spiellogik: Hier geht es um Stil, Erkennbarkeit und den Ablauf.</p>
+</header>
+<main>
+  <h2>Storyboard</h2>
+  <p>Die wichtigsten Momente in der Reihenfolge des Spiels. Oben jeweils das Kalenderband: Eine Jahreszeit bekommt ihren Namen erst, wenn sie einmal erlebt wurde.</p>
+  <div id="story"></div>
+  <h2>Bausteine</h2>
+  <p>Alle Zeichnungen einzeln, in allen Zuständen, die das Spiel braucht.</p>
+  <div id="parts"></div>
+  <h2>Oberfläche</h2>
+  <p>Kalenderband, Papyrusrolle für die Merksätze und Symbole für die Versorgung.</p>
+  <div id="ui"></div>
+</main>
+</body>
+</html>
