@@ -1,4 +1,4 @@
-/* Im Rhythmus des Nils 0.5 – alle Texte und Zahlen.
+/* Im Rhythmus des Nils 0.6 – alle Texte und Zahlen.
    Hier darf geändert werden: nur die Wörter zwischen den Anführungszeichen und die Zahlen.
    Kommas, Klammern und Namen links vom Doppelpunkt bitte stehen lassen.
    {n}, {name} usw. sind Platzhalter, die das Spiel selbst ausfüllt. */
@@ -31,6 +31,8 @@ export const NUM = {
     korb: 3,             //   einen Korb flechten
     deichAusbessern: 2   //   Deich nach dem Hochwasser ausbessern
   },
+  hungerSchwaeche: 2,    // so viel weniger Arbeitskraft im nächsten Jahr je Sack, der gefehlt hat
+  hofVerlassen: 4,       // fehlen in Jahr 2 so viele Säcke (oder mehr), muss die Familie den Hof verlassen
   korbTausch: 1,         // Säcke Getreide für einen Korb (nicht nach der schlechten Flut in Jahr 2)
   toepferTausch: 3,      // Säcke für die Krüge des Töpfers (Jahr 4)
   verwalterLohn: 3       // Säcke Lohn für den Speicherverwalter (Jahr 4)
@@ -71,7 +73,8 @@ export const UI = {
   vorrat: "Euer Speicher",
   familie: "Deine Familie: 4 Personen",
   kraft: "Arbeitskraft deiner Familie",
-  kraftErnte: "Der markierte Teil ist für die Ernte.",
+  kraftErnte: "Der schraffierte Teil ist für die Ernte.",
+  kraftSchwach: "Der Hunger im letzten Jahr hat deine Familie geschwächt. Ihre Arbeitskraft ist kleiner als sonst.",
   kraftWenig: "Nur noch wenig Arbeitskraft übrig.",
   kraftLeer: "Die Arbeitskraft für dieses Jahr ist aufgebraucht.",
   kraftNeu: "Während der Flut ruht die Feldarbeit. Deine Familie hat sich erholt – die Arbeitskraft ist wieder voll.",
@@ -194,7 +197,7 @@ export const TEXT = {
     titel: { 1: "Schemu: Die Felder liegen brach", 3: "Jahr 3, Trockenzeit", 4: "Jahr 4, Trockenzeit" },
     text: "Die Felder sind abgeerntet. Bis zur nächsten Flut wächst hier nichts. Was macht deine Familie mit der übrigen Arbeitskraft?",
     arbeiten: {
-      ausbessern: { name: "Den Deich ausbessern", text: "Das Hochwasser hat am Deich gerissen. Jede Familie hilft beim Ausbessern – das geht vor.", hint: "Zieh einen Korb mit Erde vom Haufen auf den Deich.", fertig: "Der Deich ist wieder dicht." },
+      ausbessern: { name: "Den Deich ausbessern", text: "Das Hochwasser hat am Deich gerissen. Jede Familie hilft beim Ausbessern – das geht vor.", hint: "Zieh einen Korb mit Erde vom Haufen auf den Deich.", fertig: "Der Deich ist wieder dicht.", nachbarn: "Eure Arbeitskraft ist aufgebraucht. Die Nachbarn bessern den Deich für euch mit aus." },
       koerbe:     { name: "Körbe flechten und tauschen", text: "Aus Schilf vom Nilufer flechtet ihr Körbe. Die Nachbarn geben euch für jeden Korb {n} Sack Getreide.", hint: "Wische im Zickzack über den Korb." }
     },
     pflichtZuerst: "Zuerst die Arbeit am Deich – das Dorf verlässt sich auf euch.",
@@ -249,6 +252,18 @@ export const TEXT = {
     keinBeitrag: "Ihr habt kein Getreide übrig. Familien mit mehr Vorrat geben mehr.",
     fertig: "Allein hätte das Jahre gedauert. Gemeinsam war es in einer Trockenzeit geschafft.",
     weiter: "Weiter zu Jahr 3"
+  },
+  verloren: {
+    titel: "Deine Familie muss den Hof verlassen",
+    text: "Es fehlte so viel Getreide, dass deine Familie nicht bis zur nächsten Ernte durchhalten kann. Sie gibt den Hof auf und zieht zu Verwandten.",
+    gruende: "Wie es dazu kam:",
+    flut: "Die Flut in Jahr 2 war zu niedrig. Es fehlten {n} Säcke.",
+    koerbe: "In der Trockenzeit von Jahr 1 habt ihr nur {n} Körbe geflochten und getauscht. Euer Vorrat war klein.",
+    keineKoerbe: "In der Trockenzeit von Jahr 1 habt ihr keine Körbe geflochten und getauscht. Ihr hattet kaum Vorrat.",
+    schaduf: "Ihr habt keinen Schaduf gebaut. Das mittlere Feld blieb trocken.",
+    eimer: "Mit dem Schaduf habt ihr nur wenig Wasser geschöpft.",
+    nochmal: "Noch einmal ab der Trockenzeit in Jahr 1",
+    versuch: "Neuer Versuch: Du bist wieder in der Trockenzeit nach der ersten Ernte."
   },
   beruf: {
     titel: "Jahr 4, Achet: Die Familien beraten",

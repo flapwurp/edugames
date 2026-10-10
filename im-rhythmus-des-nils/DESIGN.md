@@ -1,9 +1,24 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
-**Stand:** Version 0.5 spielbar (10.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
-`im-rhythmus-des-nils-v0.1/` bis `-v0.4/` (Branches `archiv/nil-v0.1` bis `archiv/nil-v0.4`).
+**Stand:** Version 0.6 spielbar (10.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
+`im-rhythmus-des-nils-v0.1/` bis `-v0.5/` (Branches `archiv/nil-v0.1` bis `archiv/nil-v0.5`).
 
-## Neu in 0.5 (Robs Entscheidungen vom 10.10.2026)
+## Neu in 0.6 (Robs Rückmeldung vom 10.10.2026)
+- **Balken repariert.** Fehler in 0.5: Der goldene Teil zeigte „Kraft minus alles, was begonnene Felder noch brauchen“.
+  Beim Beginnen eines Feldes sprang er deshalb stark zurück, bei den nächsten Schritten blieb er stehen, und zwischen
+  Schaduf und Aussaat schien er sich wieder zu füllen. Jetzt zeigt die Länge linear genau die verbleibende Arbeitskraft.
+  Der schraffierte Teil am Ende ist nur die Kraft für die Ernte der Felder, die in diesem Jahr noch geerntet werden.
+- **Berufswahl:** Alle vier Berufe sind von Anfang an zu sehen; nach der Wahl ist der eigene markiert.
+- **Verlieren nach Option C (Rob):**
+  - Hunger schwächt: Je Sack, der im Vorjahr fehlte, startet das nächste Jahr mit weniger Arbeitskraft
+    (`NUM.hungerSchwaeche`). Der Balken ist dann von Anfang an kürzer, mit Hinweis beim Sirius.
+  - Schwerer Hunger kostet den Hof: Fehlen in Jahr 2 mindestens `NUM.hofVerlassen` (4) Säcke, muss die Familie den Hof
+    verlassen. Mit den jetzigen Zahlen nur ohne Schaduf und mit höchstens einem Korb in Jahr 1. Danach geht es nur mit
+    „Noch einmal ab der Trockenzeit in Jahr 1“ weiter (kein Überspringen, damit Jahr 3 und 4 nicht fehlen).
+  - Geschwächt in Jahr 3: Die Felder gehen sich noch aus, für den Deich und Körbe bleibt weniger oder nichts
+    („Die Nachbarn bessern den Deich für euch mit aus“). Am Ende von Jahr 4 fehlt dann ein Sack.
+
+## Neu in 0.5 (Robs Entscheidungen vom 10.10.2026) – Stand vor 0.6
 - **Arbeitskraft als Balken ohne Zahlen** (Rob: 0.4 war „zu excelig“). Der Balken leert sich mit jeder Arbeit;
   der schraffierte Teil mit Sichel ist für die Ernte reserviert. Die Werte stehen nur in `content.js` (`NUM.kraft`,
   `NUM.kosten`), im Spiel und in der Bilanz erscheinen keine Kraft-Zahlen (Bilanz: gestapelter Balken je Jahr).
@@ -249,7 +264,6 @@ Gefahr einer zu hohen Flut).
 | Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
 ## Offen
-- Verlieren: Seit 0.5 kann man nicht mehr verlieren. Rob möchte eine neue Möglichkeit dafür (Vorschläge offen).
 - 0.5 im Test mit der 6e prüfen (Berufe am Anfang von Jahr 4 logisch?). Aus 0.4 weiterhin: Spieldauer mit vier Jahren und Gesten; werden die Gesten verstanden (Hinweis „So geht's“)?
   Wird anders entschieden, wird verloren, hilft die Wiederholung? Funktionieren die Gesten auf den Schul-iPads (Safari)?
 - Speicherverwalter: Deutung „Lohn aus dem Dorfspeicher“ von Rob abnehmen lassen.

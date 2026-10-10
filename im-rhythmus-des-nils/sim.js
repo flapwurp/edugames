@@ -1,4 +1,4 @@
-/* Im Rhythmus des Nils 0.5 – Spiellogik ohne Bildschirm (in Node testbar).
+/* Im Rhythmus des Nils 0.6 – Spiellogik ohne Bildschirm (in Node testbar).
    Vier Jahre ohne Zufall: Jahr 1 normale Flut, Jahr 2 zu niedrig, Jahr 3 zu hoch, Jahr 4 wieder normal.
    Jede Arbeit kostet Arbeitskraft; die Familie hat pro Jahr nur eine begrenzte Arbeitskraft (NUM.kraft).
    Die Werte sieht man im Spiel nicht als Zahlen, nur als Balken. Alle Zahlen stehen in content.js (NUM). */
@@ -17,7 +17,8 @@ export const PHASES = {
   2: [
     { id: "sirius", m: 1 }, { id: "achet", m: 1 }, { id: "schadufWahl", m: 5 }, { id: "schaduf", m: 5, only: f => f.schaduf === "bauen" },
     { id: "aussaat", m: 5 }, { id: "wachsen", m: 6 }, { id: "ernte", m: 9 }, { id: "versorgung", m: 9 },
-    { id: "dorfRat", m: 10 }, { id: "dorfbau", m: 10 }
+    { id: "verloren", m: 9, only: f => f.verloren },
+    { id: "dorfRat", m: 10, only: f => !f.verloren }, { id: "dorfbau", m: 10, only: f => !f.verloren }
   ],
   3: [
     { id: "sirius", m: 1 }, { id: "achet", m: 1 }, { id: "aussaat", m: 6 }, { id: "wachsen", m: 7 },
@@ -30,12 +31,13 @@ export const PHASES = {
 };
 export const LAST_YEAR = 4;
 
-/* nächste Phase oder null (dann folgt die Bilanz) */
+/* nächste Phase oder null (dann folgt die Bilanz; nach „verloren“ geht es nur mit „Noch einmal“ weiter) */
 export function nextPhase(year, phase, flags = {}){
   let y = year, i = PHASES[y].findIndex(p => p.id === phase);
+  if (phase === "verloren") return null;
   for (;;){
     i++;
-    if (i >= PHASES[y].length){ if (y === LAST_YEAR) return null; y++; i = 0; }
+    if (i >= PHASES[y].length){ if (y === LAST_YEAR || (y === 2 && flags.verloren)) return null; y++; i = 0; }
     const p = PHASES[y][i];
     if (!p.only || p.only(flags)) return { year: y, phase: p.id };
   }
@@ -136,6 +138,11 @@ export function supply(h, vorrat, village = 0){
   return { need, harvest: h, surplus: 0, fromVorrat: vorrat, help, hunger: deficit - help, vorrat: 0, status: deficit - help > 0 ? "hunger" : "geholfen" };
 }
 
+/* Hunger schwächt: Je mehr Säcke im Vorjahr fehlten, desto weniger Arbeitskraft hat die Familie.
+   Fehlen zu viele, muss die Familie den Hof verlassen (verloren). */
+export const kraftImJahr = (hungerVorjahr = 0) => Math.max(0, NUM.kraft - hungerVorjahr * NUM.hungerSchwaeche);
+export const hofVerloren = hunger => hunger >= NUM.hofVerlassen;
+
 /* Körbe tauschen geht nur, wenn die Nachbarn Getreide übrig haben: nicht nach der schlechten Flut in Jahr 2 */
 export const tauschMoeglich = year => year !== 2;
 
@@ -151,8 +158,10 @@ export function simulate({ koerbe1 = null, buckets = NUM.schadufVoll, beruf = "t
   let vorrat = NUM.startVorrat;
   const years = {}, kraft = {};
   const ctx4 = { landvermesser: beruf === "landvermesser", kupfer: beruf === "weberin" };
+  let hungerVorjahr = 0, lost = false;
   for (let year = 1; year <= LAST_YEAR; year++){
-    let have = NUM.kraft;
+    let have = kraftImJahr(hungerVorjahr);
+    const start = have;
     const use = { felder: 0, schaduf: 0, dorf: 0, koerbe: 0 };
     const ctx = year === 4 ? ctx4 : {};
     let sown = [false, false, false], b = 0;
@@ -163,9 +172,11 @@ export function simulate({ koerbe1 = null, buckets = NUM.schadufVoll, beruf = "t
         b = buckets; const c = k.schadufBau + b * k.eimer; have -= c; use.schaduf += c;
         if (sowable(2, 1, b)) work(1);
       }
-    } else for (let i = 0; i < 3; i++) work(i);
+    } else for (let i = 0; i < 3; i++) if (fieldRest(year, i, {}, ctx) <= have) work(i);
     const sp = supply(harvest(year, sown, b), vorrat, year === 3 ? NUM.dorfspeicher : 0);
     vorrat = sp.vorrat;
+    hungerVorjahr = sp.hunger;
+    if (year === 2 && hofVerloren(sp.hunger)){ years[year] = { ...sp, sown, kraftStart: start }; lost = true; break; }
     let extra = 0, beitrag = 0;
     if (year === 2){ beitrag = Math.min(vorrat, NUM.dorfBeitrag); vorrat -= beitrag; use.dorf += have; have = 0; }
     if (year === 3){ const c = Math.min(have, k.deichAusbessern); have -= c; use.dorf += c; }
@@ -177,8 +188,8 @@ export function simulate({ koerbe1 = null, buckets = NUM.schadufVoll, beruf = "t
       extra += n * NUM.korbTausch; have -= n * k.korb; use.koerbe += n * k.korb;
     }
     vorrat += extra;
-    years[year] = { ...sp, sown, extra, beitrag, vorratEnde: vorrat };
+    years[year] = { ...sp, sown, extra, beitrag, vorratEnde: vorrat, kraftStart: start };
     kraft[year] = { ...use, frei: Math.max(0, have) };
   }
-  return { years, kraft };
+  return { years, kraft, verloren: lost };
 }

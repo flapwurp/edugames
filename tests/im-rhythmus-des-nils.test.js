@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, SPIELBELEGE, BILANZ } from "../im-rhythmus-des-nils/content.js";
-import { nextPhase, sowable, harvest, supply, simulate, seasonsKnown, fieldRest, fieldSteps, growMonths, RISE_HOCH, tauschMoeglich, dorfbauGesten } from "../im-rhythmus-des-nils/sim.js";
+import { nextPhase, sowable, harvest, supply, simulate, seasonsKnown, fieldRest, fieldSteps, growMonths, RISE_HOCH, tauschMoeglich, dorfbauGesten, kraftImJahr, hofVerloren } from "../im-rhythmus-des-nils/sim.js";
 import { scene, villageView, LEVEL, groundY, waterReach } from "../im-rhythmus-des-nils/scene.js";
 
 const BERUFE = ["toepfer", "weberin", "landvermesser", "verwalter"];
@@ -48,6 +48,24 @@ test("Jahr 2: ohne Schaduf Hunger, mit Schaduf reicht es; nach dem vollen Schöp
   assert.equal(supply(0, 0, 0).hunger, NUM.bedarf);
 });
 
+test("Hunger schwächt, schwerer Hunger kostet den Hof (Option C)", () => {
+  // verlieren nur ohne Schaduf und mit kaum Körben in Jahr 1
+  for (const koerbe1 of [0, 1, 2, 3]) for (const buckets of [0, 3, 6]){
+    const r = simulate({ koerbe1, buckets });
+    assert.equal(r.verloren, buckets === 0 && koerbe1 <= 1, `Körbe ${koerbe1}, Eimer ${buckets}`);
+    if (!r.verloren) assert.equal(r.years[3].kraftStart, kraftImJahr(r.years[2].hunger));
+  }
+  assert.ok(kraftImJahr(2) < kraftImJahr(0));
+  assert.equal(hofVerloren(NUM.hofVerlassen), true);
+  // auch geschwächt reicht die Kraft in Jahr 3 für alle Felder; das Dorf fängt den Hunger auf
+  const g = simulate({ koerbe1: 2, buckets: 0 });
+  assert.equal(g.years[3].sown.filter(Boolean).length, 3);
+  assert.equal(g.years[3].hunger, 0);
+  const walkLost = []; let cur = { year: 1, phase: "sirius" };
+  while (cur){ walkLost.push(cur.year + ":" + cur.phase); cur = nextPhase(cur.year, cur.phase, { verloren: true }); }
+  assert.equal(walkLost[walkLost.length - 1], "2:verloren");
+});
+
 test("Beitrag zum Dorfspeicher nur, wenn etwas übrig ist", () => {
   assert.equal(simulate({ buckets: 0 }).years[2].beitrag, 0);
   assert.equal(simulate({ buckets: NUM.schadufVoll }).years[2].beitrag, NUM.dorfBeitrag);
@@ -57,7 +75,8 @@ test("Jahr 3: im Dorf hungert niemand, und für Körbe bleibt nach dem Ausbesser
   for (const buckets of [0, 3, 6]){
     const r = simulate({ buckets });
     assert.equal(r.years[3].hunger, 0);
-    assert.ok(r.kraft[3].dorf > 0 && r.kraft[3].koerbe > 0);
+    assert.ok(r.kraft[3].dorf > 0);
+    if (r.years[2].hunger === 0) assert.ok(r.kraft[3].koerbe > 0, "ohne Hunger bleibt Kraft für Körbe");
   }
   assert.equal(tauschMoeglich(2), false);
   assert.equal(tauschMoeglich(3), true);

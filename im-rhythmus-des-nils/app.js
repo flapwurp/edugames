@@ -1,8 +1,8 @@
-/* Im Rhythmus des Nils 0.5 – Bildschirme und Bedienung (Querformat) */
+/* Im Rhythmus des Nils 0.6 – Bildschirme und Bedienung (Querformat) */
 import { NUM, GAME, SEASONS, UI, MERKSAETZE, ROLLE_REIHENFOLGE, TEXT, BILANZ, QUELLE, QUELLTEXT, AUSSAGEN,
   URTEIL, QUELLE_BELEGE, ALLERDINGS, SPIELBELEGE, IMPULS, BEGRIFFE } from "./content.js";
 import { nextPhase, monthOf, growMonths, RISE, RISE_HOCH, seasonsKnown, sowable, fieldYield, supply,
-  fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, DORFBAU, dorfbauGesten } from "./sim.js";
+  fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, DORFBAU, dorfbauGesten, kraftImJahr, hofVerloren } from "./sim.js";
 import { scene, villageView, LEVEL, GROUND, big, fieldRange, stonePos, DIKE } from "./scene.js";
 import * as A from "./assets.js";
 import { initGestures, resetProgress } from "./gesture.js";
@@ -17,14 +17,15 @@ const fresh = () => ({
   fields: freshFields(), buckets: 0, vorrat: NUM.startVorrat, harvested: 0,
   kraft: NUM.kraft, use: {}, frei: {}, vorratEnde: {}, koerbe: {}, tz: {},
   schaduf: null, beruf: null, dorfRate: 0, dorfProg: { deich: 0, haeuser: 0, speicher: 0 }, beitrag: null,
-  last: null, supplies: {}, hunger: {}, ledger: [], rolle: [], neu: [], q: null, pick: {}
+  last: null, supplies: {}, hunger: {}, ledger: [], rolle: [], neu: [], q: null, pick: {},
+  lost: false, snap: null, versuch: 1
 });
-const store = createStore("nil-v05", fresh);
+const store = createStore("nil-v06", fresh);
 let S = store.load() || fresh();
 const save = () => store.save(S);
 const fill = (t, p = {}) => String(t).replace(/\{(\w+)\}/g, (_, k) => (k in p ? p[k] : `{${k}}`))
   .replace(/(^|\D)1 Säcken?(?!\p{L})/gu, (_, pre) => pre + "1 Sack");
-const flags = () => ({ schaduf: S.schaduf });
+const flags = () => ({ schaduf: S.schaduf, verloren: S.lost });
 const inDorf = () => S.year >= 3;
 const ctx = () => (S.year === 4 ? { landvermesser: S.beruf === "landvermesser", kupfer: S.beruf === "weberin" } : {});
 const FIELD_X = [272, 500, 702];
@@ -103,19 +104,32 @@ function vorratBox(){
 
 /* Arbeitskraft als Balken ohne Zahlen: frei – für die Ernte nötig – verbraucht */
 const SICHEL = `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17 L 7 13" stroke="#5c3a1e" stroke-width="3" stroke-linecap="round"/><path d="M7 13 Q 18 8 9 2" fill="none" stroke="#3b2718" stroke-width="3.4" stroke-linecap="round"/><path d="M7 13 Q 18 8 9 2" fill="none" stroke="#e8e2cf" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+/* Felder, die in diesem Jahr noch geerntet werden (begonnen oder noch bestellbar) */
+const BEFORE_HARVEST = ["sirius", "achet", "schadufWahl", "schaduf", "aussaat", "wachsen", "ernte", "beruf"];
+function harvestReserve(){
+  if (!BEFORE_HARVEST.includes(S.phase)) return 0;
+  return S.fields.reduce((sum, f, i) => {
+    if (f.done) return sum;
+    const planned = started(f) || (S.phase !== "ernte" && sowable(S.year, i, S.buckets) && affordable(i));
+    return sum + (planned ? ernteKosten(ctx()) : 0);
+  }, 0);
+}
+/* Der Balken zeigt linear die verbleibende Arbeitskraft (ohne Zahlen).
+   Der schraffierte Teil am Ende ist die Kraft, die noch für die Ernte gebraucht wird. */
 function kraftBar(left, r, total = NUM.kraft){
   const pct = v => Math.max(0, Math.min(100, (v / total) * 100)).toFixed(2) + "%";
-  return `<div class="bar" role="img" aria-label="${esc(UI.kraft)}"><span class="free" style="width:${pct(left - r)}"></span><span class="res" style="width:${pct(r)}">${r / total > 0.06 ? SICHEL : ""}</span></div>`;
+  const inner = left > 0 ? Math.min(100, (r / left) * 100).toFixed(2) + "%" : "0%";
+  return `<div class="bar" role="img" aria-label="${esc(UI.kraft)}"><span class="fill" style="width:${pct(left)}">${r > 0 ? `<span class="res" style="width:${inner}">${r / total > 0.06 ? SICHEL : ""}</span>` : ""}</span></div>`;
 }
-function kraftBox(res = null){
-  const left = Math.max(0, S.kraft), r = Math.min(left, res ?? reserve());
+function kraftBox(){
+  const left = Math.max(0, S.kraft), r = Math.min(left, harvestReserve());
   let note = "";
   if (left <= 0.01) note = UI.kraftLeer;
   else if (r > 0) note = UI.kraftErnte;
   else if (left / NUM.kraft < 0.12) note = UI.kraftWenig;
   return `<div class="kraft"><small>${esc(UI.kraft)}</small>${kraftBar(left, r)}${note ? `<p class="kraft-use">${esc(note)}</p>` : ""}</div>`;
 }
-const sideBoxes = (res) => kraftBox(res) + vorratBox();
+const sideBoxes = () => kraftBox() + vorratBox();
 
 /* Die vier Familienmitglieder mit ihren Schalen */
 function familyBowls(fillLevel){
@@ -196,7 +210,7 @@ function start(){
 function spiel(){
   ({ sirius: pSirius, achet: pAchet, schadufWahl: pSchadufWahl, schaduf: pSchaduf, aussaat: pAussaat, wachsen: pWachsen,
     ernte: pErnte, versorgung: pVersorgung, trockenzeit: pTrockenzeit, jahresende: pJahresende,
-    dorfRat: pDorfRat, dorfbau: pDorfbau, beruf: pBeruf }[S.phase])();
+    dorfRat: pDorfRat, dorfbau: pDorfbau, verloren: pVerloren, beruf: pBeruf }[S.phase])();
 }
 
 function pSirius(){
@@ -205,7 +219,8 @@ function pSirius(){
   st.fields = [0, 1, 2].map(() => ({ soil: "brache", plants: S.year === 1 ? "stoppel" : null }));
   st.people = [{ x: inDorf() ? 980 : 846, pose: "winken", n: 0, flip: true }];
   const T = TEXT.sirius[S.year];
-  const extra = S.year > 1 ? `<p class="fb">${esc(UI.kraftNeu)}</p>` : "";
+  const schwach = S.year > 1 && S.kraft < NUM.kraft;
+  const extra = S.year > 1 ? `<p class="fb">${esc(schwach ? UI.kraftSchwach : UI.kraftNeu)}</p>` : "";
   layout(scene(st), panel({ titel: T.titel, text: T.text, extra, actions: btn("toAchet", T.knopf), side: S.year > 1 ? sideBoxes() : kraftBox() }));
 }
 
@@ -259,7 +274,7 @@ function pSchaduf(){
   if (S.buckets >= NUM.schadufVoll) fb = T.voll; else if (wet) fb = T.halb + " " + T.muede; else if (S.buckets > 0) fb = T.muede;
   layout(scene(st), panel({ titel: T.titel, text: fill(T.text, { h: NUM.schadufHalb, v: NUM.schadufVoll }),
     extra: meter + (fb ? `<p class="fb">${esc(fb)}</p>` : "") + `<p class="plan">${esc(T.plan)}</p>` + (S.buckets < NUM.schadufVoll ? hint(T.hint) : ""),
-    actions: btn("toNext", T.weiter), side: kraftBox(schadufReserve(S.buckets)) }));
+    actions: btn("toNext", T.weiter), side: kraftBox() }));
 }
 
 function pAussaat(){
@@ -370,7 +385,7 @@ function pVersorgung(){
 /* ---------- Trockenzeit: übrige Arbeitskraft einsetzen ---------- */
 
 function tz(){ return (S.tz[S.year] ||= { koerbe: 0, ausb: false, beruf: false }); }
-const pflicht = () => S.year === 3 && !tz().ausb;
+const pflicht = () => S.year === 3 && !tz().ausb && S.kraft > 0.01;
 
 function pTrockenzeit(){
   const st = baseScene();
@@ -381,8 +396,9 @@ function pTrockenzeit(){
   const card = (title, text, state, cls = "") => `<li class="work ${cls}"><b>${esc(title)}</b><span>${esc(text)}</span>${state ? `<em>${esc(state)}</em>` : ""}</li>`;
   let cards = "", hints = [];
   if (S.year === 3){
-    cards += card(W.ausbessern.name, W.ausbessern.text, t.ausb ? W.ausbessern.fertig : "", t.ausb ? "ok" : "pflicht");
-    if (!t.ausb){
+    const ohneKraft = !t.ausb && S.kraft <= 0.01;
+    cards += card(W.ausbessern.name, W.ausbessern.text, t.ausb ? W.ausbessern.fertig : ohneKraft ? W.ausbessern.nachbarn : "", t.ausb || ohneKraft ? "ok" : "pflicht");
+    if (pflicht()){
       st.hot.push({ id: "ausbessern", g: "korb", label: W.ausbessern.name, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx: DIKE.x0 + 22, ty: DIKE.top + 10, load: "erde" } });
       st.extra += big(A.loadPile({ x: PILE.x, y: PILE.y, kind: "erde" }), PILE.x, PILE.y, 1.1);
       hints.push(W.ausbessern.hint);
@@ -454,15 +470,28 @@ function pDorfbau(){
   layout(scene(st), panel({ titel: T.titel, text, extra, actions: act, side: sideBoxes() }));
 }
 
+function pVerloren(){
+  const st = baseScene();
+  st.sky = "schemu"; st.water = { level: LEVEL.tief };
+  st.fields = S.fields.map((f, i) => ({ soil: sowable(2, i, S.buckets) ? "brache" : "trocken", plants: f.sown ? "stoppel" : null }));
+  st.people = [0, 1, 2, 3].map(i => ({ x: 1000 + i * 34, pose: "gehen", n: i, kind: i === 3 }));
+  const T = TEXT.verloren, k = S.koerbe[1] || 0;
+  const g = [fill(T.flut, { n: S.supplies[2].hunger }), k ? fill(T.koerbe, { n: k }) : T.keineKoerbe];
+  g.push(S.schaduf === "bauen" ? T.eimer : T.schaduf);
+  layout(scene(st), panel({ titel: T.titel, text: T.text,
+    extra: `<p class="big">${esc(T.gruende)}</p><ul class="gruende">${g.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`,
+    actions: btn("nochmal", T.nochmal), side: vorratBox() }));
+}
+
 function pBeruf(){
   const T = TEXT.beruf;
   const vv = o => villageView({ sky: "achet", fill: 0.45, ...o });
   if (!S.beruf){
-    layout(vv({ jobs: [], alt: "Das Dorf berät" }), panel({ titel: T.titel, text: T.text, extra: `<div class="choices four">${Object.entries(T.optionen).map(([id, o]) =>
+    layout(vv({ alt: "Das Dorf berät" }), panel({ titel: T.titel, text: T.text, extra: `<div class="choices four">${Object.entries(T.optionen).map(([id, o]) =>
       `<button class="choice" data-act="beruf" data-id="${id}"><b>${esc(o.name)}</b><span>${esc(o.text)}</span></button>`).join("")}</div>` }));
     return;
   }
-  layout(vv({ jobs: [S.beruf], mine: S.beruf, n: 0 }), panel({ titel: T.titel, text: fill(T.ergebnis, { name: T.optionen[S.beruf].name }), actions: btn("toNext", T.weiter), side: sideBoxes() }));
+  layout(vv({ mine: S.beruf, n: 0 }), panel({ titel: T.titel, text: fill(T.ergebnis, { name: T.optionen[S.beruf].name }), actions: btn("toNext", T.weiter), side: sideBoxes() }));
 }
 
 /* ---------- Bilanz ---------- */
@@ -645,9 +674,12 @@ function goPhase(year, phase){
   clearToast(); resetProgress();
   if (phase === "sirius" && year > 1 && S.year !== year) closeYear(S.year);
   S.year = year; S.phase = phase; S.month = monthOf(year, phase); S.last = null; S.neu = [];
-  if (phase === "sirius"){ S.fields = freshFields(); S.harvested = 0; S.kraft = NUM.kraft; useYear(); }
+  if (phase === "sirius"){
+    S.fields = freshFields(); S.harvested = 0; useYear();
+    S.kraft = kraftImJahr(S.supplies[year - 1] ? S.supplies[year - 1].hunger : 0);
+  }
   if (phase === "trockenzeit"){
-    if (year === 1) learn("brache");
+    if (year === 1){ learn("brache"); if (!S.snap) S.snap = JSON.stringify({ ...S, snap: null }); }
     if (year === 4){
       learn("teilung");
       if (!tz().beruf){
@@ -748,6 +780,7 @@ const actions = {
     book("gegessen", -sp.fromVorrat);
     S.vorrat = sp.vorrat;
     S.hunger[S.year] = sp.hunger > 0;
+    if (S.year === 2) S.lost = hofVerloren(sp.hunger);
     goPhase(S.year, "versorgung");
     ({ 1: ["schlamm", "kraft"], 2: ["niedrig"], 3: ["vorrat"], 4: [] })[S.year].forEach(learn);
     save(); render();
@@ -763,6 +796,13 @@ const actions = {
   wahlSchaduf(el){ S.schaduf = el.dataset.id; if (S.schaduf === "bauen") spend(KO.schadufBau, "schaduf"); save(); render(); },
   dorfStart(){ S.dorfRate = S.kraft / dorfbauGesten(); goPhase(2, "dorfbau"); },
   beruf(el){ S.beruf = el.dataset.id; learn("berufe"); save(); render(); },
+  nochmal(){
+    if (!S.snap) return;
+    const v = S.versuch + 1, snap = S.snap;
+    S = JSON.parse(snap); S.snap = snap; S.versuch = v;
+    resetProgress(); clearToast(); save(); render(); window.scrollTo(0, 0);
+    toast(TEXT.verloren.versuch, "", 3600);
+  },
   go(el){ S.screen = el.dataset.to; save(); render(); window.scrollTo(0, 0); },
   selCard(el){ if (suppressClick) return; const i = +el.dataset.card; S.q.sel = S.q.sel === i ? null : i; S.q.msg = null; save(); render(); },
   dropSel(el){ if (S.q && S.q.sel != null) placeCard(S.q.sel, el.dataset.zone); },
