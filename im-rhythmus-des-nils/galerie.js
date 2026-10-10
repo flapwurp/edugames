@@ -32,19 +32,19 @@ const STORY = [
     does: "Felder antippen: Die Familie erntet mit Sicheln und trägt das Getreide in den Speicher.",
     st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("gepflueg", "reif"), F("gepflueg", "stoppel"), F("gepflueg", "reif")], hof: { fill: 0.85 }, labels: ["speicher"], people: [fam(300, "ernten", 0), fam(690, "ernten", 2), fam(950, "tragen", 1)] } },
   { year: 1, season: "schemu", month: 11, title: "Schemu: Die Felder liegen brach – Zeit für andere Arbeiten",
-    does: "Entscheidung 1: Krüge töpfern und gegen Getreide tauschen – oder einen Erdwall um den Hof aufschütten?",
-    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), hof: { fill: 0.7, wall: true }, extra: big(A.potter({ x: 1030, y: GROUND.site.y, n: 3 }), 1030, GROUND.site.y), people: [fam(818, "bauen", 0)] } },
+    does: "Übrige Arbeitskraft: Körbe aus Schilf flechten und bei den Nachbarn gegen Getreide tauschen.",
+    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), hof: { fill: 0.7 }, extra: big(A.weaveBasket({ x: 772, y: GROUND.f3.y, p: 0.6 }), 772, GROUND.f3.y, 1.5), people: [fam(738, "flechten", 3, { kind: true })] } },
   { year: 2, season: "achet", month: 4, title: "Jahr 2, Achet: Der Nil steigt zu wenig",
     does: "Der Pegel bleibt unter der Marke. Nur das Uferfeld wird überschwemmt.",
-    st: { sky: "achet", water: { level: LEVEL.niedrig, kind: "flut" }, fields: all("trocken"), hof: { fill: 0.45, wall: true }, labels: ["nilmesser"], nmLabels: true, people: [fam(660, "stehen", 1), fam(690, "stehen", 2, { kind: true })] } },
+    st: { sky: "achet", water: { level: LEVEL.niedrig, kind: "flut" }, fields: all("trocken"), hof: { fill: 0.45 }, labels: ["nilmesser"], nmLabels: true, people: [fam(660, "stehen", 1), fam(690, "stehen", 2, { kind: true })] } },
   { year: 2, season: "peret", month: 6, title: "Jahr 2, Peret: Der Schaduf",
     does: "Ein Nachbar zeigt eine neue Erfindung. Schaduf antippen: Eimer für Eimer kommt Wasser aus dem Graben auf das mittlere Feld. Das obere Feld liegt zu hoch.",
-    st: { sky: "peret", water: { level: LEVEL.tief }, ditchWater: true, fields: [F("gepflueg", "halm"), F("gepflueg", "jung"), F("trocken")], shaduf: { t: 1, n: 0 }, hof: { fill: 0.45, wall: true }, labels: ["schaduf", "graben"] } },
+    st: { sky: "peret", water: { level: LEVEL.tief }, ditchWater: true, fields: [F("gepflueg", "halm"), F("gepflueg", "jung"), F("trocken")], shaduf: { t: 1, n: 0 }, hof: { fill: 0.45 }, labels: ["schaduf", "graben"] } },
   { year: 2, season: "schemu", month: 9, title: "Jahr 2, Schemu: Eine kleine Ernte",
     does: "Das obere Feld ist vertrocknet. Der Speicher wird leer, die Schalen der Familie bleiben halb leer.",
-    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("gepflueg", "reif"), F("gepflueg", "reif"), F("trocken", "verdorrt")], hof: { fill: 0.05, wall: true }, labels: ["speicher"], people: [fam(700, "stehen", 2), fam(728, "stehen", 3, { kind: true })] } },
+    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("gepflueg", "reif"), F("gepflueg", "reif"), F("trocken")], hof: { fill: 0.05 }, labels: ["speicher"], people: [fam(700, "stehen", 2), fam(728, "stehen", 3, { kind: true })] } },
   { year: 2, season: "schemu", month: 11, title: "Jahr 2, Trockenzeit: Die Familien bauen gemeinsam ein Dorf",
-    does: "Körbe mit Erde auf den Deich ziehen (kostet Kraft), dann wachsen Häuser und Dorfspeicher – viele Hände bauen mit. Am Nilmesser zeigt eine alte Marke, wie hoch der Nil einmal stand.",
+    does: "Das Dorf entsteht automatisch. Körbe mit Erde, Lehmziegeln und Getreide ziehen: Deich, Häuser und Dorfspeicher wachsen, bis die Arbeitskraft der Familie aufgebraucht ist. Am Nilmesser zeigt eine alte Marke, wie hoch der Nil einmal stand.",
     st: { sky: "schemu", water: { level: LEVEL.tief }, fields: [F("brache", "stoppel"), F("brache", "stoppel"), F("trocken", "verdorrt")], village: { stage: 0.6, dike: true }, oldMark: true, people: [fam(770, "bauen", 0), fam(880, "tragen", 4), fam(1000, "bauen", 5), fam(1090, "tragen", 2)] } },
   { year: 3, season: "achet", month: 4, title: "Jahr 3, Achet: Der Nil steigt zu hoch",
     does: "Das Wasser steht bis an die Deichkrone. Gestrichelt: So hoch stünde es ohne Deich im Dorf.",
@@ -53,16 +53,16 @@ const STORY = [
     does: "Die Flut hat die Grenzsteine weggespült. Die Familie zieht selbst das Messseil am Feld entlang (Geste), ein Nachbar streitet mit. Das kostet Kraft.",
     st: { sky: "peret", water: { level: LEVEL.normal }, fields: [F("schlamm", null), F("schlamm", null), F("schlamm", null)].map(x => ({ ...x, boundary: false })), village: { dike: true, fill: 0.55 }, hutRuined: true,
       extra: `<path d="M190 358 L 300 358" stroke="${A.C.goldDark}" stroke-width="3" stroke-dasharray="9 3"/>` + A.person({ x: 308, y: GROUND.f1.y, pose: "seil", n: 0, scale: 1.32 }), people: [fam(362, "winken", 4, { flip: true })] } },
-  { year: 3, season: "schemu", month: 11, title: "Jahr 3, Schemu: Das Dorf versorgt alle – neue Berufe",
-    does: "Nahansicht des Dorfes. Wer aus deiner Familie übernimmt einen neuen Beruf? Was er bringt, zeigt sich in Jahr 4. Hier: Töpfer.",
-    view: "dorf", st: { fill: 0.4, mine: "toepfer", n: 0 } },
+  { year: 4, season: "achet", month: 4, title: "Jahr 4, Achet: Die Familien beraten – neue Berufe",
+    does: "Nahansicht des Dorfes. Die Felder stehen unter Wasser. Wer aus deiner Familie übernimmt einen Beruf? Was er bringt, zeigt sich in diesem Jahr. Hier: Töpfer.",
+    view: "dorf", st: { sky: "achet", fill: 0.45, jobs: ["toepfer"], mine: "toepfer", n: 0 } },
   { year: 4, season: "peret", month: 5, title: "Jahr 4, Peret: Der Landvermesser hat schon ausgemessen",
     does: "Gleiche Flut wie in Jahr 1. Wer einen Landvermesser in der Familie hat, findet die Grenzsteine schon gesetzt – das spart Kraft.",
     st: { sky: "peret", water: { level: LEVEL.normal }, fields: all("schlamm"), village: { dike: true, fill: 0.55 }, hutRuined: true, extra: big(A.surveyor({ x: 420, y: GROUND.f2.y, n: 0 }), 420, GROUND.f2.y, 1.2) } },
   { year: 4, season: "schemu", month: 10, title: "Jahr 4, Trockenzeit: Körbe flechten und tauschen",
-    does: "Übrige Kraft wird zu Körben (Zickzack-Geste), die Nachbarn tauschen sie gegen Getreide. Am Haufen: Erde für Deich oder Erdwall (ziehen).",
-    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), hof: { fill: 0.5, wall: 0.75 }, hutRuined: true,
-      extra: big(A.loadPile({ x: 548, y: GROUND.f2.y }), 548, GROUND.f2.y, 1.1) + big(A.weaveBasket({ x: 772, y: GROUND.f3.y, p: 0.5 }), 772, GROUND.f3.y, 1.5) + big(A.basketRow({ x: 630, y: GROUND.f3.y, n: 3 }), 630, GROUND.f3.y, 1.2),
+    does: "Übrige Arbeitskraft wird zu Körben (Zickzack-Geste), die Nachbarn tauschen sie gegen Getreide.",
+    st: { sky: "schemu", water: { level: LEVEL.tief }, fields: all("brache", "stoppel"), village: { dike: true, fill: 0.6 }, hutRuined: true,
+      extra: big(A.weaveBasket({ x: 772, y: GROUND.f3.y, p: 0.5 }), 772, GROUND.f3.y, 1.5) + big(A.basketRow({ x: 630, y: GROUND.f3.y, n: 3 }), 630, GROUND.f3.y, 1.2),
       people: [fam(738, "flechten", 3, { kind: true })] } }
 ];
 
@@ -120,7 +120,6 @@ function parts(){
   h += tile(A.storeYard({ x: 10, y: 92, fill: 0.6 }), "0 0 170 100", "Dorfspeicher");
   h += tile(A.house({ x: 20, y: 90, ruined: true }), "0 0 130 100", "zerstörtes Haus");
   h += tile(A.dike({ x0: 10, x1: 150, y: 96, top: 30 }), "0 0 160 104", "Deich");
-  h += tile(A.earthWall({ x: 10, y: 50, w: 60, h: 24 }), "0 0 80 56", "Erdwall am Hof");
   h += tile(A.nilometer({ x: 40, yBottom: 260, yTop: 10, marks: { niedrig: 170, gut: 120, hoch: 80, labels: true }, old: 50 }), "0 0 130 266", "Nilmesser mit Marken");
   h += `</div><h3>Berufe im Dorf</h3><div class="tiles">`;
   h += tile(A.potter({ x: 26, y: 90 }), "0 0 130 100", "Töpfer");

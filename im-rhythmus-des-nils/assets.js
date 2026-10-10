@@ -710,6 +710,8 @@ export function surveyor({ x = 0, y = 0, n = 4 } = {}){
 
 /* Korb mit Ladung, Mittelpunkt (0|0) – wird beim Ziehen mitgeführt */
 export function basketLoad(kind = "erde"){
+  if (kind === "korn") return `<path d="M-13 -8 Q 0 -20 13 -8 Z" fill="${C.goldLight}" ${stroke(1.3)}/><path d="M-6 -12 l 2 -1 M 2 -14 l 2 1 M 5 -10 l 2 -1" stroke="${C.goldDark}" stroke-width="1.4"/>
+    <path d="M-15 -8 L 15 -8 L 11 8 L -11 8 Z" fill="${C.reed}" ${stroke(1.6)}/><path d="M-13 -2 L 13 -2 M -12 3 L 12 3" stroke="${C.reedDark}" stroke-width="1.2"/>`;
   const top = kind === "ziegel"
     ? `<rect x="-11" y="-14" width="10" height="6" fill="${C.brick}" ${stroke(1.1)}/><rect x="1" y="-14" width="10" height="6" fill="${C.brickLight}" ${stroke(1.1)}/><rect x="-5" y="-19" width="10" height="6" fill="${C.brick}" ${stroke(1.1)}/>`
     : `<path d="M-13 -8 Q 0 -22 13 -8 Z" fill="${C.soilDark}" ${stroke(1.3)}/>`;

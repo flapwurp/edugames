@@ -1,4 +1,4 @@
-/* Im Rhythmus des Nils 0.4 – Gestaltung (für das iPad im Querformat) */
+/* Im Rhythmus des Nils 0.5 – Gestaltung (für das iPad im Querformat) */
 :root{
   --paper:#f1e6cf; --card:#fbf5e8; --ink:#3b2718; --muted:#76593f; --line:#d9c6a2;
   --bar:#3a2a1b; --gold:#e3b23c; --gold-edge:#a87d17; --nile:#1f5f86;
@@ -224,3 +224,15 @@ html,body{touch-action:manipulation}
 .compare.four td{font-size:.95rem}
 .scene .hot.gesture{touch-action:none}
 .scene .fx{pointer-events:none}
+
+/* 0.5: Arbeitskraft als Balken ohne Zahlen */
+.kraft .bar{display:flex;height:22px;margin:6px 0 2px;border:2px solid #7c5a2a;border-radius:8px;background:#efe4cb;overflow:hidden}
+.kraft .bar span{display:block;height:100%;transition:width .35s ease}
+.kraft .bar .free{background:linear-gradient(#f6d15a,#e3b23c)}
+.kraft .bar .res{position:relative;background:repeating-linear-gradient(135deg,#e3b23c 0 4px,#fbf5e8 4px 8px);border-left:2px solid #7c5a2a}
+.kraft .bar .res svg{position:absolute;left:50%;top:1px;width:16px;height:16px;transform:translateX(-50%);background:#fbf5e8;border-radius:50%}
+.usebar{display:flex;height:18px;border:1.5px solid #7c5a2a;border-radius:6px;overflow:hidden;background:#efe4cb;min-width:120px}
+.u-felder{--c:#8a5a32}.u-schaduf{--c:#2f7fa6}.u-dorf{--c:#5c8a2a}.u-koerbe{--c:#d9aa3c}.u-frei{--c:#efe4cb}
+.usebar span{display:block;height:100%;background:var(--c)}
+.uselegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;color:var(--muted);margin:8px 0 0}
+.uselegend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1.5px solid #7c5a2a;background:var(--c)}

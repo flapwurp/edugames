@@ -1,9 +1,9 @@
-/* Im Rhythmus des Nils 0.4 – Bildschirme und Bedienung (Querformat) */
+/* Im Rhythmus des Nils 0.5 – Bildschirme und Bedienung (Querformat) */
 import { NUM, GAME, SEASONS, UI, MERKSAETZE, ROLLE_REIHENFOLGE, TEXT, BILANZ, QUELLE, QUELLTEXT, AUSSAGEN,
   URTEIL, QUELLE_BELEGE, ALLERDINGS, SPIELBELEGE, IMPULS, BEGRIFFE } from "./content.js";
-import { nextPhase, monthOf, growMonths, RISE, RISE_HOCH, seasonsKnown, sowable, fieldYield, supply, hochwasserAllein,
-  verloren, fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, LAST_YEAR } from "./sim.js";
-import { scene, villageView, LEVEL, GROUND, big, fieldRange, stonePos, DIKE, WALL, groundY } from "./scene.js";
+import { nextPhase, monthOf, growMonths, RISE, RISE_HOCH, seasonsKnown, sowable, fieldYield, supply,
+  fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, DORFBAU, dorfbauGesten } from "./sim.js";
+import { scene, villageView, LEVEL, GROUND, big, fieldRange, stonePos, DIKE } from "./scene.js";
 import * as A from "./assets.js";
 import { initGestures, resetProgress } from "./gesture.js";
 import { createStore } from "../shared/session.js";
@@ -15,23 +15,22 @@ const freshFields = () => [0, 1, 2].map(() => ({ grenze: false, plowed: false, s
 const fresh = () => ({
   screen: "start", year: 1, phase: "sirius", month: 1,
   fields: freshFields(), buckets: 0, vorrat: NUM.startVorrat, harvested: 0,
-  kraft: NUM.kraft, use: {}, frei: {}, vorratEnde: {}, schuld: 0, wall: 0, y1: { wall: 0, koerbe: 0 }, tz: {},
-  schaduf: null, dorf: null, beruf: null, dorfStep: 0, deichPaid: 0, hausWeg: false, hausProg: 0, flood3: null,
-  last: null, supplies: {}, hunger: {}, lost: false, ledger: [], versuch: 1, snap: null,
-  rolle: [], neu: [], q: null, pick: {}
+  kraft: NUM.kraft, use: {}, frei: {}, vorratEnde: {}, koerbe: {}, tz: {},
+  schaduf: null, beruf: null, dorfRate: 0, dorfProg: { deich: 0, haeuser: 0, speicher: 0 }, beitrag: null,
+  last: null, supplies: {}, hunger: {}, ledger: [], rolle: [], neu: [], q: null, pick: {}
 });
-const store = createStore("nil-v04", fresh);
+const store = createStore("nil-v05", fresh);
 let S = store.load() || fresh();
 const save = () => store.save(S);
 const fill = (t, p = {}) => String(t).replace(/\{(\w+)\}/g, (_, k) => (k in p ? p[k] : `{${k}}`))
   .replace(/(^|\D)1 Säcken?(?!\p{L})/gu, (_, pre) => pre + "1 Sack");
-const flags = () => ({ schaduf: S.schaduf, dorf: S.dorf, verloren: S.lost, hausWeg: S.hausWeg });
-const inDorf = () => S.dorf === "dorf" && S.year >= 3;
-const alone = () => S.dorf === "allein" && S.year >= 3;
-const ctx = () => (S.year === 4 && S.dorf === "dorf" ? { landvermesser: S.beruf === "landvermesser", kupfer: S.beruf === "weberin" } : {});
+const flags = () => ({ schaduf: S.schaduf });
+const inDorf = () => S.year >= 3;
+const ctx = () => (S.year === 4 ? { landvermesser: S.beruf === "landvermesser", kupfer: S.beruf === "weberin" } : {});
 const FIELD_X = [272, 500, 702];
 const PILE = { x: 548, y: GROUND.f2.y };          // Erdhaufen am mittleren Feld
 const WEAVE = { x: 772, y: GROUND.f3.y };         // im Schatten der Feldhütte flechten
+const HARVESTER = 2;                               // dieses Familienmitglied erntet immer
 
 /* ---------- Hilfsfunktionen ---------- */
 
@@ -47,8 +46,8 @@ function book(key, delta){
 }
 
 /* Arbeitskraft verbrauchen */
-function useYear(){ return (S.use[S.year] ||= { felder: 0, schaduf: 0, schutz: 0, koerbe: 0, nachholen: 0 }); }
-function spend(n, cat){ S.kraft -= n; useYear()[cat] += n; }
+function useYear(){ return (S.use[S.year] ||= { felder: 0, schaduf: 0, dorf: 0, koerbe: 0 }); }
+function spend(n, cat){ S.kraft = Math.max(0, S.kraft - n); useYear()[cat] += n; }
 
 const started = f => f.grenze || f.plowed || f.sown;
 /* Kraft, die die schon begonnenen Felder noch brauchen (ohne Feld „except“) */
@@ -102,19 +101,19 @@ function vorratBox(){
   return `<div class="vorrat"><small>${esc(UI.vorrat)}: ${fill(UI.saecke, { n: S.vorrat })}</small>${sacks(S.vorrat)}${rows ? `<ul class="ledger">${rows}</ul>` : ""}</div>`;
 }
 
-/* Arbeitskraft: verbraucht – noch gebraucht – frei */
+/* Arbeitskraft als Balken ohne Zahlen: frei – für die Ernte nötig – verbraucht */
+const SICHEL = `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17 L 7 13" stroke="#5c3a1e" stroke-width="3" stroke-linecap="round"/><path d="M7 13 Q 18 8 9 2" fill="none" stroke="#3b2718" stroke-width="3.4" stroke-linecap="round"/><path d="M7 13 Q 18 8 9 2" fill="none" stroke="#e8e2cf" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+function kraftBar(left, r, total = NUM.kraft){
+  const pct = v => Math.max(0, Math.min(100, (v / total) * 100)).toFixed(2) + "%";
+  return `<div class="bar" role="img" aria-label="${esc(UI.kraft)}"><span class="free" style="width:${pct(left - r)}"></span><span class="res" style="width:${pct(r)}">${r / total > 0.06 ? SICHEL : ""}</span></div>`;
+}
 function kraftBox(res = null){
-  const total = NUM.kraft, left = Math.max(0, S.kraft), r = Math.min(left, res ?? reserve());
-  const pips = Array.from({ length: total }, (_, i) => {
-    const cls = i < total - left ? "used" : i < total - left + r ? "res" : "free";
-    return `<span class="${cls}"></span>`;
-  }).join("");
-  const u = useYear();
-  const parts = Object.entries(u).filter(([, v]) => v > 0).map(([k, v]) => `${UI.verbrauch[k]} ${v}`).join(" · ");
-  return `<div class="kraft"><small>${esc(UI.kraft)}: ${fill(UI.kraftRest, { n: left, k: total })}</small>
-    <div class="pips" aria-hidden="true">${pips}</div>
-    ${parts ? `<p class="kraft-use">${esc(parts)}</p>` : ""}
-    ${r > 0 ? `<p class="kraft-use">${esc(fill(UI.kraftReserve, { n: r }))}</p>` : ""}</div>`;
+  const left = Math.max(0, S.kraft), r = Math.min(left, res ?? reserve());
+  let note = "";
+  if (left <= 0.01) note = UI.kraftLeer;
+  else if (r > 0) note = UI.kraftErnte;
+  else if (left / NUM.kraft < 0.12) note = UI.kraftWenig;
+  return `<div class="kraft"><small>${esc(UI.kraft)}</small>${kraftBar(left, r)}${note ? `<p class="kraft-use">${esc(note)}</p>` : ""}</div>`;
 }
 const sideBoxes = (res) => kraftBox(res) + vorratBox();
 
@@ -129,15 +128,11 @@ function familyBowls(fillLevel){
 function baseScene(){
   const y = S.year;
   const st = { sky: "peret", water: { level: LEVEL.normal }, fields: [], people: [] };
-  const villageNow = inDorf() || S.phase === "dorfbau";
-  if (!villageNow){
-    const ruined = S.hausWeg && S.hausProg < KO.haus;
-    st.hof = { fill: ruined ? 0 : Math.min(1, (S.vorrat + S.harvested) / 12), wall: S.wall / KO.erdwall, ruined };
-  } else {
-    const stage = y >= 3 ? 1 : S.dorfStep / 3;
-    const dikeK = y >= 3 || S.dorfStep > 0 ? 1 : Math.max(0.08, S.deichPaid / KO.deich);
-    st.village = { dike: true, stage, dikeK, fill: y >= 3 ? 0.55 : 0.4 };
-  }
+  if (y >= 3) st.village = { dike: true, stage: 1, fill: 0.55 };
+  else if (S.phase === "dorfbau"){
+    const p = S.dorfProg, n = id => DORFBAU.find(x => x.id === id).n;
+    st.village = { dike: true, dikeK: Math.max(0.08, p.deich / n("deich")), stage: Math.min(1, 0.05 + 0.75 * p.haeuser / n("haeuser") + 0.2 * p.speicher / n("speicher")), fill: 0.4 };
+  } else st.hof = { fill: Math.min(1, (S.vorrat + S.harvested) / 12) };
   if (y >= 3) st.hutRuined = true; else st.hut = true;
   return st;
 }
@@ -200,8 +195,8 @@ function start(){
 
 function spiel(){
   ({ sirius: pSirius, achet: pAchet, schadufWahl: pSchadufWahl, schaduf: pSchaduf, aussaat: pAussaat, wachsen: pWachsen,
-    ernte: pErnte, versorgung: pVersorgung, trockenzeit: pTrockenzeit, jahresende: pJahresende, dorfWahl: pDorfWahl,
-    dorfbau: pDorfbau, hausbau: pHausbau, verloren: pVerloren, beruf: pBeruf }[S.phase])();
+    ernte: pErnte, versorgung: pVersorgung, trockenzeit: pTrockenzeit, jahresende: pJahresende,
+    dorfRat: pDorfRat, dorfbau: pDorfbau, beruf: pBeruf }[S.phase])();
 }
 
 function pSirius(){
@@ -209,11 +204,9 @@ function pSirius(){
   st.sky = "dawn"; st.water = { level: LEVEL.tief };
   st.fields = [0, 1, 2].map(() => ({ soil: "brache", plants: S.year === 1 ? "stoppel" : null }));
   st.people = [{ x: inDorf() ? 980 : 846, pose: "winken", n: 0, flip: true }];
-  const key = S.year >= 3 && S.dorf === "allein" ? S.year + "allein" : S.year;
-  const T = TEXT.sirius[key];
-  const beruf = S.beruf ? TEXT.beruf.optionen[S.beruf].name : "";
-  const extra = `<p class="fb">${esc(fill(UI.kraftNeu, { k: NUM.kraft }))}${S.schuld > 0 ? " " + esc(fill(UI.kraftSchuld, { n: S.schuld })) : ""}</p>`;
-  layout(scene(st), panel({ titel: T.titel, text: fill(T.text, { beruf }), extra, actions: btn("toAchet", T.knopf), side: S.year > 1 ? sideBoxes() : kraftBox() }));
+  const T = TEXT.sirius[S.year];
+  const extra = S.year > 1 ? `<p class="fb">${esc(UI.kraftNeu)}</p>` : "";
+  layout(scene(st), panel({ titel: T.titel, text: T.text, extra, actions: btn("toAchet", T.knopf), side: S.year > 1 ? sideBoxes() : kraftBox() }));
 }
 
 function pAchet(){
@@ -230,18 +223,9 @@ function pAchet(){
   const last = S.month === 4;
   st.nmLabels = last || (y === 3 && S.month >= 2);
   const T = TEXT.achet[y];
-  let text = T.monate[S.month - 1];
   if (last && y === 1){ st.labels.push("hof"); learn("steigt"); }
-  if (y === 3 && last){
-    learn("hoch"); learn("deich");
-    if (S.dorf === "dorf"){ st.ghost = LEVEL.hoch; st.labels.push("deich"); text = T.dorf; }
-    else {
-      st.people = [{ x: 1124, pose: "stehen", n: 1 }, { x: 1100, pose: "stehen", n: 3, kind: true }];
-      text = S.wall >= KO.erdwall ? T.wall : (S.wall > 0 ? T.halbWall + " " : "") + T.ohne;
-    }
-  }
-  const titel = `${T.titel} – ${S.month}. Monat`;
-  layout(scene(st), panel({ titel, text, side: y > 1 ? vorratBox() : "",
+  if (last && y === 3){ learn("hoch"); learn("deich"); st.ghost = LEVEL.hoch; st.labels.push("deich"); }
+  layout(scene(st), panel({ titel: `${T.titel} – ${S.month}. Monat`, text: T.monate[S.month - 1], side: y > 1 ? vorratBox() : "",
     actions: last ? btn("toNext", T.knopf) : btn("nextMonth", UI.naechsterMonat) }));
 }
 
@@ -319,8 +303,8 @@ function pAussaat(){
     else if (!affordable(i)) state = T.nichtBestellt;
     else state = fieldSteps(S.year, i, c).map(s => {
       const ok = s.id === "pfluegen" ? f.plowed : s.id === "saeen" ? f.sown : f.grenze;
-      return `${ok ? "✓ " : ""}${T.schritte[s.id].name} (${s.cost})`;
-    }).join(" · ") + ` · später ernten (${ernteKosten(c)})`;
+      return `${ok ? "✓ " : ""}${T.schritte[s.id].name}`;
+    }).join(" · ") + ` · ${T.spaeter}`;
     return `<li class="${f.sown ? "ok" : !can || !affordable(i) ? "no" : ""}"><b>${T.namen[i]}:</b> ${esc(state)}</li>`;
   }).join("")}</ul>`;
   const lv = c.landvermesser ? `<p class="fb">${esc(T.landvermesser)}</p>` : "";
@@ -347,13 +331,13 @@ function pErnte(){
   const st = baseScene();
   st.sky = "schemu"; st.water = { level: LEVEL.tief };
   if (S.year === 2 && S.schaduf === "bauen") st.shaduf = { t: 0.5, n: 0 };
-  const stage = S.year === 3 ? "halm" : "reif";
+  const stage = "reif";
   st.fields = fieldViews(stage);
   const c = ctx();
   st.hot = S.fields.map((f, i) => f.sown && !f.done
     ? { id: "f" + i, g: "ernte", label: "ernten", data: { stage, ...(c.kupfer ? { kupfer: 1 } : {}) } }
     : { id: "f" + i, act: "feldInfo", label: TEXT.ernte.nichts, done: true });
-  if (S.last && S.last.what === "reap") st.people.push({ x: fieldRange(S.last.i).x1 - 24, pose: c.kupfer ? "ernten2" : "ernten", n: S.last.i });
+  if (S.last && S.last.what === "reap") st.people.push({ x: fieldRange(S.last.i).x1 - 14, pose: c.kupfer ? "ernten2" : "ernten", n: HARVESTER });
   if (S.harvested > 0) st.people.push({ x: inDorf() ? 1010 : 960, pose: "tragen", n: 1 });
   st.labels = [st.village ? "dorfspeicher" : "speicher"];
   const done = S.fields.every(f => f.done || !f.sown);
@@ -375,81 +359,54 @@ function pVersorgung(){
   let res = "", bowl = 1;
   if (sp.status === "satt") res = fill(T.satt, { n: sp.surplus });
   if (sp.status === "knapp"){ res = fill(T.knapp, { n: sp.fromVorrat }); bowl = 0.5; }
-  if (sp.status === "hunger"){ res = fill(alone() ? T.alleinHunger : T.hunger, { n: sp.hunger }) + (S.year === 2 ? " " + T.nachbarn : ""); bowl = 0; }
+  if (sp.status === "hunger"){ res = fill(T.hunger, { n: sp.hunger }) + (S.year === 2 ? " " + T.nachbarn : ""); bowl = 0; }
   if (sp.status === "geholfen") res = fill(T.geholfen, { n: sp.help });
-  else if (S.year === 3 && S.dorf === "dorf") res += " " + T.dorfAndere;
+  else if (S.year === 3) res += " " + T.dorfAndere;
   layout(scene(st), panel({ titel: T.titel, text: fill(T.ernte, { n: sp.harvest }) + " " + fill(T.bedarf, { n: sp.need }),
     extra: `${sacks(sp.harvest, "row")}<div class="result ${sp.status}">${familyBowls(bowl)}<p>${esc(res)}</p></div>`,
     side: sideBoxes(), actions: btn("toNext", UI.weiter) }));
 }
 
-/* ---------- Trockenzeit: übrige Kraft einsetzen ---------- */
+/* ---------- Trockenzeit: übrige Arbeitskraft einsetzen ---------- */
 
-function tz(){ return (S.tz[S.year] ||= { koerbe: 0, wall: 0, nach: 0, ausb: 0, beruf: false }); }
-function pflichten(){
-  const list = [];
-  if (S.dorf === "dorf" && S.schuld > 0) list.push({ key: "nachholen", rest: S.schuld });
-  if (S.year === 3 && S.dorf === "dorf" && tz().ausb < KO.deichAusbessern) list.push({ key: "ausbessern", rest: KO.deichAusbessern - tz().ausb });
-  return list;
-}
-const wallMoeglich = () => S.dorf !== "dorf" && S.year < LAST_YEAR && S.wall < KO.erdwall;
+function tz(){ return (S.tz[S.year] ||= { koerbe: 0, ausb: false, beruf: false }); }
+const pflicht = () => S.year === 3 && !tz().ausb;
 
 function pTrockenzeit(){
   const st = baseScene();
   st.sky = "schemu"; st.water = { level: LEVEL.tief };
   st.fields = S.fields.map((f, i) => ({ soil: sowable(S.year, i, S.buckets) ? "brache" : "trocken", plants: f.sown ? "stoppel" : null }));
   const T = TEXT.trockenzeit, W = T.arbeiten, t = tz();
-  const pf = pflichten();
-  const kraftDa = S.kraft > 0;
-  st.hot = [];
-  const pileHot = (id, kind, tx, ty, label) => st.hot.push({ id, g: "korb", label, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx, ty, load: kind } });
-  let cards = "";
-  const card = (key, title, text, state, cls = "") => `<li class="work ${cls}"><b>${esc(title)}</b><span>${esc(text)}</span>${state ? `<em>${esc(state)}</em>` : ""}</li>`;
-  // Pflichten im Dorf
-  for (const p of pf){
-    cards += card(p.key, W[p.key].name, fill(W[p.key].text, { n: p.rest }), kraftDa ? W[p.key].hint : fill(T.nochSchuld, { n: p.rest }), "pflicht");
+  st.hot = []; st.extra = "";
+  const card = (title, text, state, cls = "") => `<li class="work ${cls}"><b>${esc(title)}</b><span>${esc(text)}</span>${state ? `<em>${esc(state)}</em>` : ""}</li>`;
+  let cards = "", hints = [];
+  if (S.year === 3){
+    cards += card(W.ausbessern.name, W.ausbessern.text, t.ausb ? W.ausbessern.fertig : "", t.ausb ? "ok" : "pflicht");
+    if (!t.ausb){
+      st.hot.push({ id: "ausbessern", g: "korb", label: W.ausbessern.name, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx: DIKE.x0 + 22, ty: DIKE.top + 10, load: "erde" } });
+      st.extra += big(A.loadPile({ x: PILE.x, y: PILE.y, kind: "erde" }), PILE.x, PILE.y, 1.1);
+      hints.push(W.ausbessern.hint);
+    }
   }
-  if (pf.length && kraftDa) pileHot(pf[0].key, "erde", DIKE.x0 + 22, DIKE.top + 6, W[pf[0].key].name);
-  // Wahlarbeiten
-  const free = pf.length === 0 && kraftDa;
-  if (S.year !== 3 || S.dorf !== "dorf"){
-    if (tauschMoeglich(S.year)){
-      cards += card("koerbe", W.koerbe.name, fill(W.koerbe.text, { n: NUM.korbTausch }), t.koerbe ? `${t.koerbe} Körbe getauscht` : "", free ? "" : "off");
-      if (free) st.hot.push({ id: "koerbe", g: "flecht", label: W.koerbe.name, rect: { x: WEAVE.x - 34, y: WEAVE.y - 74, w: 100, h: 84 }, data: { sx: WEAVE.x, sy: WEAVE.y } });
-    } else if (S.year > 1) cards += card("koerbe", W.koerbe.name, W.koerbe.nein, "", "off");
-  }
-  if (wallMoeglich()){
-    cards += card("erdwall", W.erdwall.name, fill(W.erdwall.text, { w: S.wall, n: KO.erdwall }), "", free ? "" : "off");
-    if (free) pileHot("erdwall", "erde", WALL.x + 14, GROUND.site.y - 16, W.erdwall.name);
-  } else if (S.dorf !== "dorf" && S.wall >= KO.erdwall && S.year < LAST_YEAR) cards += card("erdwall", W.erdwall.name, W.erdwall.fertig, "", "ok");
-  // Bilder
-  st.extra = "";
-  if (st.hot.some(h => h.g === "korb")) st.extra += big(A.loadPile({ x: PILE.x, y: PILE.y, kind: "erde" }), PILE.x, PILE.y, 1.1);
-  if (tauschMoeglich(S.year)){
-    st.extra += big(A.weaveBasket({ x: WEAVE.x, y: WEAVE.y, p: 0 }), WEAVE.x, WEAVE.y, 1.5);
-    st.people.push({ x: WEAVE.x - 34, pose: "flechten", n: 3, kind: true });
-    if (t.koerbe) st.extra += big(A.basketRow({ x: 630, y: WEAVE.y, n: t.koerbe }), 630, WEAVE.y, 1.2);
-  }
-  // Jahr 4: was die Berufe bringen
+  const korbOk = !pflicht() && S.kraft >= KO.korb - 1e-9;
+  cards += card(W.koerbe.name, fill(W.koerbe.text, { n: NUM.korbTausch }), t.koerbe ? `${t.koerbe} ${t.koerbe === 1 ? "Korb" : "Körbe"} getauscht` : "", korbOk || t.koerbe ? "" : "off");
+  if (korbOk){ st.hot.push({ id: "koerbe", g: "flecht", label: W.koerbe.name, rect: { x: WEAVE.x - 34, y: WEAVE.y - 74, w: 100, h: 84 }, data: { sx: WEAVE.x, sy: WEAVE.y } }); hints.push(W.koerbe.hint); }
+  st.extra += big(A.weaveBasket({ x: WEAVE.x, y: WEAVE.y, p: 0 }), WEAVE.x, WEAVE.y, 1.5);
+  st.people.push({ x: WEAVE.x - 34, pose: "flechten", n: 3, kind: true });
+  if (t.koerbe) st.extra += big(A.basketRow({ x: 630, y: WEAVE.y, n: t.koerbe }), 630, WEAVE.y, 1.2);
+  // Jahr 4: was der Beruf bringt
   let beruf = "";
-  if (S.year === 4 && S.dorf === "dorf" && S.beruf){
-    const n = { toepfer: NUM.toepferTausch, verwalter: NUM.verwalterLohn, weberin: 3 * (KO.ernten - KO.ernteKupfer), landvermesser: 3 * KO.grenzstein }[S.beruf];
-    beruf = `<div class="beruf-effekt"><p>${esc(fill(T[S.beruf], { n }))}</p></div>`;
+  if (S.year === 4 && S.beruf){
+    beruf = `<div class="beruf-effekt"><p>${esc(fill(T[S.beruf], { n: S.beruf === "toepfer" ? NUM.toepferTausch : NUM.verwalterLohn }))}</p></div>`;
     if (S.beruf === "toepfer") st.extra += big(A.potter({ x: 900, y: GROUND.site.y, n: 0 }), 900, GROUND.site.y, 1.1);
     if (S.beruf === "verwalter") st.extra += big(A.steward({ x: 900, y: GROUND.site.y, n: 0 }), 900, GROUND.site.y, 1.1);
     if (S.beruf === "weberin") st.extra += big(A.linenBolt({ x: 880, y: GROUND.site.y }) + A.copperSickles({ x: 910, y: GROUND.site.y }), 900, GROUND.site.y, 1.3);
+    if (S.beruf === "landvermesser") st.extra += big(A.surveyor({ x: 420, y: GROUND.f2.y, n: 0 }), 420, GROUND.f2.y, 1.2);
   }
-  if (S.year === 4 && S.dorf === "allein") beruf = `<div class="beruf-effekt"><p>${esc(BILANZ.vergleichAllein)}</p></div>`;
-  const gemacht = [];
-  if (t.koerbe) gemacht.push(`${t.koerbe} Körbe getauscht`);
-  if (t.wall) gemacht.push(`${t.wall} Kraft am Erdwall`);
-  if (t.nach + t.ausb) gemacht.push(`${t.nach + t.ausb} Kraft am Deich`);
-  const info = (pf.length && kraftDa ? `<p class="fb">${esc(T.pflichtZuerst)}</p>` : "") + (!kraftDa ? `<p class="fb">${esc(T.keineKraft)}</p>` : "")
-    + (gemacht.length ? `<p class="small">${esc(fill(T.gemacht, { liste: gemacht.join(", ") }))}</p>` : "");
-  const hotHint = st.hot.length ? hint(st.hot.map(h => (h.id === "koerbe" ? W.koerbe.hint : W[h.id] ? W[h.id].hint : W.erdwall.hint)).filter((x, i, a) => a.indexOf(x) === i).join(" ")) : "";
+  const info = (pflicht() ? `<p class="fb">${esc(T.pflichtZuerst)}</p>` : "") + (!pflicht() && !korbOk ? `<p class="fb">${esc(T.keineKraft)}</p>` : "");
   layout(scene(st), panel({ titel: T.titel[S.year], text: S.year === 3 ? "" : T.text,
-    extra: beruf + `<ul class="works">${cards}</ul>` + info + hotHint,
-    actions: btn("tzEnde", T.ende), side: sideBoxes() }));
+    extra: beruf + `<ul class="works">${cards}</ul>` + info + (hints.length ? hint(hints[0]) : ""),
+    actions: btn("tzEnde", T.ende, pflicht() ? "disabled" : ""), side: sideBoxes() }));
 }
 
 function pJahresende(){
@@ -457,23 +414,18 @@ function pJahresende(){
   st.sky = "dawn"; st.water = { level: LEVEL.tief };
   st.fields = [0, 1, 2].map(() => ({ soil: "brache", plants: "stoppel" }));
   st.people = [{ x: inDorf() ? 1000 : 846, pose: "winken", n: 0, flip: true }];
+  if (S.year === 3) st.people.push({ x: 1040, pose: "stehen", n: 1 }, { x: 1066, pose: "stehen", n: 3, kind: true });
   const T = TEXT.jahresende[S.year];
   layout(scene(st), panel({ titel: T.titel, text: T.text, actions: btn("toNext", T.knopf), side: sideBoxes() }));
 }
 
-function pDorfWahl(){
+function pDorfRat(){
   const st = baseScene();
   st.sky = "schemu"; st.water = { level: LEVEL.tief }; st.oldMark = true;
   st.fields = [{ soil: "brache", plants: "stoppel" }, { soil: S.fields[1].sown ? "brache" : "trocken", plants: S.fields[1].sown ? "stoppel" : null }, { soil: "trocken" }];
-  const T = TEXT.dorfWahl, p = { n: NUM.dorfBeitrag, d: KO.deich, w: S.wall, e: KO.erdwall };
-  if (!S.dorf){
-    st.people = [0, 1, 2, 3, 4, 5].map(i => ({ x: 760 + i * 28, pose: "stehen", n: i, flip: i % 2 === 1 }));
-    const versuch = S.versuch > 1 ? `<p class="fb">Zweiter Versuch: Du entscheidest noch einmal.</p>` : "";
-    layout(scene(st), panel({ titel: T.titel, text: T.text, extra: versuch + `<p class="fb">${esc(fill(T.kraftInfo, { k: S.kraft }))}</p>` + choices("wahlDorf", T.optionen, p), side: sideBoxes() }));
-    return;
-  }
-  st.people = [{ x: 1040, pose: "stehen", n: 1 }];
-  layout(scene(st), panel({ titel: T.titel, text: T.allein, side: sideBoxes(), actions: btn("toNext", UI.weiter) }));
+  st.people = [0, 1, 2, 3, 4, 5].map(i => ({ x: 760 + i * 28, pose: "stehen", n: i, flip: i % 2 === 1 }));
+  const T = TEXT.dorfRat;
+  layout(scene(st), panel({ titel: T.titel, text: T.text, actions: btn("dorfStart", T.knopf), side: sideBoxes() }));
 }
 
 function pDorfbau(){
@@ -481,126 +433,77 @@ function pDorfbau(){
   st.sky = "schemu"; st.water = { level: LEVEL.tief }; st.oldMark = true;
   st.fields = [{ soil: "brache", plants: "stoppel" }, { soil: S.fields[1].sown ? "brache" : "trocken", plants: S.fields[1].sown ? "stoppel" : null }, { soil: "trocken" }];
   const T = TEXT.dorfbau;
-  const k = S.dorfStep;
-  const rest = KO.deich - S.deichPaid;
-  let text, act = "", extra = "";
-  if (k === 0){
-    const step = T.schritte[0];
-    st.people = [{ x: 820, pose: "bauen", n: 4 }, { x: 1060, pose: "tragen", n: 5 }];
-    if (rest > 0 && S.kraft > 0){
-      st.hot = [{ id: "deich", g: "korb", label: step.name, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx: DIKE.x0 + 22, ty: GROUND.f3.y - 30, load: "erde" } }];
-      st.extra = big(A.loadPile({ x: PILE.x, y: PILE.y }), PILE.x, PILE.y, 1.1);
-      text = fill(step.text, { n: KO.deich });
-      extra = `<p class="big">${S.deichPaid} von ${KO.deich} Kraft</p>` + hint(step.hint);
-    } else {
-      text = rest > 0 ? fill(T.fehlt, { n: rest }) : step.fertig;
-      act = btn("bauen", T.weiterBauen);
-    }
-  } else if (k < 3){
-    st.people = [{ x: 770, pose: "bauen", n: 0 }, { x: 880, pose: "tragen", n: 4 }, { x: 1000, pose: "bauen", n: 5 }, { x: 1090, pose: "tragen", n: 2 }];
-    text = T.schritte[k].text; act = btn("bauen", T.schritte[k].knopf);
-  } else { st.people = [{ x: 1124, pose: "winken", n: 0 }]; text = T.fertig; act = btn("toNext", T.weiter); }
-  const steps = `<ol class="buildsteps">${T.schritte.map((x, i) => `<li class="${i < k ? "ok" : ""}">${esc(x.name)}${i < k ? " ✓" : ""}</li>`).join("")}</ol>`;
-  layout(scene(st), panel({ titel: T.titel, text, extra: steps + extra, actions: act, side: sideBoxes() }));
-}
-
-function pHausbau(){
-  const st = baseScene();
-  st.water = { level: LEVEL.normal };
-  st.fields = [0, 1, 2].map(() => ({ soil: "schlamm", boundary: false }));
-  const T = TEXT.hausbau;
-  const done = S.hausProg >= KO.haus;
-  let extra = `<p class="big">${S.hausProg} von ${KO.haus} Kraft</p>`;
-  if (!done){
-    st.hot = [{ id: "haus", g: "korb", label: T.titel, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx: 896, ty: GROUND.site.y - 30, load: "ziegel" } }];
-    st.extra = big(A.loadPile({ x: PILE.x, y: PILE.y, kind: "ziegel" }), PILE.x, PILE.y, 1.1);
-    st.people = [{ x: 960, pose: "bauen", n: 0 }];
-    extra += hint(T.hint);
-  } else st.people = [{ x: 960, pose: "winken", n: 0 }];
-  layout(scene(st), panel({ titel: T.titel, text: done ? T.fertig : fill(T.text, { n: KO.haus }), extra,
-    actions: btn("toNext", UI.weiter, done ? "" : "disabled"), side: sideBoxes() }));
-}
-
-function gruende(){
-  const g = [];
-  const s2 = S.supplies[2] || {}, s3 = S.supplies[3] || {};
-  g.push(`Jahr 2: Die Flut war zu niedrig. Es fehlten ${s2.hunger} Säcke.`);
-  if (S.y1.wall > 0) g.push(`Nach Jahr 1 habt ihr ${S.y1.wall} Kraft in den Erdwall gesteckt. Dafür hattet ihr ${S.y1.wall * NUM.korbTausch} Säcke weniger Vorrat.`);
-  if (S.schaduf === "lassen") g.push("Ihr habt keinen Schaduf gebaut. Das mittlere Feld blieb trocken.");
-  else if (S.buckets < NUM.schadufVoll) g.push(`Mit dem Schaduf habt ihr nur ${S.buckets} Eimer geschöpft.`);
-  const flood = S.flood3 && S.flood3.house === "zerstoert" ? "hat euren Hof zerstört und den Vorrat verdorben" : "hat euren Hof nicht zerstört – der Erdwall hielt";
-  g.push(`Jahr 3: Ihr seid allein geblieben. Das Hochwasser ${flood}. Es fehlten ${s3.hunger} Säcke, und niemand hat geholfen.`);
-  return g;
-}
-
-function pVerloren(){
-  const st = baseScene();
-  st.sky = "schemu"; st.water = { level: LEVEL.tief };
-  st.fields = [0, 1, 2].map(() => ({ soil: "brache", plants: "stoppel" }));
-  st.people = [0, 1, 2, 3].map(i => ({ x: 1000 + i * 34, pose: "gehen", n: i, kind: i === 3 }));
-  const T = TEXT.verloren;
-  layout(scene(st), panel({ titel: T.titel, text: T.text,
-    extra: `<p class="big">${esc(T.gruende)}</p><ul class="gruende">${gruende().map(x => `<li>${esc(x)}</li>`).join("")}</ul>`,
-    actions: btn("nochmal", T.nochmal) + btn("toNext", T.weiter, "", "secondary") }));
+  const cur = DORFBAU.find(x => S.dorfProg[x.id] < x.n);
+  const steps = `<ol class="buildsteps">${DORFBAU.map(x => { const done = S.dorfProg[x.id] >= x.n; return `<li class="${done ? "ok" : ""}">${esc(T.schritte[x.id].name)}${done ? " ✓" : ""}</li>`; }).join("")}</ol>`;
+  let text = T.text, extra = steps, act = "";
+  if (cur){
+    const kind = { deich: "erde", haeuser: "ziegel", speicher: "korn" }[cur.id];
+    const target = { deich: [DIKE.x0 + 22, GROUND.f3.y - 30], haeuser: [900, GROUND.site.y - 30], speicher: [1030, GROUND.site.y - 30] }[cur.id];
+    st.hot = [{ id: cur.id, g: "korb", label: T.schritte[cur.id].name, rect: { x: PILE.x - 40, y: PILE.y - 60, w: 110, h: 74 }, data: { tx: target[0], ty: target[1], load: kind } }];
+    st.extra = big(A.loadPile({ x: PILE.x, y: PILE.y, kind: kind === "ziegel" ? "ziegel" : "erde" }), PILE.x, PILE.y, 1.1);
+    st.people = [{ x: 820, pose: "bauen", n: 4 }, { x: 960, pose: "tragen", n: 5 }, { x: 1090, pose: "bauen", n: 1 }];
+    extra += hint(T.schritte[cur.id].hint);
+  } else {
+    st.people = [{ x: 1124, pose: "winken", n: 0 }];
+    text = T.fertig;
+    extra += `<p class="fb">${esc(S.beitrag > 0 ? fill(T.beitrag, { n: S.beitrag }) : T.keinBeitrag)}</p>`;
+    act = btn("toNext", T.weiter);
+  }
+  const last = [...DORFBAU].reverse().find(x => S.dorfProg[x.id] > 0);
+  if (cur && last && S.dorfProg[last.id] >= last.n) extra = `<p class="fb">${esc(T.schritte[last.id].fertig)}</p>` + extra;
+  layout(scene(st), panel({ titel: T.titel, text, extra, actions: act, side: sideBoxes() }));
 }
 
 function pBeruf(){
   const T = TEXT.beruf;
-  if (S.dorf === "allein"){
-    learn("berufe");
-    layout(villageView({ fill: 0.3, alt: "Das Dorf der Nachbarn" }), panel({ titel: T.alleinTitel, text: T.allein, actions: btn("toNext", T.weiter), side: sideBoxes() }));
-    return;
-  }
+  const vv = o => villageView({ sky: "achet", fill: 0.45, ...o });
   if (!S.beruf){
-    layout(villageView({ fill: 0.3, alt: "Das Dorf mit seinen Berufen" }), panel({ titel: T.titel, text: T.text, extra: `<div class="choices four">${Object.entries(T.optionen).map(([id, o]) =>
+    layout(vv({ jobs: [], alt: "Das Dorf berät" }), panel({ titel: T.titel, text: T.text, extra: `<div class="choices four">${Object.entries(T.optionen).map(([id, o]) =>
       `<button class="choice" data-act="beruf" data-id="${id}"><b>${esc(o.name)}</b><span>${esc(o.text)}</span></button>`).join("")}</div>` }));
     return;
   }
-  layout(villageView({ fill: 0.3, mine: S.beruf, n: 0 }), panel({ titel: T.titel, text: fill(T.ergebnis, { name: T.optionen[S.beruf].name }), actions: btn("toNext", T.weiter) }));
+  layout(vv({ jobs: [S.beruf], mine: S.beruf, n: 0 }), panel({ titel: T.titel, text: fill(T.ergebnis, { name: T.optionen[S.beruf].name }), actions: btn("toNext", T.weiter), side: sideBoxes() }));
 }
 
 /* ---------- Bilanz ---------- */
 
 function berufPlus(){
-  if (S.dorf !== "dorf" || !S.beruf) return 0;
+  if (!S.beruf) return 0;
   if (S.beruf === "toepfer") return NUM.toepferTausch;
   if (S.beruf === "verwalter") return NUM.verwalterLohn;
-  if (S.beruf === "weberin") return 3 * (KO.ernten - KO.ernteKupfer) * NUM.korbTausch;
-  return 3 * KO.grenzstein * NUM.korbTausch;
+  const gespart = S.beruf === "weberin" ? 3 * (KO.ernten - KO.ernteKupfer) : 3 * KO.grenzstein;
+  return Math.floor(gespart / KO.korb + 1e-9) * NUM.korbTausch;
+}
+
+/* gestapelter Balken: wofür die Arbeitskraft eines Jahres gebraucht wurde (ohne Zahlen) */
+function useBar(y){
+  const u = S.use[y] || {}, total = NUM.kraft;
+  const parts = [["felder", u.felder], ["schaduf", u.schaduf], ["dorf", u.dorf], ["koerbe", u.koerbe], ["frei", S.frei[y] ?? 0]];
+  return `<div class="usebar">${parts.filter(([, v]) => v > 0.01).map(([k, v]) =>
+    `<span class="u-${k}" style="width:${((v / total) * 100).toFixed(2)}%" title="${esc(BILANZ.kraftTeile[k])}"></span>`).join("")}</div>`;
 }
 
 function bilanz(){
   const T = BILANZ, Z = T.zeilen;
   const years = [1, 2, 3, 4].filter(y => S.supplies[y]);
-  const res = s => ({ satt: "satt", knapp: "gerade so satt", hunger: `Hunger (es fehlten ${s.hunger} Säcke)`, geholfen: "satt – mit Hilfe des Dorfspeichers" }[s.status]);
-  const u = y => S.use[y] || {};
+  const res = s => ({ satt: "satt", knapp: "gerade so satt", hunger: `Hunger (es fehlten ${s.hunger === 1 ? "1 Sack" : s.hunger + " Säcke"})`, geholfen: "satt – mit Hilfe des Dorfspeichers" }[s.status]);
   const rows = [
-    [Z.flut, y => T.flut[FLOOD[y]]],
-    [Z.ernte, y => fill(UI.saecke, { n: S.supplies[y].harvest })],
-    [Z.felder, y => u(y).felder || 0],
-    [Z.schaduf, y => u(y).schaduf || "–"],
-    [Z.schutz, y => (u(y).schutz || 0) + (u(y).nachholen || 0) || "–"],
-    [Z.koerbe, y => u(y).koerbe || "–"],
-    [Z.frei, y => S.frei[y] ?? S.kraft],
-    [Z.hilfe, y => (S.supplies[y].help ? fill(UI.saecke, { n: S.supplies[y].help }) + " aus dem Dorfspeicher" : "keine")],
-    [Z.ergebnis, y => res(S.supplies[y]) + (y === 3 && S.lost ? " – Hof verlassen" : "")],
-    [Z.vorrat, y => fill(UI.saecke, { n: S.vorratEnde[y] ?? S.vorrat })]
+    [Z.flut, y => esc(T.flut[FLOOD[y]])],
+    [Z.ernte, y => esc(fill(UI.saecke, { n: S.supplies[y].harvest }))],
+    [Z.kraft, y => useBar(y)],
+    [Z.hilfe, y => esc(S.supplies[y].help ? fill(UI.saecke, { n: S.supplies[y].help }) + " aus dem Dorfspeicher" : "keine")],
+    [Z.ergebnis, y => esc(res(S.supplies[y]))],
+    [Z.vorrat, y => esc(fill(UI.saecke, { n: S.vorratEnde[y] ?? S.vorrat }))]
   ];
+  const legend = `<p class="uselegend">${Object.entries(T.kraftTeile).map(([k, v]) => `<span class="u-${k}">${esc(v)}</span>`).join("")}</p>`;
   const table = `<table class="compare four"><thead><tr><th></th>${years.map(y => `<th>Jahr ${y}</th>`).join("")}</tr></thead><tbody>${rows.map(([z, fn]) =>
-    `<tr><th>${esc(z)}</th>${years.map(y => `<td>${esc(String(fn(y)))}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-  let vergleich = "";
-  if (S.supplies[4]){
-    vergleich = S.dorf === "dorf" && S.beruf
-      ? fill(T.vergleichDorf, { n: berufPlus(), grund: T.gruende[S.beruf] })
-      : T.vergleichAllein;
-    vergleich = `<h3>${esc(T.vergleich)}</h3><p>${esc(vergleich)}</p>`;
-  }
+    `<tr><th>${esc(z)}</th>${years.map(y => `<td>${fn(y)}</td>`).join("")}</tr>`).join("")}</tbody></table>${legend}`;
+  const vergleich = S.supplies[4] && S.beruf ? `<h3>${esc(T.vergleich)}</h3><p>${esc(fill(T.vergleichText, { n: berufPlus(), grund: T.gruende[S.beruf] }))}</p>` : "";
   const ent = [
-    `Trockenzeit Jahr 1: ${S.y1.koerbe} Körbe getauscht, ${S.y1.wall} Kraft am Erdwall`,
-    `Jahr 2: ${TEXT.schadufWahl.optionen[S.schaduf].name}${S.schaduf === "bauen" ? ` (${S.buckets} Eimer geschöpft)` : ""}`,
-    `Ende Jahr 2: ${TEXT.dorfWahl.optionen[S.dorf].name}`
+    `Trockenzeit Jahr 1: ${S.koerbe[1] || 0} Körbe geflochten und getauscht`,
+    `Jahr 2: ${TEXT.schadufWahl.optionen[S.schaduf].name}${S.schaduf === "bauen" ? ` (${S.buckets} Eimer geschöpft)` : ""}`
   ];
-  if (S.beruf) ent.push(`Jahr 3: Neuer Beruf – ${TEXT.beruf.optionen[S.beruf].name}`);
+  if (S.beruf) ent.push(`Jahr 4: Neuer Beruf – ${TEXT.beruf.optionen[S.beruf].name}`);
   S.neu = [];
   $app.innerHTML = `${topbar()}<main class="page">
     <h2>${esc(T.titel)}</h2>
@@ -704,17 +607,12 @@ document.addEventListener("pointercancel", () => { if (drag && drag.ghost) drag.
 /* ---------- Urteil, Impuls ---------- */
 
 function spielbelege(){
-  const B = SPIELBELEGE, s2 = S.supplies[2] || {}, s3 = S.supplies[3] || {};
+  const B = SPIELBELEGE, s2 = S.supplies[2] || {};
   const list = [B.schlamm, fill(B.ernte1, { n: (S.supplies[1] || {}).harvest || 12 }), B.kraft, B.niedrig];
   list.push(s2.status === "hunger" ? B.hunger : B.knapp);
   if (S.schaduf === "bauen") list.push(B.schaduf);
-  list.push(B.hoch);
-  if (S.dorf === "dorf"){ list.push(B.deich, B.speicher); if (S.supplies[4] && S.beruf) list.push(B.beruf); }
-  else {
-    list.push(S.flood3 && S.flood3.house === "zerstoert" ? B.alleinZerstoert : B.alleinWall);
-    if (s3.hunger > 0) list.push(B.alleinHunger);
-    list.push(B.dorfGeschuetzt);
-  }
+  list.push(B.hoch, B.deich, B.speicher);
+  if (S.supplies[4] && S.beruf) list.push(B.beruf);
   return list;
 }
 
@@ -748,12 +646,11 @@ function goPhase(year, phase){
   if (phase === "sirius" && year > 1 && S.year !== year) closeYear(S.year);
   S.year = year; S.phase = phase; S.month = monthOf(year, phase); S.last = null; S.neu = [];
   if (phase === "sirius"){ S.fields = freshFields(); S.harvested = 0; S.kraft = NUM.kraft; useYear(); }
-  if (phase === "dorfWahl" && !S.dorf) S.snap = JSON.stringify({ ...S, snap: null });
   if (phase === "trockenzeit"){
     if (year === 1) learn("brache");
     if (year === 4){
       learn("teilung");
-      if (S.dorf === "dorf" && !tz().beruf){
+      if (!tz().beruf){
         tz().beruf = true;
         if (S.beruf === "toepfer") book("toepfer", NUM.toepferTausch);
         if (S.beruf === "verwalter") book("verwalter", NUM.verwalterLohn);
@@ -766,14 +663,6 @@ function advance(){
   const n = nextPhase(S.year, S.phase, flags());
   if (!n){ closeYear(S.year); S.screen = "bilanz"; S.neu = []; save(); render(); window.scrollTo(0, 0); return; }
   goPhase(n.year, n.phase);
-}
-
-/* Hochwasser in Jahr 3, Monat 4: Was passiert mit dem Hof, wenn man allein lebt? */
-function hochwasser(){
-  if (S.year !== 3 || S.dorf !== "allein" || S.flood3) return;
-  S.flood3 = hochwasserAllein(S.vorrat, S.wall >= KO.erdwall);
-  S.hausWeg = S.flood3.house === "zerstoert";
-  book("flut", -S.flood3.lost);
 }
 
 /* ---------- Gesten ---------- */
@@ -797,29 +686,35 @@ function bucket(){
   S.busy = true; S.shadufT = 1; S.buckets++; render();
   setTimeout(() => { S.shadufT = 0.5; S.busy = false; save(); render(); }, 650);
 }
+/* ein Korb beim Dorfbau: die übrige Arbeitskraft wird gleichmäßig auf alle Schritte verteilt */
+function dorfStep(id){
+  const x = DORFBAU.find(d => d.id === id);
+  if (!x || S.dorfProg[id] >= x.n) return;
+  S.dorfProg[id]++;
+  const allDone = DORFBAU.every(d => S.dorfProg[d.id] >= d.n);
+  spend(allDone ? S.kraft : S.dorfRate, "dorf");
+  if (id === "speicher" && S.dorfProg.speicher >= x.n){
+    S.beitrag = Math.min(S.vorrat, NUM.dorfBeitrag);
+    book("dorf", -S.beitrag);
+  }
+}
 
 const HINTS = () => ({
   stein: TEXT.aussaat.schritte.grenzstein.hint, seil: TEXT.aussaat.schritte.grenzeNeu.hint,
   pflug: TEXT.aussaat.schritte.pfluegen.hint, saat: TEXT.aussaat.schritte.saeen.hint,
-  ernte: TEXT.ernte.hint, zug: TEXT.schaduf.hint, korb: TEXT.trockenzeit.arbeiten.erdwall.hint, flecht: TEXT.trockenzeit.arbeiten.koerbe.hint
+  ernte: TEXT.ernte.hint, zug: TEXT.schaduf.hint, korb: TEXT.dorfbau.schritte.deich.hint, flecht: TEXT.trockenzeit.arbeiten.koerbe.hint
 });
 
 initGestures({
   canStart(type, id){
     if (S.screen !== "spiel" || S.busy) return "";
-    if (["stein", "seil", "pflug", "saat"].includes(type)){
-      const i = +id[1];
-      if (!affordable(i)) return TEXT.aussaat.keineKraft;
-      return true;
-    }
-    if (type === "ernte") return true;
+    if (["stein", "seil", "pflug", "saat"].includes(type)) return affordable(+id[1]) ? true : TEXT.aussaat.keineKraft;
     if (type === "zug"){
       if (S.buckets >= NUM.schadufVoll) return TEXT.schaduf.voll;
-      if (S.kraft - KO.eimer < schadufReserve(S.buckets + 1)) return TEXT.aussaat.keineKraft;
+      if (S.kraft - KO.eimer < schadufReserve(S.buckets + 1) - 1e-9) return TEXT.aussaat.keineKraft;
       return true;
     }
-    if (type === "korb") return S.kraft >= (id === "haus" ? NUM.hausLadung : 1) ? true : TEXT.trockenzeit.keineKraft;
-    if (type === "flecht") return S.kraft >= KO.korb ? true : TEXT.trockenzeit.keineKraft;
+    if (type === "flecht") return S.kraft >= KO.korb - 1e-9 ? true : TEXT.trockenzeit.keineKraft;
     return true;
   },
   onTap(type, id, el, msg){
@@ -830,14 +725,11 @@ initGestures({
     else if (type === "ernte") reap(+id[1]);
     else if (type === "zug") return bucket();
     else if (type === "korb"){
-      if (id === "haus"){ spend(NUM.hausLadung, "schutz"); S.hausProg += NUM.hausLadung; }
-      else if (id === "deich"){ spend(1, "schutz"); S.deichPaid++; }
-      else if (id === "erdwall"){ spend(1, "schutz"); S.wall++; tz().wall++; if (S.year === 1) S.y1.wall++; }
-      else if (id === "nachholen"){ spend(1, "nachholen"); S.schuld--; tz().nach++; }
-      else if (id === "ausbessern"){ spend(1, "schutz"); tz().ausb++; }
+      if (id === "ausbessern"){ spend(Math.min(S.kraft, KO.deichAusbessern), "dorf"); tz().ausb = true; }
+      else dorfStep(id);
     } else if (type === "flecht"){
       spend(KO.korb, "koerbe"); book("koerbe", NUM.korbTausch); tz().koerbe++;
-      if (S.year === 1) S.y1.koerbe++;
+      S.koerbe[S.year] = (S.koerbe[S.year] || 0) + 1;
     }
     S.neu = []; save(); render();
   }
@@ -846,17 +738,16 @@ initGestures({
 const actions = {
   startGame(){ S = fresh(); S.screen = "spiel"; goPhase(1, "sirius"); },
   toAchet(){ goPhase(S.year, "achet"); },
-  nextMonth(){ S.month++; S.neu = []; if (S.phase === "achet" && S.month === 4) hochwasser(); save(); render(); },
+  nextMonth(){ S.month++; S.neu = []; save(); render(); },
   toNext(){ advance(); },
   toVersorgung(){
     const h = S.harvested;
-    const sp = supply(h, S.vorrat, S.year === 3 && S.dorf === "dorf" ? NUM.dorfspeicher : 0);
+    const sp = supply(h, S.vorrat, S.year === 3 ? NUM.dorfspeicher : 0);
     S.supplies[S.year] = sp; S.harvested = 0;
     book("ueberschuss", sp.surplus);
     book("gegessen", -sp.fromVorrat);
     S.vorrat = sp.vorrat;
     S.hunger[S.year] = sp.hunger > 0;
-    if (S.year === 3) S.lost = verloren(S.hunger);
     goPhase(S.year, "versorgung");
     ({ 1: ["schlamm", "kraft"], 2: ["niedrig"], 3: ["vorrat"], 4: [] })[S.year].forEach(learn);
     save(); render();
@@ -868,29 +759,10 @@ const actions = {
     if (!sowable(S.year, i, S.buckets)){ toast(S.year === 2 && i === 2 ? T.zuHoch : T.zuTrocken, "", 3200); return; }
     toast(T.keineKraft, "", 3600);
   },
-  tzEnde(){
-    const t = tz();
-    if (S.year === 3 && S.dorf === "dorf" && t.ausb < KO.deichAusbessern){ S.schuld += KO.deichAusbessern - t.ausb; t.ausb = KO.deichAusbessern; }
-    if (S.year === 1) learn("kalender");
-    advance();
-  },
+  tzEnde(){ if (pflicht()) return; if (S.year === 1) learn("kalender"); advance(); },
   wahlSchaduf(el){ S.schaduf = el.dataset.id; if (S.schaduf === "bauen") spend(KO.schadufBau, "schaduf"); save(); render(); },
-  wahlDorf(el){
-    S.dorf = el.dataset.id;
-    if (S.dorf === "dorf"){ book("dorf", -Math.min(S.vorrat, NUM.dorfBeitrag)); advance(); return; }
-    save(); render();
-  },
-  bauen(){
-    if (S.dorfStep === 0 && S.deichPaid < KO.deich) S.schuld += KO.deich - S.deichPaid;
-    S.dorfStep++; S.neu = []; save(); render();
-  },
+  dorfStart(){ S.dorfRate = S.kraft / dorfbauGesten(); goPhase(2, "dorfbau"); },
   beruf(el){ S.beruf = el.dataset.id; learn("berufe"); save(); render(); },
-  nochmal(){
-    if (!S.snap) return;
-    const v = S.versuch + 1;
-    S = JSON.parse(S.snap); S.versuch = v; S.snap = null;
-    goPhase(2, "dorfWahl");
-  },
   go(el){ S.screen = el.dataset.to; save(); render(); window.scrollTo(0, 0); },
   selCard(el){ if (suppressClick) return; const i = +el.dataset.card; S.q.sel = S.q.sel === i ? null : i; S.q.msg = null; save(); render(); },
   dropSel(el){ if (S.q && S.q.sel != null) placeCard(S.q.sel, el.dataset.zone); },

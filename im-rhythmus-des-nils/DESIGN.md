@@ -1,9 +1,33 @@
 # Im Rhythmus des Nils – Design-Entscheidungen
 
-**Stand:** Version 0.4 spielbar (9.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
-`im-rhythmus-des-nils-v0.1/`, `-v0.2/`, `-v0.3/` (Branches `archiv/nil-v0.1` bis `archiv/nil-v0.3`).
+**Stand:** Version 0.5 spielbar (10.10.2026). Grafik von Rob abgenommen (`galerie.html`). Ältere Versionen bleiben spielbar:
+`im-rhythmus-des-nils-v0.1/` bis `-v0.4/` (Branches `archiv/nil-v0.1` bis `archiv/nil-v0.4`).
 
-## Neu in 0.4 (Robs Entscheidungen vom 9.10.2026)
+## Neu in 0.5 (Robs Entscheidungen vom 10.10.2026)
+- **Arbeitskraft als Balken ohne Zahlen** (Rob: 0.4 war „zu excelig“). Der Balken leert sich mit jeder Arbeit;
+  der schraffierte Teil mit Sichel ist für die Ernte reserviert. Die Werte stehen nur in `content.js` (`NUM.kraft`,
+  `NUM.kosten`), im Spiel und in der Bilanz erscheinen keine Kraft-Zahlen (Bilanz: gestapelter Balken je Jahr).
+  Begriff „Arbeitskraft“; „Zeit“ als Alternative im Hinterkopf behalten (Rob).
+- **Das Dorf entsteht automatisch** nach der Ernte in Jahr 2 („Die Familien beraten“). Weggefallen: Entscheidung
+  Dorf/allein, Erdwall, zerstörter Hof, Wiederaufbau, Nachholen von Deich-Arbeit, Verlieren.
+- **Dorfbau in einem Durchgang:** Deich (2 Gesten), Häuser (2), Dorfspeicher bauen und füllen (1). Die Familie arbeitet
+  mit, bis ihre Arbeitskraft für das Jahr aufgebraucht ist; die übrige Kraft wird gleichmäßig auf die Gesten verteilt.
+  Wer viel geschöpft hat, trägt weniger bei – „die anderen gleichen das aus“. Das Dorf wird immer fertig.
+- **Beitrag zum Dorfspeicher** nur, wenn Getreide übrig ist (mit 6 Eimern: 1 Sack; ohne Schaduf oder mit 3 Eimern: nichts,
+  eigener Text).
+- **Trockenzeiten:** J1 Körbe (Rob: zeigt, dass die Menschen in der Trockenzeit anderen Arbeiten nachgehen), J2 Dorfbau,
+  J3 Deich ausbessern (Pflicht) und Körbe, J4 Körbe. Tausch nur nicht nach der schlechten Flut in J2.
+- **Berufe am Anfang von Jahr 4** (Achet, Felder unter Wasser): Die Flut ist gut, eine gute Ernte ist zu erwarten.
+  Die Familien beraten, was im letzten Jahr viel Arbeitskraft gekostet hat; die Beschreibung jedes Berufs knüpft
+  daran an. Jahr 3 endet mit „Gemeinsam überstanden“. (Rob testet, ob sich das logisch anfühlt.)
+- Korrekturen: Ernte immer mit derselben Figur; Getreide in J3 bei der Ernte reif; vor der Berufswahl zeigt das Dorf
+  noch keine Berufe.
+- Zahlen (versteckt): Arbeitskraft 48; Feld = Grenzstein 3, pflügen 4, säen 2, ernten 4 (Kupfersichel 1);
+  nach dem Hochwasser Grenze 4; Schaduf 4, Eimer 2; Korb 3; Deich ausbessern 2.
+  Ergebnis: J1 3 Körbe; J2 ohne Schaduf Hunger (2 Säcke fehlen), mit 3 Eimern gerade so, mit 6 Eimern gerade so + 1 Sack
+  Beitrag; J3 Dorfspeicher hilft bzw. gerade so; J4 mit jedem Beruf 9 Säcke am Ende (ohne Beruf wären es 6).
+
+## Neu in 0.4 (Robs Entscheidungen vom 9.10.2026) – Stand vor 0.5
 - **Arbeitskraft als knappe Größe.** Die Familie hat pro Jahr 22 Kraft (Anzeige als Kästchen: verbraucht – noch
   nötig – frei). Jede Arbeit kostet Kraft. Ein Feld kann man nur anfangen, wenn die Kraft bis zur Ernte reicht.
   Übrige Kraft wird in der Trockenzeit eingesetzt. Ziel: Die Arbeit der Menschen wird sichtbar („Der Nil schenkt
@@ -225,7 +249,8 @@ Gefahr einer zu hohen Flut).
 | Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
 ## Offen
-- 0.4 im Test mit der 6e prüfen: Spieldauer mit vier Jahren und Gesten; werden die Gesten verstanden (Hinweis „So geht's“)?
+- Verlieren: Seit 0.5 kann man nicht mehr verlieren. Rob möchte eine neue Möglichkeit dafür (Vorschläge offen).
+- 0.5 im Test mit der 6e prüfen (Berufe am Anfang von Jahr 4 logisch?). Aus 0.4 weiterhin: Spieldauer mit vier Jahren und Gesten; werden die Gesten verstanden (Hinweis „So geht's“)?
   Wird anders entschieden, wird verloren, hilft die Wiederholung? Funktionieren die Gesten auf den Schul-iPads (Safari)?
 - Speicherverwalter: Deutung „Lohn aus dem Dorfspeicher“ von Rob abnehmen lassen.
 - Übersetzung von M3 beschaffen und den Platzhalter ersetzen.
