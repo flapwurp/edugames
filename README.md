@@ -11,6 +11,7 @@ Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicher
 |---|---|---|
 | [Who is it?](who-is-it/) | Kl. 5–7 | Personen beschreiben (has got, is wearing), Fragen stellen |
 | [Reactor Rescue](reactor-rescue/) | Kl. 8–9 | Bedienungsanleitung lesen, Konditionalsätze, präzise beschreiben und anweisen |
+| [Spot the Difference](spot-the-difference/) | Kl. 6 (Prototyp) | Zwei fast gleiche Bilder (Geburtstagsfeier): beschreiben, fragen, widersprechen – there is/are, Präpositionen, Farben, Zahlen, present progressive |
 | [Im Rhythmus des Nils](im-rhythmus-des-nils/) | Geschichte Kl. 6 | Einzelspiel (iPad quer): vier Jahre am Nil – Flut, Schlamm, Kalender, Arbeitskraft und Gesten, Schaduf, Deich, Vorräte, Berufe; Quellencheck und Urteil „Ein Geschenk des Nils?“ · [Grafik-Galerie](im-rhythmus-des-nils/galerie.html) · ältere Versionen: [0.1](im-rhythmus-des-nils-v0.1/), [0.2](im-rhythmus-des-nils-v0.2/), [0.3](im-rhythmus-des-nils-v0.3/), [0.4](im-rhythmus-des-nils-v0.4/), [0.5](im-rhythmus-des-nils-v0.5/) |
 
 ## So funktioniert das Zusammenspiel ohne Server
@@ -26,6 +27,7 @@ Texte, Redemittel, Zeiten und Level stehen jeweils in `content.js`:
 
 - `who-is-it/content.js` – Level, Redemittel, Merkmale der Personen
 - `reactor-rescue/content.js` – Level, Zeiten, Redemittel, Glossar
+- `spot-the-difference/content.js` – Level, Zeit, Zeitabzug für Fehltipps, Redemittel, Wörter für die Sätze in der Auflösung
 - `im-rhythmus-des-nils/content.js` – alle Texte, Zahlen (Ernte, Bedarf, Arbeitskraft und Kosten jeder Arbeit, Schaduf-Eimer, Dorfspeicher, Berufe), Merksätze, Quelle M3 (noch Platzhalter), Begriffe
 
 Nur die Wörter zwischen den Anführungszeichen ändern, Kommas und Klammern stehen lassen.
@@ -39,6 +41,7 @@ index.html            Startseite
 shared/               gemeinsamer Code (Zufall aus dem Spielcode, Sitzung, Sync, Dialoge, Schriften)
 who-is-it/            app.js (Bildschirme) · people.js (Personen erzeugen/zeichnen) · content.js · style.css
 reactor-rescue/       app.js (Bildschirme) · rules.js (Reaktor + Regeln) · manual.js (Handbuch) · content.js · style.css
+spot-the-difference/  app.js (Bildschirme) · spot.js (Bilder und Unterschiede aus dem Code, Tippen prüfen, Sätze) · party.js (Szene Geburtstagsfeier: Orte, Zeichnungen) · content.js · style.css
 im-rhythmus-des-nils/ app.js (Bildschirme) · gesture.js (Wischgesten) · sim.js (Ablauf, Ernte, Arbeitskraft, Versorgung) · scene.js (Querschnitt) · assets.js (Zeichnungen) · galerie.html · content.js
 tests/                automatische Prüfungen (z. B. „jeder Reaktor ist lösbar“)
 ```

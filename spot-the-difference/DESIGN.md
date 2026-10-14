@@ -1,7 +1,6 @@
 # Spot the Difference – Vorhaben
 
-**Stand:** Idee, noch kein Code (14.10.2026). Arbeitstitel.
-Grundlage für die Ausarbeitung in einer neuen Sitzung. Die allgemeinen Leitlinien in `CLAUDE.md` gelten.
+**Stand:** Prototyp mit einer Szene (14.10.2026). Arbeitstitel. Die allgemeinen Leitlinien in `CLAUDE.md` gelten.
 
 ## Eckdaten (von Rob festgelegt)
 - **Fach / Gruppe:** Englisch, Klasse 6 (auch schon Klasse 5 denkbar)
@@ -38,19 +37,28 @@ Hier sprechen beide gleich viel und wechseln ständig zwischen Beschreiben, Frag
 - **Feedback nach der Runde:** Beide Bilder nebeneinander, Unterschiede markiert, zu jedem Unterschied ein Mustersatz
   („In picture A there are three apples. In picture B there are two apples.“).
 
-## Offene Fragen für die Ausarbeitung
-1. **Wie wird ein gefundener Unterschied markiert, ohne dass blindes Herumtippen funktioniert?**
-   Beide Geräte kennen über den Spielcode beide Bilder, können Tipps also selbst prüfen. Möglichkeiten:
-   - Fehltipps kosten Zeit oder einen Stern
-   - begrenzte Zahl an Fehltipps
-   - nach dem Tippen die Art des Unterschieds wählen (missing / colour / number / place)
-   - ein Unterschied zählt erst, wenn beide ihn markiert haben
-2. **Gemeinsamer Punktestand:** Zählt jedes Gerät für sich, oder braucht es einen Bestätigungscode wie bei Reactor Rescue?
-3. **Level:** Was unterscheidet Easy, Medium und Hard (Zahl der Unterschiede, Zahl der Gegenstände, wie deutlich die Unterschiede sind)?
-   Leitlinie: Level ändern Menge und Hilfen, nicht den kognitiven Anspruch.
-4. **Runden und Zeit:** wie viele Szenen pro Spiel, wie lange pro Szene?
-5. **Gestaltung auf dem iPad:** Bildgröße, Querformat, Tippflächen groß genug für kleine Gegenstände?
-6. **Welche Szenen zuerst** (passend zur aktuellen Unit in Klasse 5/6)?
+## Entscheidungen (mit Rob geklärt, 14.10.2026)
+- **Zielgruppe:** vorerst nur Klasse 6. Ob es auch für Klasse 5 taugt, wird später entschieden.
+- **Zeitlimit:** Jede Szene hat einen kleinen Countdown. Ziel ist, in der Zeit so viele Unterschiede wie möglich zu finden.
+- **Fehltipp:** Ein Tipp auf eine Stelle ohne Unterschied zieht Zeit vom Countdown ab (Wert in `content.js`). Die Runde endet, wenn alle Unterschiede gefunden sind oder die Zeit abgelaufen ist.
+- **Keine Wahl der Unterschiedsart** beim Markieren: Tippen auf die Stelle genügt.
+- **Level:** Die Arten von Unterschieden sind auf allen Leveln gleich. Level ändern nur Menge und Hilfen:
+  Easy wenige Dinge im Raum und 5 Unterschiede, Medium mehr Dinge und 6, Hard noch mehr Dinge und 7 Unterschiede.
+- **Runden:** 2 Szenen pro Spiel.
+- **iPad:** Querformat, die Szene füllt den Bildschirm. Kleine Dinge stehen in Behältern oder Gruppen, die als Ganzes die Tippfläche sind (z. B. die Becher auf dem Tisch).
+- **Szenen:** zuerst „Birthday party“ (Green Line 2, Unit 1 „It's my party“), danach „Park“ (Unit 2 „My friends and I“, Freizeitaktivitäten beschreiben).
+- **Present progressive** ist in Klasse 6 eingeführt. Tätigkeiten von Personen sind daher eine Unterschiedsart („The girl is eating cake.“).
+- **Punktestand:** noch offen, wird im Prototyp ausprobiert. Vorschlag: Jedes Gerät zählt für sich, kein Bestätigungscode.
+  Wird ein Unterschied gefunden, tippen ihn beide in ihrem Bild an.
+
+## Umsetzung im Prototyp (Vorschläge von Claude, mit Rob zu prüfen)
+- Spieler 1 sieht Bild A, Spieler 2 Bild B. Beide Bilder entstehen aus dem Spielcode.
+- Arten von Unterschieden: fehlt/da, Farbe, Anzahl, Ort (Präposition), Tätigkeit einer Person, Wetter vor dem Fenster.
+  In jeder Runde mindestens ein Unterschied bei Ort, Anzahl und Tätigkeit.
+- Farben ohne Rot und Grün; Farbunterschiede nur zwischen Farben, die sich auch in der Helligkeit deutlich unterscheiden.
+- „Oops, German!“ kostet wie ein Fehltipp Zeit (statt eines Sterns wie in Who is it?).
+- Auflösung nach jeder Runde: beide Bilder mit nummerierten Markierungen, zu jedem Unterschied zwei Mustersätze aus Sicht
+  der beiden Spieler („In my picture there are three presents.“ – „In my picture there are four presents.“).
 
 ## Nächster Schritt
-In einer neuen Sitzung im Repo: offene Fragen mit Rob klären, dann einen ersten spielbaren Prototyp mit einer Szene bauen.
+Prototyp mit der Szene „Birthday party“ testen (zwei Browserfenster), dann Szene „Park“ ergänzen.
