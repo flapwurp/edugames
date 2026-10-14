@@ -7,7 +7,7 @@
 export const CONFIG = {
   roundsPerGame: 2,
   scenes: ["party", "park"],    // which scene is used in round 1, round 2, …
-  wrongTapSeconds: 10,          // a tap where there is no difference costs this many seconds
+  wrongTapSeconds: 30,          // a tap where there is no difference costs this many seconds
   germanSeconds: 10,            // "Oops, German!" costs this many seconds
   /* What makes a level harder is the number of things in the picture (extras),
      not the number of differences: more things, but only a few more differences. */
