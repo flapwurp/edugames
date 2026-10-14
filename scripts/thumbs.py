@@ -50,11 +50,14 @@ with sync_playwright() as p:
     save(shot, "who-is-it")
     pg.close()
 
-    # Reactor Rescue – Bedienpult
-    pg = b.new_page(viewport={"width": 1024, "height": 768}, **ctx)
-    pg.goto(BASE + "reactor-rescue/")
-    clicks(pg, ["[data-act=new]", "[data-act=level]", "[data-act=toIntro]", "[data-act=start]"])
-    save(pg.screenshot(clip={"x": 28, "y": 76, "width": 968, "height": 530}), "reactor-rescue", fy=0.55)
+    # Reactor Rescue – Reaktorkern vom Startbildschirm (das Bedienpult soll vor dem Spiel nicht zu sehen sein)
+    pg = b.new_page(viewport={"width": 1024, "height": 768}, reduced_motion="reduce", **ctx)
+    pg.goto(BASE + "reactor-rescue/"); pg.wait_for_timeout(500)
+    r = pg.locator(".core").bounding_box()
+    h = r["height"] * 1.35; w = h * 2
+    cx = r["x"] + r["width"] / 2; cy = r["y"] + r["height"] / 2
+    pg.evaluate("document.querySelector('.title,.lead,.stack') && document.querySelectorAll('.title,.lead,.stack').forEach(e => e.style.visibility = 'hidden')")
+    save(pg.screenshot(clip={"x": cx - w / 2, "y": max(0, cy - h / 2), "width": w, "height": h}), "reactor-rescue")
     pg.close()
 
     # Spot the Difference – Partyszene
