@@ -1,6 +1,6 @@
 # Spot the Difference – Vorhaben
 
-**Stand:** Prototyp mit einer Szene (14.10.2026). Arbeitstitel. Die allgemeinen Leitlinien in `CLAUDE.md` gelten.
+**Stand:** Prototyp mit zwei Szenen (14.10.2026). Arbeitstitel. Die allgemeinen Leitlinien in `CLAUDE.md` gelten.
 
 ## Eckdaten (von Rob festgelegt)
 - **Fach / Gruppe:** Englisch, Klasse 6 (auch schon Klasse 5 denkbar)
@@ -42,8 +42,10 @@ Hier sprechen beide gleich viel und wechseln ständig zwischen Beschreiben, Frag
 - **Zeitlimit:** Jede Szene hat einen kleinen Countdown. Ziel ist, in der Zeit so viele Unterschiede wie möglich zu finden.
 - **Fehltipp:** Ein Tipp auf eine Stelle ohne Unterschied zieht Zeit vom Countdown ab (Wert in `content.js`). Die Runde endet, wenn alle Unterschiede gefunden sind oder die Zeit abgelaufen ist.
 - **Keine Wahl der Unterschiedsart** beim Markieren: Tippen auf die Stelle genügt.
-- **Level:** Die Arten von Unterschieden sind auf allen Leveln gleich. Level ändern nur Menge und Hilfen:
-  Easy wenige Dinge im Raum und 5 Unterschiede, Medium mehr Dinge und 6, Hard noch mehr Dinge und 7 Unterschiede.
+- **Level:** Die Arten von Unterschieden sind auf allen Leveln gleich. Level ändern nur Menge und Hilfen.
+- **Grundsatz Schwierigkeit (Rob):** Mehr Unterschiede machen ein Bild nicht schwerer, solange nicht auch mehr Dinge im Bild sind.
+  Schwerer wird es über die Dichte: mehr Dinge, aber kaum mehr Unterschiede.
+  Stand: Easy ca. 10 Dinge / 5 Unterschiede, Medium ca. 13 / 5, Hard ca. 17 / 6 (Werte `extras` und `differences` in `content.js`).
 - **Runden:** 2 Szenen pro Spiel.
 - **iPad:** Querformat, die Szene füllt den Bildschirm. Kleine Dinge stehen in Behältern oder Gruppen, die als Ganzes die Tippfläche sind (z. B. die Becher auf dem Tisch).
 - **Szenen:** zuerst „Birthday party“ (Green Line 2, Unit 1 „It's my party“), danach „Park“ (Unit 2 „My friends and I“, Freizeitaktivitäten beschreiben).
@@ -60,5 +62,13 @@ Hier sprechen beide gleich viel und wechseln ständig zwischen Beschreiben, Frag
 - Auflösung nach jeder Runde: beide Bilder mit nummerierten Markierungen, zu jedem Unterschied zwei Mustersätze aus Sicht
   der beiden Spieler („In my picture there are three presents.“ – „In my picture there are four presents.“).
 
+## Szenen
+- **Birthday party** (Runde 1, `party.js`): Zimmer mit Fenster, Tisch, Sofa, Regal. Orte: on the windowsill, on the shelf, next to the plant,
+  under the table, on/behind/in front of the sofa. Tätigkeiten: eating cake, drinking lemonade, reading, playing the guitar, taking a photo, waving, dancing.
+- **In the park** (Runde 2, `park.js`): Baum, Bank, Teich, Picknickdecke. Orte: in/under the tree, on/under/next to the bench, on the blanket,
+  in front of the pond. Tätigkeiten: eating an ice cream, listening to music, reading, taking a photo, waving, drinking lemonade, playing the guitar.
+  Wetter: the sun is shining / it's cloudy. Kopfbedeckung: cap statt Partyhut.
+- Figuren (Kinder, Tiere, kleine Dinge) liegen gemeinsam in `figures.js`, damit neue Szenen sie wiederverwenden.
+
 ## Nächster Schritt
-Prototyp mit der Szene „Birthday party“ testen (zwei Browserfenster), dann Szene „Park“ ergänzen.
+Beide Szenen mit Klasse 6 testen. Danach entscheiden: Punktestand, „Oops, German!“, weitere Szenen (z. B. classroom, market).

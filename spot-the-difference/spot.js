@@ -6,10 +6,11 @@
    ===================================================================== */
 import { roundRng, shuffle, pickWeighted } from "../shared/random.js";
 import { levelOf } from "../shared/session.js";
-import { CONFIG, COLOURS, NUMBERS, PARTY } from "./content.js";
+import { CONFIG, COLOURS, NUMBERS, PARTY, PARK } from "./content.js";
 import * as party from "./party.js";
+import * as park from "./park.js";
 
-export const SCENES = { party: { art: party, words: PARTY } };
+export const SCENES = { party: { art: party, words: PARTY }, park: { art: park, words: PARK } };
 
 const REQUIRED = ["place", "number", "activity"];
 const WEIGHTS = { missing: 3, colour: 3, place: 2, number: 1.5, activity: 1.5, hat: 1, hatColour: 0.7, weather: 0.7 };
@@ -37,7 +38,7 @@ export const sceneFor = round => CONFIG.scenes[(round - 1) % CONFIG.scenes.lengt
 /* ---------- building the base picture ---------- */
 function baseState(def, rng){
   switch (def.kind){
-    case "weather": return { weather: rng() < 0.6 ? "sun" : "rain" };
+    case "weather": return { weather: rng() < 0.6 ? def.weathers[0] : def.weathers[1] };
     case "person": return { activity: null, colour: pick(rng, def.colours), hat: rng() < 0.6 ? pick(rng, def.hats) : null };
     default: {
       const s = {};
@@ -120,7 +121,7 @@ function tryDiff(type, def, A, B, rng, art){
     }
     case "weather":
       if (def.kind !== "weather") return false;
-      side[def.id].weather = base.weather === "sun" ? "rain" : "sun"; return true;
+      side[def.id].weather = def.weathers.find(w => w !== base.weather); return true;
   }
   return false;
 }
@@ -190,7 +191,9 @@ const num = (n, one, many) => (n === 1 ? `is one ${one}` : `are ${NUMBERS[n] || 
 
 /* What a player would say about this difference, looking at their own picture. */
 export function sentence(r, diff, player){
-  const W = SCENES[r.scene].words, st = pictureFor(r, player)[diff.id], T = W.things[diff.id] || {};
+  const { words: W, art } = SCENES[r.scene];
+  const st = pictureFor(r, player)[diff.id], T = W.things[diff.id] || {};
+  const def = art.OBJECTS.find(d => d.id === diff.id);
   const where = st && st.slot ? W.places[st.slot] : T.where;
   const say = s => `In my picture ${s}.`;
   switch (diff.type){
@@ -200,12 +203,12 @@ export function sentence(r, diff, player){
       return say(`${T.the} is ${where}`);
     case "colour": {
       const c = COLOURS[st.colour].word;
-      if (diff.id === "balloons") return say(`the balloons are ${c}`);
+      if (T.plural) return say(`${T.the} are ${c}`);
       if (T.clothes) return say(`${T.the}'s ${T.clothes} is ${c}`);
       return say(`${T.the} is ${c}`);
     }
     case "number": {
-      const N = diff.id === "cake" ? W.things.candles : T;
+      const N = def.countWord ? W.things[def.countWord] : T;
       return say(`there ${num(st.count, N.one, N.many)} ${N.where}`);
     }
     case "activity":

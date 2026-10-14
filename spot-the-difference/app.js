@@ -266,8 +266,7 @@ function phrases(){
     if (t) return t.a ? t.a.replace(/^an? /, "") : t.many;
     return W.furniture[k] || k;
   };
-  const things = ["cake", "candles", "presents", "cups", "balloons", "clock", "lamp", "sofa", "table", "window", "windowsill", "shelf", "plant",
-    "cat", "dog", "teddy", "ball", "car", "girl", "boy", "hat"];
+  const things = a.WORDLIST;
   const tile = (k, text) => `<figure class="word"><div class="wpic">${a.iconSVG(k)}</div><figcaption>${esc(text)}</figcaption></figure>`;
   const bank = things.map(k => tile(k, label(k))).join("");
   const acts = Object.entries(W.activities).map(([k, t]) => tile(k, t.replace(/^is /, ""))).join("");

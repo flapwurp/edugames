@@ -6,13 +6,15 @@
 
 export const CONFIG = {
   roundsPerGame: 2,
-  scenes: ["party", "party"],   // which scene is used in round 1, round 2, …
+  scenes: ["party", "park"],    // which scene is used in round 1, round 2, …
   wrongTapSeconds: 10,          // a tap where there is no difference costs this many seconds
   germanSeconds: 10,            // "Oops, German!" costs this many seconds
+  /* What makes a level harder is the number of things in the picture (extras),
+     not the number of differences: more things, but only a few more differences. */
   levels: {
-    1: { name: "Easy",   info: "A small party – find 5 differences",          extras: 3, differences: 5, seconds: 240 },
-    2: { name: "Medium", info: "More things in the room – find 6 differences", extras: 5, differences: 6, seconds: 270 },
-    3: { name: "Hard",   info: "A big party – find 7 differences",            extras: 7, differences: 7, seconds: 300 }
+    1: { name: "Easy",   info: "Not many things in the pictures – 5 differences", extras: 2, differences: 5, seconds: 240 },
+    2: { name: "Medium", info: "More things in the pictures – 5 differences",     extras: 5, differences: 5, seconds: 270 },
+    3: { name: "Hard",   info: "Lots of things in the pictures – 6 differences",  extras: 9, differences: 6, seconds: 300 }
   },
   keyPhrases: [               // always visible during a round
     "In my picture there is / there are …",
@@ -22,11 +24,11 @@ export const CONFIG = {
   ],
   phrases: [
     "In my picture there is a cat under the table.",
-    "In my picture there are three presents.",
+    "In my picture there are three … .",
     "Is there a clock in your picture?",
-    "How many balloons are there?",
+    "How many … are there?",
     "Where is the dog?",
-    "What colour is the sofa?",
+    "What colour is the …?",
     "What is the girl doing?",
     "The boy is playing the guitar.",
     "Me too. / Same here.",
@@ -72,9 +74,11 @@ export const PARTY = {
     candles:  { one: "candle",     many: "candles",       where: "on the cake" },
     presents: { one: "present",    many: "presents",      where: "on the table" },
     cups:     { one: "cup",        many: "cups",          where: "on the table" },
-    balloons: { one: "balloon",    many: "balloons",      where: "above the sofa", the: "the balloons" },
+    balloons: { one: "balloon",    many: "balloons",      where: "above the sofa", the: "the balloons", plural: true },
     clock:    { a: "a clock",      the: "the clock",      where: "on the wall" },
     lamp:     { a: "a lamp",       the: "the lamp",       where: "above the table" },
+    bird:     { a: "a bird",       the: "the bird",       where: "outside the window" },
+    rug:      { a: "a rug",        the: "the rug",        where: "under the table" },
     sofa:     { a: "a sofa",       the: "the sofa" },
     cat:      { a: "a cat",        the: "the cat" },
     dog:      { a: "a dog",        the: "the dog" },
@@ -100,4 +104,50 @@ export const PARTY = {
   },
   /* Extra words in the word list (with pictures) */
   furniture: { table: "table", window: "window", shelf: "shelf", plant: "plant", windowsill: "windowsill" }
+};
+
+/* Words for the park scene (Green Line 2, Unit 2: free time) */
+export const PARK = {
+  title: "In the park",
+  places: {
+    inTree:     "in the tree",
+    underTree:  "under the tree",
+    onBench:    "on the bench",
+    underBench: "under the bench",
+    nextBench:  "next to the bench",
+    onBlanket:  "on the blanket",
+    frontPond:  "in front of the pond"
+  },
+  things: {
+    bench:      { a: "a bench",      the: "the bench" },
+    blanket:    { a: "a blanket",    the: "the blanket" },
+    flowers:    { one: "flower",     many: "flowers",    where: "in front of the tree", the: "the flowers", plural: true },
+    birds:      { one: "bird",       many: "birds",      where: "in the sky" },
+    ducks:      { one: "duck",       many: "ducks",      where: "on the pond" },
+    kite:       { a: "a kite",       the: "the kite",       where: "in the sky" },
+    basket:     { a: "a basket",     the: "the basket",     where: "on the blanket" },
+    bin:        { a: "a bin",        the: "the bin",        where: "next to the bench" },
+    cat:        { a: "a cat",        the: "the cat" },
+    dog:        { a: "a dog",        the: "the dog" },
+    ball:       { a: "a ball",       the: "the ball" },
+    skateboard: { a: "a skateboard", the: "the skateboard" },
+    bag:        { a: "a bag",        the: "the bag" },
+    girl:       { a: "a girl",       the: "the girl",       clothes: "dress" },
+    boy:        { a: "a boy",        the: "the boy",        clothes: "T-shirt" },
+    hat:        { a: "a cap",        the: "cap" }
+  },
+  activities: {
+    icecream: "is eating an ice cream",
+    music:    "is listening to music",
+    reading:  "is reading a book",
+    photo:    "is taking a photo",
+    waving:   "is waving",
+    drinking: "is drinking lemonade",
+    guitar:   "is playing the guitar"
+  },
+  weather: {
+    sun:    "the sun is shining",
+    cloudy: "it's cloudy"
+  },
+  furniture: { tree: "tree", pond: "pond", sky: "sky" }
 };
