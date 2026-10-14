@@ -16,7 +16,7 @@ Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicher
 
 ## Werkzeuge (`tools/`)
 
-Keine Lernspiele im Sinne der Leitlinien, sondern Unterrichtswerkzeuge für den Laptop an der digitalen Tafel.
+Keine Lernspiele im Sinne der Leitlinien, sondern Unterrichtswerkzeuge für den Laptop an der digitalen Tafel. Sie stehen nicht auf der Startseite, sondern sind nur direkt erreichbar, z. B. https://flapwurp.github.io/edugames/tools/vocab-football/
 
 | Werkzeug | Für | Inhalt |
 |---|---|---|
@@ -31,6 +31,7 @@ damit beide Geräte denselben Stand haben (`shared/sync.js`).
 
 ## Inhalte selbst ändern
 
+- `games.js` – Kacheln der Startseite: Fach, Beschreibung, Klassenstufe, Spielerzahl, Minuten, Alpha/Beta, Vorschaubild
 Texte, Redemittel, Zeiten und Level stehen jeweils in `content.js`:
 
 - `who-is-it/content.js` – Level, Redemittel, Merkmale der Personen
@@ -46,7 +47,9 @@ direkt neben dem Code steht, der ihn prüft.
 ## Aufbau
 
 ```
-index.html            Startseite
+index.html            Startseite (Fachumschalter, Kacheln aus games.js)
+games.js              Spiele auf der Startseite
+scripts/thumbs.py     erzeugt die Vorschaubilder in shared/thumbs/ (Python, Playwright)
 shared/               gemeinsamer Code (Zufall aus dem Spielcode, Sitzung, Sync, Dialoge, Schriften)
 who-is-it/            app.js (Bildschirme) · people.js (Personen erzeugen/zeichnen) · content.js · style.css
 reactor-rescue/       app.js (Bildschirme) · rules.js (Reaktor + Regeln) · manual.js (Handbuch) · content.js · style.css

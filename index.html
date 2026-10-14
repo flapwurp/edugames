@@ -6,62 +6,149 @@
 <title>EduGames</title>
 <link rel="stylesheet" href="shared/fonts.css">
 <style>
-:root{--bg:#eef2f6;--surface:#fff;--ink:#17202c;--muted:#566476;--line:#d0d8e2;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#0e141e;--surface:#18212e;--ink:#e6ecf3;--muted:#9ba9bb;--line:#2b3748;color-scheme:dark}}
+:root{
+  --bg:#f5f1e8;--surface:#fffdf8;--ink:#1d2533;--muted:#5d6676;--line:#e2d9c8;--chip:#f1ebdf;
+  --accent:#2f5fd0;--accent-ink:#fff;
+  --alpha:#7b4fc9;--beta:#2c7a8c;
+  color-scheme:light
+}
+html[data-subject="geschichte"]{--accent:#a8542a}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12161d;--surface:#1b212b;--ink:#e8ecf2;--muted:#a2acba;--line:#2c3542;--chip:#252d39;color-scheme:dark}
+  :root{--accent:#6f95f0;--accent-ink:#0d1320}
+  html[data-subject="geschichte"]{--accent:#e08a5c}
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;font-size:18px;line-height:1.45}
-main{max-width:860px;margin:0 auto;padding:32px 16px 48px}
-h1{font-family:"Chakra Petch","Arial Narrow",system-ui,sans-serif;font-size:clamp(36px,8vw,56px);margin:0 0 6px}
-p.lead{color:var(--muted);margin:0 0 28px}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-a.game{display:block;text-decoration:none;color:inherit;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 0 var(--line)}
-a.game:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
-a.game h2{margin:0 0 6px;font-size:1.5rem}
-a.game p{margin:0;color:var(--muted)}
-a.game .tag{display:inline-block;margin-top:12px;font-weight:700;font-size:.9rem;border-radius:999px;padding:3px 10px;background:var(--bg)}
-.wio h2{font-family:"Bungee","Arial Black",sans-serif;font-weight:400}
-.rr h2{font-family:"Chakra Petch","Arial Narrow",sans-serif}
-.nil h2{font-family:Georgia,"Times New Roman",serif}
-.tools-h{font-family:"Chakra Petch","Arial Narrow",system-ui,sans-serif;font-size:1.6rem;margin:36px 0 4px}
-.vf h2{font-family:"Bungee","Arial Black",sans-serif;font-weight:400;color:#2a8a3e}
-.std h2{font-family:"Bungee","Arial Black",sans-serif;font-weight:400;color:#7e4fc4}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;font-size:18px;line-height:1.45;-webkit-text-size-adjust:100%}
+main{max-width:1100px;margin:0 auto;padding:max(24px,env(safe-area-inset-top)) 16px 56px}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+h1{font-family:"Chakra Petch","Arial Narrow",system-ui,sans-serif;font-weight:700;font-size:clamp(30px,7vw,52px);line-height:1.05;margin:0;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:4px 0 28px;max-width:60ch}
+
+/* Fachumschalter oben rechts */
+.switch{display:inline-flex;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
+.switch button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:16px;
+  min-height:44px;padding:0 18px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.switch button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.switch button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Kacheln */
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;list-style:none;margin:0;padding:0}
+.card{display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;background:var(--surface);
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(30,25,15,.06),0 6px 18px rgba(30,25,15,.06);
+  transition:transform .12s ease,box-shadow .12s ease;-webkit-tap-highlight-color:transparent}
+.card:active{transform:scale(.985)}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media (hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(30,25,15,.08),0 12px 28px rgba(30,25,15,.10)}}
+.media{position:relative;aspect-ratio:2/1;background:var(--chip);border-bottom:1px solid var(--line)}
+.media img{display:block;width:100%;height:100%;object-fit:cover}
+.stage{position:absolute;top:10px;right:10px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#fff;padding:4px 10px;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.stage.alpha{background:var(--alpha)}
+.stage.beta{background:var(--beta)}
+.body{display:flex;flex-direction:column;flex:1;padding:16px 18px 18px}
+.body h2{font-size:1.35rem;line-height:1.2;margin:0 0 6px}
+.body p{margin:0 0 14px;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:5px;margin:auto 0 0;padding:0;list-style:none}
+.meta li{display:inline-flex;align-items:center;gap:5px;background:var(--chip);border-radius:999px;padding:4px 10px 4px 8px;font-size:14px;font-weight:700;white-space:nowrap}
+.meta svg{width:15px;height:15px;flex:none;color:var(--muted)}
+.grade{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin:0 0 8px;padding:3px 10px 3px 8px;border-radius:999px;
+  background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:700;letter-spacing:.02em}
+.grade svg{width:16px;height:16px}
+.empty{color:var(--muted)}
+
+@media (max-width:520px){
+  .switch button{padding:0 12px;font-size:15px}
+  .games{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <main>
-  <h1>EduGames</h1>
-  <p class="lead">Games for two players. Sit back to back, talk – in English – and solve it together.</p>
-  <div class="games">
-    <a class="game wio" href="who-is-it/">
-      <h2>Who is it?</h2>
-      <p>One of you sees one person, the other one sees many. Describe, ask and find the right one.</p>
-      <span class="tag">2 players · 10–15 min</span>
-    </a>
-    <a class="game rr" href="reactor-rescue/">
-      <h2>Reactor Rescue</h2>
-      <p>One of you sees the reactor, the other one has the manual. Keep it stable before it explodes!</p>
-      <span class="tag">2 players · 15–20 min</span>
-    </a>
-    <a class="game std" href="spot-the-difference/">
-      <h2>Spot the Difference</h2>
-      <p>Your pictures are almost the same. Describe, ask and find the differences together!</p>
-      <span class="tag">2 players · 10–15 min · prototype</span>
-    </a>
-    <a class="game nil" href="im-rhythmus-des-nils/" lang="de">
-      <h2>Im Rhythmus des Nils</h2>
-      <p>Vier Jahre auf einem Bauernhof im alten Ägypten. War der Nil ein Geschenk?</p>
-      <span class="tag">Geschichte · Einzelarbeit · iPad quer · 20–25 Min.</span>
-    </a>
-  </div>
-  <h2 class="tools-h">Classroom tools</h2>
-  <p class="lead">For the teacher's laptop and the digital board – the whole class plays together.</p>
-  <div class="games">
-    <a class="game vf" href="tools/vocab-football/">
-      <h2>Vocab Football</h2>
-      <p>Two teams race to write the word. Right answer? Swipe the ball towards the goal!</p>
-      <span class="tag">Whole class · digital board · any word list</span>
-    </a>
-  </div>
+  <header>
+    <h1>EduGames</h1>
+    <div class="switch" role="group" aria-label="Fach / Subject" id="switch"></div>
+  </header>
+  <p class="lead" id="lead"></p>
+  <ul class="games" id="games"></ul>
+  <noscript><p>Diese Seite braucht JavaScript. · This page needs JavaScript.</p></noscript>
 </main>
+<script type="module">
+import { SUBJECTS, GAMES } from "./games.js";
+
+const ICON = {
+  players: '<path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19"/><circle cx="10" cy="8" r="3.5"/><path d="M20 19v-1.5a3.5 3.5 0 0 0-2.5-3.35M15.5 4.6a3.5 3.5 0 0 1 0 6.8"/>',
+  player: '<path d="M18 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 6 17.5V19"/><circle cx="12" cy="8" r="3.5"/>',
+  time: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  grade: '<path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3V11"/>'
+};
+const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const range = ([a, b]) => (a === b ? `${a}` : `${a}–${b}`);
+
+const TAGS = {
+  en: {
+    players: n => (n === 1 ? "1 player" : `${n} players`),
+    minutes: m => `${range(m)} min`,
+    grades: g => (g[0] === g[1] ? `Year ${g[0]}` : `Years ${range(g)}`)
+  },
+  de: {
+    players: n => (n === 1 ? "Einzelarbeit" : `${n} Personen`),
+    minutes: m => `${range(m)} Min.`,
+    grades: g => `Klasse ${range(g)}`
+  }
+};
+const STAGE = { alpha: "Alpha", beta: "Beta" };
+
+const $switch = document.getElementById("switch");
+const $lead = document.getElementById("lead");
+const $games = document.getElementById("games");
+const keys = Object.keys(SUBJECTS);
+
+function initial(){
+  const fromHash = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+  if (keys.includes(fromHash)) return fromHash;
+  try { const s = sessionStorage.getItem("edugames-subject"); if (keys.includes(s)) return s; } catch {}
+  return keys[0];
+}
+
+function card(g){
+  const t = TAGS[SUBJECTS[g.subject].lang] || TAGS.en;
+  const stage = STAGE[g.stage] ? `<span class="stage ${g.stage}">${STAGE[g.stage]}</span>` : "";
+  return `<li><a class="card" href="${esc(g.href)}">
+    <div class="media"><img src="${esc(g.image)}" alt="" width="800" height="400" loading="lazy" decoding="async">${stage}</div>
+    <div class="body">
+      <span class="grade">${icon("grade")}${esc(t.grades(g.grades))}</span>
+      <h2>${esc(g.title)}</h2>
+      <p>${esc(g.text)}</p>
+      <ul class="meta">
+        <li>${icon(g.players === 1 ? "player" : "players")}${esc(t.players(g.players))}</li>
+        <li>${icon("time")}${esc(t.minutes(g.minutes))}</li>
+      </ul>
+    </div></a></li>`;
+}
+
+function show(subject){
+  const s = SUBJECTS[subject];
+  document.documentElement.lang = s.lang;
+  document.documentElement.dataset.subject = subject;
+  $switch.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.subject === subject)));
+  $lead.textContent = s.lead;
+  const list = GAMES.filter(g => g.subject === subject);
+  $games.innerHTML = list.length ? list.map(card).join("") : `<li class="empty">${esc(s.empty)}</li>`;
+  try { sessionStorage.setItem("edugames-subject", subject); } catch {}
+}
+
+$switch.innerHTML = keys.map(k => `<button type="button" data-subject="${k}" lang="${SUBJECTS[k].lang}" aria-pressed="false">${esc(SUBJECTS[k].label)}</button>`).join("");
+$switch.addEventListener("click", e => {
+  const b = e.target.closest("button[data-subject]");
+  if (!b) return;
+  history.replaceState(null, "", "#" + b.dataset.subject);
+  show(b.dataset.subject);
+});
+window.addEventListener("hashchange", () => show(initial()));
+show(initial());
+</script>
 </body>
 </html>

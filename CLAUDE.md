@@ -53,8 +53,8 @@ genauso, wenn man den Fachinhalt austauscht, ist der Inhalt nur Verpackung – s
 - `shared/session.js`: Spielcode (erste Ziffer = Level), Spielerrollen pro Runde, Speichern.
 - `shared/ui.js`: Dialoge, Toasts, Redemittel-Leiste, Hilfsfunktionen.
 - Pro Spiel: `content.js` (nur Daten, von Rob editierbar), Logik-Datei(en) ohne DOM-Zugriff (testbar in Node), `app.js` (Bildschirme), `style.css`, `DESIGN.md` (Spielidee und spielspezifische Entscheidungen).
-- Neue Spiele werden auf der Startseite `index.html` und in der Tabelle in `README.md` ergänzt.
-- `tools/`: Unterrichtswerkzeuge, **keine Edu-Games** (z. B. Vocab Football für den Laptop an der digitalen Tafel). Die didaktischen Leitlinien und die iPad-Vorgabe gelten dort nicht; was gilt, steht in der jeweiligen `DESIGN.md`.
+- Neue Spiele werden in `games.js` (Startseite) und in der Tabelle in `README.md` ergänzt. Jede Kachel ist gleich aufgebaut: Vorschaubild 800 × 400 (`shared/thumbs/`, erzeugt mit `scripts/thumbs.py`), Beschreibung, Klassenstufe, Spielerzahl, Minuten, Entwicklungsstand `alpha`/`beta` (oder leer, wenn fertig). Die Startseite filtert nach Fach (Umschalter oben rechts, Link direkt aufs Fach mit `#englisch` / `#geschichte`).
+- `tools/`: Unterrichtswerkzeuge, **keine Edu-Games** (z. B. Vocab Football für den Laptop an der digitalen Tafel). Die didaktischen Leitlinien und die iPad-Vorgabe gelten dort nicht; was gilt, steht in der jeweiligen `DESIGN.md`. Werkzeuge stehen **nicht** auf der Startseite, sie sind nur über ihre direkte Adresse erreichbar.
 
 ## Arbeitsweise
 - Beim Entwurf eines neuen Spiels zuerst mit Rob klären: Lernziel und Kompetenz, Lerngruppe, Platz in der Reihe, Sozialform, Reflexion (ja/nein, wie), bei Geschichte die Dekonstruktion, bei sensiblen Themen die Rollen.
