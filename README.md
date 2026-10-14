@@ -14,6 +14,14 @@ Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicher
 | [Spot the Difference](spot-the-difference/) | Kl. 6 (Prototyp) | Zwei fast gleiche Bilder (Geburtstagsfeier, Park): beschreiben, fragen, widersprechen – there is/are, Präpositionen, Farben, Zahlen, present progressive |
 | [Im Rhythmus des Nils](im-rhythmus-des-nils/) | Geschichte Kl. 6 | Einzelspiel (iPad quer): vier Jahre am Nil – Flut, Schlamm, Kalender, Arbeitskraft und Gesten, Schaduf, Deich, Vorräte, Berufe; Quellencheck und Urteil „Ein Geschenk des Nils?“ · [Grafik-Galerie](im-rhythmus-des-nils/galerie.html) · ältere Versionen: [0.1](im-rhythmus-des-nils-v0.1/), [0.2](im-rhythmus-des-nils-v0.2/), [0.3](im-rhythmus-des-nils-v0.3/), [0.4](im-rhythmus-des-nils-v0.4/), [0.5](im-rhythmus-des-nils-v0.5/) |
 
+## Werkzeuge (`tools/`)
+
+Keine Lernspiele im Sinne der Leitlinien, sondern Unterrichtswerkzeuge für den Laptop an der digitalen Tafel.
+
+| Werkzeug | Für | Inhalt |
+|---|---|---|
+| [Vocab Football](tools/vocab-football/) | Englisch Kl. 6 und 9 | Digitaler Vokabelfußball: zwei Teams schreiben an der Tafel, bei richtiger Antwort wird der Ball per Wischen Richtung Tor gespielt. Vokabellisten in `tools/vocab-football/content.js` oder spontan einfügen |
+
 ## So funktioniert das Zusammenspiel ohne Server
 
 Spieler 1 startet ein Spiel und bekommt einen vierstelligen Code (die erste Ziffer ist das Level).
@@ -28,6 +36,7 @@ Texte, Redemittel, Zeiten und Level stehen jeweils in `content.js`:
 - `who-is-it/content.js` – Level, Redemittel, Merkmale der Personen
 - `reactor-rescue/content.js` – Level, Zeiten, Redemittel, Glossar
 - `spot-the-difference/content.js` – Level, Zeit, Zeitabzug für Fehltipps, Redemittel, Wörter für die Sätze in der Auflösung
+- `tools/vocab-football/content.js` – Vokabellisten (Englisch ; Deutsch, eine Zeile pro Vokabel) und Torwart-Stärke
 - `im-rhythmus-des-nils/content.js` – alle Texte, Zahlen (Ernte, Bedarf, Arbeitskraft und Kosten jeder Arbeit, Schaduf-Eimer, Dorfspeicher, Berufe), Merksätze, Quelle M3 (noch Platzhalter), Begriffe
 
 Nur die Wörter zwischen den Anführungszeichen ändern, Kommas und Klammern stehen lassen.
@@ -43,6 +52,7 @@ who-is-it/            app.js (Bildschirme) · people.js (Personen erzeugen/zeich
 reactor-rescue/       app.js (Bildschirme) · rules.js (Reaktor + Regeln) · manual.js (Handbuch) · content.js · style.css
 spot-the-difference/  app.js (Bildschirme) · spot.js (Bilder und Unterschiede aus dem Code, Tippen prüfen, Sätze) · party.js / park.js (Szenen: Orte, Zeichnungen) · figures.js (Kinder, Tiere, Dinge) · content.js · style.css
 im-rhythmus-des-nils/ app.js (Bildschirme) · gesture.js (Wischgesten) · sim.js (Ablauf, Ernte, Arbeitskraft, Versorgung) · scene.js (Querschnitt) · assets.js (Zeichnungen) · galerie.html · content.js
+tools/vocab-football/ app.js (Bildschirme, Spielfeld, Wischen, Klänge) · match.js (Ablauf, Torschuss, Listen lesen) · content.js · style.css
 tests/                automatische Prüfungen (z. B. „jeder Reaktor ist lösbar“)
 ```
 

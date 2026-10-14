@@ -1,0 +1,192 @@
+/* Vocab Football – für die digitale Tafel (Querformat, aus der letzten Reihe lesbar) */
+:root{
+  --night:#08160f; --night2:#0f2419; --panel:#132c20; --panel-line:#25503a;
+  --chalk:#f5f8f1; --muted:#a9c2b3;
+  --red:#e5484d; --red-d:#a92f37; --blue:#2f7cf6; --blue-d:#1d55b8;
+  --grass1:#2f8a3e; --grass2:#2a7d38; --gold:#ffd23f;
+  --display:"Bungee","Arial Black",Impact,sans-serif;
+  --ui:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:
+    radial-gradient(60vw 40vh at 8% -10%, rgba(255,255,230,.10), transparent 70%),
+    radial-gradient(60vw 40vh at 92% -10%, rgba(255,255,230,.10), transparent 70%),
+    linear-gradient(var(--night2), var(--night));
+  color:var(--chalk); font-family:var(--ui); font-size:18px; line-height:1.4;
+  overflow:hidden; user-select:none; -webkit-user-select:none;
+}
+button{font:inherit;color:inherit}
+
+/* ---------- Knöpfe ---------- */
+.btn{
+  border:0; border-radius:14px; padding:.6em 1.2em; font-weight:700; cursor:pointer;
+  background:var(--gold); color:#1d1a08; box-shadow:0 4px 0 rgba(0,0,0,.35);
+  touch-action:manipulation;
+}
+.btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn:disabled{opacity:.4; cursor:default; transform:none}
+.btn.secondary{background:#e8efe9; color:#17261d}
+.btn.big{font-size:1.35em; padding:.6em 1.6em}
+.icon{
+  width:2.4em; height:2.4em; border-radius:12px; border:2px solid var(--panel-line);
+  background:var(--panel); font-size:1.1em; cursor:pointer; touch-action:manipulation;
+}
+.icon:disabled{opacity:.3}
+
+/* ---------- Startbildschirm ---------- */
+.setup{max-width:940px; margin:0 auto; padding:28px 20px 40px; height:100%; overflow:auto; user-select:auto; -webkit-user-select:auto}
+.setup-head h1{font-family:var(--display); font-weight:400; font-size:clamp(40px,6vw,68px); margin:0; display:flex; align-items:center; gap:.3em; letter-spacing:.01em}
+.setup-head p{margin:.3em 0 1.2em; color:var(--muted); font-size:1.1em}
+.ball-icon{
+  width:.85em; height:.85em; border-radius:50%; display:inline-block; flex:none;
+  background:radial-gradient(circle at 50% 45%, #222 0 22%, transparent 23%), radial-gradient(circle at 35% 30%, #fff, #d9d9d9);
+  box-shadow:0 0 0 3px #222 inset;
+}
+.panel-card{background:var(--panel); border:2px solid var(--panel-line); border-radius:18px; padding:16px 18px; margin-bottom:14px}
+.panel-card h2{margin:0 0 10px; font-size:.95em; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.row2 .panel-card{margin-bottom:14px}
+select,textarea,input{
+  width:100%; font:inherit; color:var(--chalk); background:#0b1c14; border:2px solid var(--panel-line);
+  border-radius:12px; padding:.55em .7em;
+}
+select{font-size:1.1em}
+textarea{margin-top:10px; font-family:Consolas,"Courier New",monospace; font-size:.95em; resize:vertical}
+.segs{display:flex; gap:8px; flex-wrap:wrap}
+.segs.small{margin-top:10px}
+.seg{
+  flex:1 1 auto; min-width:6em; padding:.55em .8em; border-radius:12px; cursor:pointer; font-weight:700;
+  background:#0b1c14; border:2px solid var(--panel-line); color:var(--muted);
+}
+.seg.on{background:var(--chalk); color:#132c20; border-color:var(--chalk)}
+.ok{margin:.7em 0 0; color:#8ee59f; font-weight:700}
+.warn{color:#ffcf6b; font-weight:400}
+p.warn{margin:.7em 0 0}
+.teams-in{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.teams-in label span{display:block; font-size:.8em; font-weight:700; margin-bottom:4px}
+.teams-in .red span{color:var(--red)} .teams-in .blue span{color:#6fa3ff}
+.teams-in .red input{border-color:var(--red-d)} .teams-in .blue input{border-color:var(--blue-d)}
+.start-row{display:flex; gap:14px; justify-content:flex-end; flex-wrap:wrap; margin:8px 0 18px}
+.keys{color:var(--muted); font-size:.9em}
+.keys summary{cursor:pointer}
+kbd{background:#0b1c14; border:1px solid var(--panel-line); border-radius:6px; padding:0 .4em; font-family:inherit}
+
+/* ---------- Spielbildschirm ---------- */
+.match{
+  height:100vh; height:100dvh; display:grid; grid-template-rows:auto auto minmax(0,1fr) auto;
+  gap:1.2vh; padding:1.2vh 2vw 1.6vh; max-width:1900px; margin:0 auto;
+}
+.board{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:2vw}
+.board .side{display:flex; align-items:center; gap:1vw}
+.board .side.red{justify-content:flex-end}
+.board .side.blue{justify-content:flex-start}
+.tname{font-family:var(--display); font-size:clamp(20px,3.6vh,40px); letter-spacing:.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.side.red .tname{color:#ff8a8d} .side.blue .tname{color:#8fb8ff}
+.score{
+  font-family:var(--display); font-size:clamp(34px,6.5vh,72px); min-width:1.5em; text-align:center; line-height:1.1;
+  border-radius:12px; padding:0 .2em; color:#fff;
+}
+.side.red .score{background:var(--red); box-shadow:0 4px 0 var(--red-d)}
+.side.blue .score{background:var(--blue); box-shadow:0 4px 0 var(--blue-d)}
+.mid{display:flex; align-items:center; gap:1vw}
+.vs{font-family:var(--display); font-size:clamp(30px,5vh,56px); color:var(--muted)}
+
+.card{
+  justify-self:center; width:min(1100px, 92%); text-align:center; color:#15211a;
+  background:#fbfbf4; border-radius:20px; padding:.6vh 2vw 1vh; box-shadow:0 6px 0 rgba(0,0,0,.35);
+}
+.card .label{font-size:clamp(14px,2.1vh,22px); color:#4b5d52; text-transform:uppercase; letter-spacing:.08em}
+.card .label b{color:#15211a}
+.prompt{display:inline-block; font-weight:700; font-size:clamp(40px,9vh,104px); line-height:1.1; white-space:nowrap}
+.answer{font-weight:700; font-size:clamp(26px,5vh,58px); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.answer.red{color:var(--red-d)} .answer.blue{color:var(--blue-d)} .answer.skip{color:#6b7a71}
+.answer.placeholder{visibility:hidden}
+.answer.skip::before{content:"Answer: "; font-weight:400}
+.card.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-14px)}40%{transform:translateX(12px)}60%{transform:translateX(-8px)}80%{transform:translateX(5px)}}
+
+.pitch-wrap{position:relative; min-height:0; display:flex; justify-content:center}
+#pitch{width:100%; height:100%; display:block; touch-action:none; filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
+.lines *{fill:none; stroke:rgba(255,255,255,.85); stroke-width:3}
+.mark{fill:rgba(255,255,255,.45)}
+.goalbg{fill:rgba(0,0,0,.2)}
+.net{stroke:rgba(255,255,255,.4); stroke-width:1}
+.frame{stroke:#fff; stroke-width:6; fill:none; stroke-linecap:round}
+.frame.back{stroke-width:2.5; opacity:.7}
+.post{fill:#fff}
+.goal.ripple .net{animation:ripple .6s 2}
+@keyframes ripple{50%{transform:translateX(3px)}}
+#netL.ripple .net{animation-name:rippleL}
+@keyframes rippleL{50%{transform:translateX(-3px)}}
+
+.keeper .kbody{stroke:#fff; stroke-width:2.5}
+.keeper.red .kbody{fill:var(--red)} .keeper.blue .kbody{fill:var(--blue)}
+.kglove{fill:var(--gold); stroke:#5a4a00; stroke-width:1.5}
+
+.kicker circle{stroke:#fff; stroke-width:3}
+.kicker.red circle{fill:var(--red)} .kicker.blue circle{fill:var(--blue)}
+
+.ball{fill:#fff; stroke:#1d1d1d; stroke-width:1.3}
+.patch{fill:#1d1d1d}
+.seam{stroke:#1d1d1d; stroke-width:1.2; fill:none}
+.shadow{fill:rgba(0,0,0,.28)}
+#ballG .ring{display:none; fill:none; stroke-width:5; transform-box:fill-box; transform-origin:center}
+#ballG.active .ring{display:block; animation:pulse 1s ease-in-out infinite}
+#ballG.red .ring{stroke:#ffb3b5} #ballG.blue .ring{stroke:#b7d1ff}
+@keyframes pulse{0%,100%{transform:scale(.85); opacity:1}50%{transform:scale(1.15); opacity:.45}}
+
+.aim{display:none}
+.aim line{stroke-width:7; stroke-linecap:round}
+.aim.red line{stroke:#ffd0d1} .aim.blue line{stroke:#d3e3ff}
+.aim.red circle{fill:#ffd0d1} .aim.blue circle{fill:#d3e3ff}
+
+/* Ergebnis und Spielerwechsel über dem Spielfeld */
+.overlay{position:absolute; inset:0; pointer-events:none; display:none; flex-direction:column; align-items:center; justify-content:center; gap:2vh}
+.overlay.show{display:flex}
+.result{text-align:center; animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.result .big{font-family:var(--display); font-size:clamp(48px,11vh,130px); line-height:1; color:#fff; text-shadow:0 5px 0 rgba(0,0,0,.45), 0 0 30px rgba(0,0,0,.35)}
+.result .sub{font-weight:700; font-size:clamp(18px,3vh,32px); text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.overlay.goal .big{font-size:clamp(70px,18vh,210px)}
+.overlay.goal.red .big{color:#fff; text-shadow:0 6px 0 var(--red-d), 0 0 40px var(--red)}
+.overlay.goal.blue .big{color:#fff; text-shadow:0 6px 0 var(--blue-d), 0 0 40px var(--blue)}
+@keyframes pop{from{transform:scale(.3); opacity:0}}
+.switch{
+  background:rgba(8,22,15,.88); border:2px solid var(--gold); border-radius:18px;
+  padding:1vh 2vw; text-align:center; animation:slide .35s ease-out .15s both;
+}
+.sw-title{font-family:var(--display); color:var(--gold); font-size:clamp(20px,3.6vh,40px)}
+.switch ol{list-style:none; display:flex; gap:2.5vw; margin:.3em 0 0; padding:0; font-size:clamp(15px,2.4vh,26px)}
+.switch b{color:var(--gold)}
+@keyframes slide{from{transform:translateY(20px); opacity:0}}
+
+/* Steuerleiste */
+.controls{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:2vw; min-height:9vh}
+.controls .team{font-size:clamp(20px,3.4vh,38px); padding:.45em 1em; color:#fff; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.controls .team.red{background:var(--red); box-shadow:0 5px 0 var(--red-d); justify-self:start}
+.controls .team.blue{background:var(--blue); box-shadow:0 5px 0 var(--blue-d); justify-self:end}
+.midbtns{display:flex; gap:1vw}
+.midbtns .btn{font-size:clamp(16px,2.6vh,28px)}
+.controls .hint, .controls .next{grid-column:1 / -1; justify-self:center}
+.hint{margin:0; font-size:clamp(20px,3.6vh,40px); text-align:center}
+.hint.red b{color:#ff8a8d} .hint.blue b{color:#8fb8ff}
+.next{font-size:clamp(22px,3.6vh,40px)}
+
+/* Menü (shared/ui.js) und Hinweise */
+.sheet{position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:20}
+.sheet .panel{background:var(--panel); border:2px solid var(--panel-line); border-radius:20px; padding:22px 24px; min-width:min(420px,92vw); display:flex; flex-direction:column; gap:12px}
+.sheet h2{margin:0; font-family:var(--display); font-weight:400}
+.menu-btns{display:grid; gap:10px}
+.menu-btns .btn{font-size:1.15em}
+.toast{
+  position:fixed; left:50%; top:22%; transform:translateX(-50%); z-index:30; pointer-events:none;
+  background:rgba(8,22,15,.92); border:2px solid var(--gold); color:var(--chalk);
+  font-weight:700; font-size:clamp(20px,3.4vh,36px); padding:.4em 1em; border-radius:16px;
+}
+
+@media (max-width:700px){
+  .row2,.teams-in{grid-template-columns:1fr}
+  .switch ol{flex-direction:column; gap:.2em}
+}

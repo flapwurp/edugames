@@ -54,6 +54,7 @@ genauso, wenn man den Fachinhalt austauscht, ist der Inhalt nur Verpackung – s
 - `shared/ui.js`: Dialoge, Toasts, Redemittel-Leiste, Hilfsfunktionen.
 - Pro Spiel: `content.js` (nur Daten, von Rob editierbar), Logik-Datei(en) ohne DOM-Zugriff (testbar in Node), `app.js` (Bildschirme), `style.css`, `DESIGN.md` (Spielidee und spielspezifische Entscheidungen).
 - Neue Spiele werden auf der Startseite `index.html` und in der Tabelle in `README.md` ergänzt.
+- `tools/`: Unterrichtswerkzeuge, **keine Edu-Games** (z. B. Vocab Football für den Laptop an der digitalen Tafel). Die didaktischen Leitlinien und die iPad-Vorgabe gelten dort nicht; was gilt, steht in der jeweiligen `DESIGN.md`.
 
 ## Arbeitsweise
 - Beim Entwurf eines neuen Spiels zuerst mit Rob klären: Lernziel und Kompetenz, Lerngruppe, Platz in der Reihe, Sozialform, Reflexion (ja/nein, wie), bei Geschichte die Dekonstruktion, bei sensiblen Themen die Rollen.
