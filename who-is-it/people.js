@@ -7,7 +7,8 @@ export const FEATURE_KEYS = Object.keys(FEATURES);
 
 /* ---------- People ---------- */
 function normalise(p){
-  if (p.headwear !== "none" && p.hairStyle === "bald") p.hairStyle = "short";
+  if (p.headwear !== "none" && ["bald", "bun", "spiky"].includes(p.hairStyle)) p.hairStyle = "short";
+  if (p.top === "shirt") p.necklace = "none";   // a necklace would disappear under the shirt and tie
   return p;
 }
 export function randomPerson(rng){
@@ -38,34 +39,55 @@ function mutate(base, n, rng){
   return normalise(p);
 }
 
+/* ---------- Game modes and codes ----------
+   The game code also tells the mode, so the partner who joins gets the same mode automatically:
+   x000–x499 = team game, x500–x999 = versus (x = level). */
+export const modeOf = code => (code % 1000 < 500 ? "team" : "versus");
+export const codeFor = (level, mode, rnd = Math.random()) => level * 1000 + (mode === "versus" ? 500 : 0) + Math.floor(rnd * 500);
+
+/* All people of a round. Nobody is special:
+   - "similar": everybody is a small variation of the same invisible model person,
+     so the searched person is not more "typical" than the others.
+   - "random": everybody differs from everybody else in at least minDifferences features. */
+function generatePeople(rng, L, count){
+  const people = [], seen = new Set();
+  const add = p => { const k = lookKey(p); if (seen.has(k)) return; seen.add(k); people.push(p); };
+  let guard = 0;
+  if (L.distractors === "similar"){
+    const model = randomPerson(rng);
+    const [lo, hi] = L.changes;
+    while (people.length < count && guard++ < 20000){
+      const p = mutate(model, lo + Math.floor(rng() * (hi - lo + 1)), rng);
+      if (differences(p, model) < lo) continue;
+      add(p);
+    }
+  } else {
+    while (people.length < count && guard++ < 20000){
+      const p = randomPerson(rng);
+      if (people.some(q => differences(p, q) < L.minDifferences)) continue;
+      add(p);
+    }
+  }
+  while (people.length < count) add(randomPerson(rng));
+  return people;
+}
+
+/* Team game: the describer's person is people[target] */
 export function makeRound(code, round){
   const L = CONFIG.levels[levelOf(code)];
   const rng = roundRng(code, round);
-  const target = randomPerson(rng);
-  const people = [target];
-  const seen = new Set([lookKey(target)]);
-  let guard = 0;
-  while (people.length < L.suspects && guard < 4000){
-    guard++;
-    let c;
-    if (L.distractors === "similar"){
-      const [lo, hi] = L.changes;
-      c = mutate(target, lo + Math.floor(rng() * (hi - lo + 1)), rng);
-      if (differences(c, target) < lo) continue;
-    } else {
-      c = randomPerson(rng);
-      if (differences(c, target) < L.minDifferences) continue;
-    }
-    const k = lookKey(c);
-    if (seen.has(k)) continue;
-    seen.add(k); people.push(c);
-  }
-  while (people.length < L.suspects){
-    const c = randomPerson(rng); const k = lookKey(c);
-    if (!seen.has(k)){ seen.add(k); people.push(c); }
-  }
-  shuffle(people, rng);
-  return { people, target: people.indexOf(target) };
+  const people = generatePeople(rng, L, L.suspects);
+  return { people, target: Math.floor(rng() * people.length) };
+}
+
+/* Versus: one board for both; secrets[0] belongs to player 1, secrets[1] to player 2 */
+export function makeBoard(code, round){
+  const L = CONFIG.levels[levelOf(code)];
+  const rng = roundRng(code, round);
+  const people = generatePeople(rng, L, L.board);
+  const a = Math.floor(rng() * people.length);
+  let b = Math.floor(rng() * (people.length - 1)); if (b >= a) b++;
+  return { people, secrets: [a, b] };
 }
 
 /* ---------- Drawing ---------- */
@@ -99,6 +121,8 @@ export function avatarSVG(p){
 
   // hair behind the head
   if (p.hairStyle === "long") s.push(`<path d="M33 54 Q31 26 60 26 Q89 26 87 54 L91 106 Q60 114 29 106 Z" fill="${hair}"/>`);
+  if (p.hairStyle === "bun") s.push(`<circle cx="60" cy="26" r="11" fill="${hair}"/><circle cx="60" cy="26" r="11" fill="none" stroke="${shade(hair, -30)}" stroke-width="1.5"/>`);
+  if (p.hairStyle === "ponytail") s.push(`<ellipse cx="89" cy="70" rx="8" ry="21" transform="rotate(-14 89 70)" fill="${hair}"/>`);
   if (p.hairStyle === "curly"){
     for (let a = 150; a <= 390; a += 20){
       const r = a * Math.PI / 180;
@@ -119,12 +143,19 @@ export function avatarSVG(p){
     s.push(`<path d="M48 93 L60 104 L44 107 Z M72 93 L60 104 L76 107 Z" fill="#ffffff" stroke="${topDark}" stroke-width="1.5" stroke-linejoin="round"/>`);
     s.push(`<path d="M56.5 103 L63.5 103 L62 108 L66 125 L60 130 L54 125 L58 108 Z" fill="#26324a"/>`);
   }
+  if (p.necklace === "necklace") s.push(`<path d="M48 95 Q60 109 72 95" stroke="#e5ac16" stroke-width="2.4" fill="none"/><circle cx="60" cy="104" r="4" fill="#e5ac16" stroke="#9c7208" stroke-width="1"/>`);
   // head
   s.push(`<circle cx="37" cy="58" r="5.5" fill="${skin}"/><circle cx="83" cy="58" r="5.5" fill="${skin}"/>`);
   s.push(`<circle cx="60" cy="56" r="23" fill="${skin}"/>`);
   s.push(`<circle cx="46" cy="65" r="4" fill="#e8737a" fill-opacity=".22"/><circle cx="74" cy="65" r="4" fill="#e8737a" fill-opacity=".22"/>`);
+  if (p.freckles === "freckles"){
+    const fc = shade(skin, -95);
+    s.push(`<g fill="${fc}" fill-opacity=".85">${[[43.5, 62.5], [48.5, 62], [45.5, 66.5], [50, 66], [76.5, 62.5], [71.5, 62], [74.5, 66.5], [70, 66]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.8"/>`).join("")}</g>`);
+  }
   // front hair
-  if (p.hairStyle === "short" || p.hairStyle === "long"){
+  if (p.hairStyle === "spiky"){
+    s.push(`<path d="M36 57 L36 40 L43 44 L44 29 L52 38 L58 24 L64 37 L72 28 L74 42 L82 37 L84 57 Q79 41 60 41 Q41 41 36 57 Z" fill="${hair}"/>`);
+  } else if (["short", "long", "ponytail", "bun"].includes(p.hairStyle)){
     s.push(`<path d="M36 58 Q33 27 60 28 Q87 27 84 58 Q79 40 60 40 Q41 40 36 58 Z" fill="${hair}"/>`);
   } else if (p.hairStyle === "curly"){
     for (let a = 205; a <= 335; a += 26){
@@ -140,10 +171,14 @@ export function avatarSVG(p){
   if (p.facialHair === "beard") s.push(`<path d="M37 58 Q37 86 60 87 Q83 86 83 58 Q80 73 70 74 Q60 71 50 74 Q40 73 37 58 Z" fill="${hair}"/>`);
   if (p.facialHair === "moustache") s.push(`<path d="M50 67 Q55 62.5 60 65.5 Q65 62.5 70 67 Q65 70 60 68 Q55 70 50 67 Z" fill="${hair}"/>`);
   s.push(`<path d="M54 71 Q60 75 66 71" stroke="#9b3c4a" stroke-width="2" fill="none" stroke-linecap="round"/>`);
+  if (p.earrings === "earrings") s.push(`<g fill="none" stroke="#e5ac16" stroke-width="2.6"><circle cx="36" cy="67" r="4"/><circle cx="84" cy="67" r="4"/></g>`);
   // glasses
   if (p.glasses !== "none"){
     const lens = p.glasses === "sunglasses" ? "#1d1f27" : "rgba(255,255,255,.25)";
-    s.push(`<g fill="${lens}" stroke="#1d1f27" stroke-width="2"><circle cx="51" cy="57.5" r="7"/><circle cx="69" cy="57.5" r="7"/></g>`);
+    const shapes = p.glasses === "square"
+      ? `<rect x="43.5" y="51.5" width="15" height="12" rx="1.5"/><rect x="61.5" y="51.5" width="15" height="12" rx="1.5"/>`
+      : `<circle cx="51" cy="57.5" r="7"/><circle cx="69" cy="57.5" r="7"/>`;
+    s.push(`<g fill="${lens}" stroke="#1d1f27" stroke-width="2">${shapes}</g>`);
     s.push(`<path d="M58 57.5 L62 57.5 M44 56.5 L38 55 M76 56.5 L82 55" stroke="#1d1f27" stroke-width="2" fill="none"/>`);
   }
   // headwear

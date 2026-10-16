@@ -9,7 +9,7 @@ Läuft im Browser (iPad Safari), ohne Anmeldung, ohne Server, ohne Datenspeicher
 
 | Spiel | Für | Inhalt |
 |---|---|---|
-| [Who is it?](who-is-it/) | Kl. 5–7 | Personen beschreiben (has got, is wearing), Fragen stellen |
+| [Who is it?](who-is-it/) | Kl. 5–7 | Personen beschreiben (has got, is wearing), Fragen stellen; Team- und Versus-Modus |
 | [Reactor Rescue](reactor-rescue/) | Kl. 8–9 | Bedienungsanleitung lesen, Konditionalsätze, präzise beschreiben und anweisen |
 | [Spot the Difference](spot-the-difference/) | Kl. 6 (Prototyp) | Zwei fast gleiche Bilder (Geburtstagsfeier, Park): beschreiben, fragen, widersprechen – there is/are, Präpositionen, Farben, Zahlen, present progressive |
 | [Im Rhythmus des Nils](im-rhythmus-des-nils/) | Geschichte Kl. 6 | Einzelspiel (iPad quer): vier Jahre am Nil – Flut, Schlamm, Kalender, Arbeitskraft und Gesten, Schaduf, Deich, Vorräte, Berufe; Quellencheck und Urteil „Ein Geschenk des Nils?“ · [Grafik-Galerie](im-rhythmus-des-nils/galerie.html) · ältere Versionen: [0.1](im-rhythmus-des-nils-v0.1/), [0.2](im-rhythmus-des-nils-v0.2/), [0.3](im-rhythmus-des-nils-v0.3/), [0.4](im-rhythmus-des-nils-v0.4/), [0.5](im-rhythmus-des-nils-v0.5/) |

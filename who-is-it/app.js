@@ -1,18 +1,19 @@
-/* Who is it? – screens and controls */
+/* Who is it? – screens and controls (team game and versus) */
 import { CONFIG, FEATURES } from "./content.js";
-import { FEATURE_KEYS, makeRound, randomPerson, avatarSVG } from "./people.js";
+import { FEATURE_KEYS, makeRound, makeBoard, modeOf, codeFor, randomPerson, avatarSVG } from "./people.js";
 import { mulberry32 } from "../shared/random.js";
-import { levelOf, validCode, newCode, firstRolePlayer, createStore } from "../shared/session.js";
+import { levelOf, validCode, firstRolePlayer, createStore } from "../shared/session.js";
 import { esc, clockText, starText, keyStrip, openSheet, closeSheet, sheetOpen, confirmQuit, toast, clearToast } from "../shared/ui.js";
 
 const $app = document.getElementById("app");
 const LEVEL_COUNT = Object.keys(CONFIG.levels).length;
-const store = createStore("whoisit-v1", () => ({ screen: "home", code: null, player: null, round: 1, results: [], penalties: 0 }));
+const store = createStore("whoisit-v2", () => ({ screen: "home", code: null, player: null, round: 1, results: [], penalties: 0, pendingMode: null }));
 
 let S = store.load() || store.fresh();
 if (S.screen === "play") S.screen = "intro";
 let R = null;  // state of the running round
 
+const mode = () => modeOf(S.code);
 const myRole = () => (firstRolePlayer(S.round) === S.player ? "describer" : "guesser");
 const level = () => CONFIG.levels[levelOf(S.code)];
 const save = () => store.save(S);
@@ -22,7 +23,7 @@ function go(screen){ clearToast(); S.screen = screen; save(); render(); window.s
 function bar(){
   if (!S.code) return "";
   return `<header class="bar">
-    <div class="meta"><span>Game <strong>${S.code}</strong></span><span>Player ${S.player}</span><span>${esc(level().name)}</span></div>
+    <div class="meta"><span>Game <strong>${S.code}</strong></span><span>Player ${S.player}</span><span>${esc(CONFIG.modes[mode()].name)}</span><span>${esc(level().name)}</span></div>
     <div class="spacer"></div>
     <button data-act="howto">How to play</button>
     <button data-act="quit">Leave game</button>
@@ -31,7 +32,7 @@ function bar(){
 
 function render(){
   stopTimer();
-  const fn = { home, newgame, code: codeScreen, join, intro, play, result, final }[S.screen] || home;
+  const fn = { home, choosemode, newgame, code: codeScreen, join, intro, play, result, final }[S.screen] || home;
   fn();
 }
 
@@ -42,7 +43,7 @@ function home(){
   $app.innerHTML = `<main class="wrap center">
     <div class="hero-lineup">${faces}</div>
     <h1 class="title">Who is it?</h1>
-    <p class="lead">Find the right person together. One of you describes, the other one asks and guesses. Speak English only!</p>
+    <p class="lead">Find the right person. Describe, ask and guess – in English only!</p>
     <div class="stack">
       <button class="btn" data-act="new">Start a new game</button>
       <button class="btn secondary" data-act="join">Join a game</button>
@@ -51,14 +52,25 @@ function home(){
   </main>`;
 }
 
-/* --- New game: choose level --- */
-function newgame(){
-  const items = Object.entries(CONFIG.levels).map(([n, L]) =>
-    `<button class="level" data-act="level" data-level="${n}"><span class="num">${n}</span><span><b>${esc(L.name)}</b><small>${esc(L.info)}</small></span></button>`).join("");
+/* --- New game: choose mode, then level --- */
+function choosemode(){
+  const items = Object.entries(CONFIG.modes).map(([id, m]) =>
+    `<button class="level mode-${id}" data-act="mode" data-mode="${id}"><span class="num">${id === "team" ? "🤝" : "⚔️"}</span><span><b>${esc(m.name)}</b><small>${esc(m.info)}</small></span></button>`).join("");
   $app.innerHTML = `<main class="wrap center">
-    <h1 class="roundno">Choose a level</h1>
+    <h1 class="roundno">How do you want to play?</h1>
     <div class="levels">${items}</div>
     <div class="stack"><button class="linkbtn" data-act="home">Back</button></div>
+  </main>`;
+}
+function newgame(){
+  const vs = S.pendingMode === "versus";
+  const items = Object.entries(CONFIG.levels).map(([n, L]) =>
+    `<button class="level" data-act="level" data-level="${n}"><span class="num">${n}</span><span><b>${esc(L.name)}</b><small>${vs ? L.board : L.suspects} people – ${esc(L.info)}</small></span></button>`).join("");
+  $app.innerHTML = `<main class="wrap center">
+    <h1 class="roundno">Choose a level</h1>
+    <p class="lead">${esc(CONFIG.modes[S.pendingMode].name)}</p>
+    <div class="levels">${items}</div>
+    <div class="stack"><button class="linkbtn" data-act="new">Back</button></div>
   </main>`;
 }
 
@@ -73,7 +85,7 @@ function codeScreen(){
   </main>`;
 }
 
-/* --- Join (Player 2) --- */
+/* --- Join (Player 2) – the code tells level and mode --- */
 function join(){
   $app.innerHTML = `<main class="wrap center">
     <h1 class="roundno">Join a game</h1>
@@ -100,29 +112,46 @@ function doJoin(){
 
 /* --- Round intro --- */
 function intro(){
-  const role = myRole();
-  const n = level().suspects;
-  const text = role === "describer"
-    ? `<h2>You describe</h2><p>You see <b>one person</b>. Describe this person to your partner and answer their questions.</p><p>Don't show your screen!</p>`
-    : `<h2>You guess</h2><p>You see <b>${n} people</b>. Ask your partner questions. Tap the right person, then tap <b>That's my guess</b>.</p><p>Tap ✕ to cross out people.</p>`;
+  let card;
+  if (mode() === "versus"){
+    card = `<div class="rolecard versus"><span class="role versus">Player ${S.player}</span>
+      <h2>Versus</h2>
+      <p>You both have a <b>secret person</b>. Your partner has a different one.</p>
+      <p><b>Take turns:</b> ask one yes/no question, then your partner asks one. Cross out people with ✕.</p>
+      <p>Do you know your partner's person? Tap them and <b>That's my guess</b>. But careful: if you're wrong, you lose!</p>
+      <p>${S.round % 2 === 1 ? "Player 1" : "Player 2"} asks the first question.</p></div>`;
+  } else {
+    const role = myRole();
+    const text = role === "describer"
+      ? `<h2>You describe</h2><p>You see <b>one person</b>. Describe this person to your partner and answer their questions.</p><p>Don't show your screen!</p>`
+      : `<h2>You guess</h2><p>You see <b>${level().suspects} people</b>. Ask your partner questions. Tap the right person, then tap <b>That's my guess</b>.</p><p>Tap ✕ to cross out people.</p>`;
+    card = `<div class="rolecard ${role}"><span class="role ${role}">Player ${S.player}</span>${text}</div>`;
+  }
   $app.innerHTML = bar() + `<main class="wrap center">
-    <p class="roundno">Round ${S.round} of ${CONFIG.roundsPerGame}</p>
-    <div class="rolecard ${role}"><span class="role ${role}">Player ${S.player}</span>${text}</div>
-    <div class="stack"><button class="btn" data-act="start">Start round</button>
+    <p class="roundno">${mode() === "versus" ? "Game" : "Round"} ${S.round} of ${CONFIG.roundsPerGame}</p>
+    ${card}
+    <div class="stack"><button class="btn" data-act="start">Start</button>
     <p class="tip" style="margin:0">Start at the same time as your partner.</p></div>
   </main>`;
 }
 
 /* --- Play --- */
-function play(){
+const suspectCards = people => people.map((p, i) =>
+  `<div class="suspect" data-act="pick" data-idx="${i}" role="button" tabindex="0" aria-label="Person ${i + 1}">
+    <div class="frame">${avatarSVG(p)}</div>
+    <button class="x" data-act="cross" data-idx="${i}" aria-label="Cross out person ${i + 1}">✕</button>
+  </div>`).join("");
+
+function play(){ if (mode() === "versus") playVersus(); else playTeam(); }
+
+function playTeam(){
   const data = makeRound(S.code, S.round);
   R = { data, wrong: 0, out: new Set(), selected: null, ended: false, deadline: Date.now() + level().seconds * 1000, timer: null };
-  const role = myRole();
-  if (role === "describer"){
+  if (myRole() === "describer"){
     $app.innerHTML = bar() + `<main class="wrap">
       <div class="playhead"><span class="role describer">You describe</span><p class="task">Describe this person. Answer your partner's questions.</p><div class="timer" id="timer"></div></div>
       <div class="target"><div class="frame">${avatarSVG(data.people[data.target])}</div></div>
-      <p class="tip">Talk about hair, face, clothes, colours and patterns.</p>
+      <p class="tip">Talk about hair, face, jewellery, clothes, colours and patterns.</p>
       <div class="actionbar">
         ${keyStrip(CONFIG.keyPhrases.describer, "describer")}
         <button class="btn secondary small" data-act="phrases">More phrases</button>
@@ -131,14 +160,9 @@ function play(){
       </div>
     </main>`;
   } else {
-    const cards = data.people.map((p, i) =>
-      `<div class="suspect" data-act="pick" data-idx="${i}" role="button" tabindex="0" aria-label="Person ${i + 1}">
-        <div class="frame">${avatarSVG(p)}</div>
-        <button class="x" data-act="cross" data-idx="${i}" aria-label="Cross out person ${i + 1}">✕</button>
-      </div>`).join("");
     $app.innerHTML = bar() + `<main class="wrap">
       <div class="playhead"><span class="role guesser">You guess</span><p class="task">Ask questions. Who is it?</p><div class="timer" id="timer"></div></div>
-      <div class="lineup" id="lineup">${cards}</div>
+      <div class="lineup" id="lineup">${suspectCards(data.people)}</div>
       <div class="actionbar">
         ${keyStrip(CONFIG.keyPhrases.guesser, "guesser")}
         <button class="btn secondary small" data-act="phrases">More phrases</button>
@@ -150,8 +174,31 @@ function play(){
   tick();
   R.timer = setInterval(tick, 250);
 }
+
+function playVersus(){
+  const data = makeBoard(S.code, S.round);
+  const mine = data.secrets[S.player - 1], theirs = data.secrets[2 - S.player];
+  R = { data, mine, theirs, out: new Set(), selected: null, ended: false, timer: null };
+  $app.innerHTML = bar() + `<main class="wrap">
+    <div class="vs-head">
+      <div class="mine"><div class="frame">${avatarSVG(data.people[mine])}</div></div>
+      <div class="vs-text"><span class="role versus">Your secret person</span>
+        <p class="task">Your partner asks about this person. Answer honestly!</p>
+        <p class="tip">Take turns: one question each. Cross out people with ✕.</p></div>
+    </div>
+    <div class="lineup board" id="lineup">${suspectCards(data.people)}</div>
+    <div class="actionbar">
+      ${keyStrip(CONFIG.keyPhrases.versus, "versus")}
+      <button class="btn secondary small" data-act="phrases">More phrases</button>
+      <button class="btn secondary small" data-act="oopsVs">Oops, German!</button>
+      <button class="btn secondary small" data-act="partnerGuessed">My partner guessed</button>
+      <button class="btn grow" id="guessBtn" data-act="guess" disabled>That's my guess</button>
+    </div>
+  </main>`;
+}
+
 function tick(){
-  if (!R) return;
+  if (!R || !R.deadline) return;
   const left = Math.max(0, Math.ceil((R.deadline - Date.now()) / 1000));
   const el = document.getElementById("timer");
   if (el){ el.textContent = clockText(left); el.classList.toggle("low", left <= 20); }
@@ -179,6 +226,14 @@ function cross(i){
 }
 function guess(){
   if (R.selected === null || R.ended) return;
+  if (mode() === "versus"){
+    openSheet(`<h2>Is it this person?</h2>
+      <div class="sheet-person"><div class="frame">${avatarSVG(R.data.people[R.selected])}</div></div>
+      <p>If you're wrong, you lose this game.</p>
+      <div class="btnrow"><button class="btn secondary" data-act="closeSheet">No, go back</button>
+      <button class="btn" data-act="confirmGuess">Yes, that's my guess</button></div>`, false);
+    return;
+  }
   const i = R.selected;
   if (i === R.data.target){ endRound({ correct: true }); return; }
   R.wrong++; R.out.add(i); R.selected = null;
@@ -188,6 +243,7 @@ function guess(){
   toast("Not this person. Keep asking!");
 }
 
+/* --- Ending a round --- */
 function endRound(res){
   if (!R || R.ended) return;
   R.ended = true; stopTimer();
@@ -205,21 +261,37 @@ function endRoundDescriber(){
   R.ended = true; stopTimer();
   nextRound();
 }
+/* outcome: "found" (my guess right), "wrong" (my guess wrong), "partnerFound", "partnerWrong" */
+function endVersus(outcome){
+  if (!R || R.ended) return;
+  R.ended = true;
+  const won = outcome === "found" || outcome === "partnerWrong";
+  S.results.push({ round: S.round, won });
+  S.last = { versus: true, outcome, won, theirs: R.data.people[R.theirs], guessed: R.selected !== null ? R.data.people[R.selected] : null };
+  go("result");
+}
 
 /* --- Round result --- */
 function result(){
   const L = S.last || {};
   const lastRound = S.round >= CONFIG.roundsPerGame;
-  const next = `<div class="stack"><button class="btn" data-act="next">${lastRound ? "See results" : "Next round"}</button></div>`;
+  const next = `<div class="stack"><button class="btn" data-act="next">${lastRound ? "See results" : (L.versus ? "Next game" : "Next round")}</button></div>`;
+  const person = (p, cls = "") => `<div class="result-person ${cls}"><div class="frame">${avatarSVG(p)}</div></div>`;
   let body;
-  if (L.role === "guesser" && L.correct){
+  if (L.versus){
+    const texts = {
+      found: `<p class="big good">You win!</p><p class="lead">You found your partner's person.</p>${person(L.theirs)}<p class="lead">Tell your partner. They tap <b>My partner guessed</b>.</p>`,
+      wrong: `<p class="big bad">Not this person!</p><p class="lead">You lose this game. Your partner's person was:</p>${person(L.theirs)}<p class="lead">Tell your partner. They tap <b>My partner guessed</b>.</p>`,
+      partnerFound: `<p class="big bad">Your partner found your person.</p><p class="lead">You lose this game – maybe next time!</p>`,
+      partnerWrong: `<p class="big good">You win!</p><p class="lead">Your partner guessed the wrong person.</p>`
+    };
+    body = texts[L.outcome];
+  } else if (L.role === "guesser" && L.correct){
     body = `<p class="big good">Correct!</p><div class="stars">${starText(L.stars)}</div>
-      <div class="result-person"><div class="frame">${avatarSVG(L.target)}</div></div>
-      <p class="lead">Tell your partner you've got it. Then go on together.</p>`;
+      ${person(L.target)}<p class="lead">Tell your partner you've got it. Then go on together.</p>`;
   } else if (L.role === "guesser"){
     body = `<p class="big bad">Time's up!</p><p class="lead">This was the person:</p>
-      <div class="result-person"><div class="frame">${avatarSVG(L.target)}</div></div>
-      <p class="lead">Show your partner. What was difficult to describe?</p>`;
+      ${person(L.target)}<p class="lead">Show your partner. What was difficult to describe?</p>`;
   } else {
     body = `<p class="big bad">Time's up!</p><p class="lead">Your partner can see the right person now. Go on together.</p>`;
   }
@@ -232,6 +304,18 @@ function nextRound(){
 
 /* --- Final --- */
 function final(){
+  if (mode() === "versus"){
+    const won = S.results.filter(r => r.won).length;
+    const rows = S.results.map(r => `<tr><td>Game ${r.round}</td><td>${r.won ? "You won" : "Your partner won"}</td></tr>`).join("");
+    $app.innerHTML = bar() + `<main class="wrap center">
+      <p class="big">That's it!</p>
+      <p class="lead">You won</p>
+      <p class="total">${won} of ${S.results.length}</p>
+      <table class="scoretable">${rows}</table>
+      <div class="stack"><button class="btn" data-act="restart">Play again</button></div>
+    </main>`;
+    return;
+  }
   const sum = S.results.reduce((a, r) => a + r.stars, 0);
   const total = Math.max(0, sum - S.penalties * CONFIG.germanPenalty);
   const rows = S.results.map(r => `<tr><td>Round ${r.round}</td><td class="s">${"★".repeat(r.stars) || "–"}</td></tr>`).join("");
@@ -248,7 +332,7 @@ function final(){
 
 /* --- Sheets --- */
 function phrases(){
-  const role = S.code && S.screen === "play" ? myRole() : "describer";
+  const role = S.code && S.screen === "play" ? (mode() === "versus" ? "versus" : myRole()) : "describer";
   const list = CONFIG.phrases[role].map(p => `<li>${esc(p)}</li>`).join("");
   const groups = {};
   for (const k of FEATURE_KEYS){
@@ -259,8 +343,15 @@ function phrases(){
     `<h3>${esc(g)}</h3><div class="chips">${[...new Set(words)].map(w => `<span class="chip">${esc(w)}</span>`).join("")}</div>`).join("");
   openSheet(`<h2>Useful phrases</h2><ul>${list}</ul>${bank}`);
 }
+function partnerGuessed(){
+  openSheet(`<h2>Your partner guessed</h2><p>Did your partner find your secret person?</p>
+    <div class="btnrow"><button class="btn secondary" data-act="closeSheet">Not yet – go back</button></div>
+    <div class="btnrow"><button class="btn" data-act="partnerRight">Yes, they found my person</button>
+    <button class="btn" data-act="partnerWrongBtn">No, they guessed wrong</button></div>`, false);
+}
 function howto(){
   openSheet(`<h2>How to play</h2>
+    <h3>Team game</h3>
     <ol>
       <li>Player 1 starts a new game and tells Player 2 the code.</li>
       <li>Sit back to back. Don't show your screen!</li>
@@ -268,8 +359,15 @@ function howto(){
       <li>Swap roles after every round.</li>
       <li>Speak English only. If you speak German, tap <b>Oops, German!</b> and lose a star.</li>
     </ol>
-    <h3>Stars</h3>
-    <p>Right on the first try: ★★★ · second try: ★★ · later: ★</p>`);
+    <p>Stars: right on the first try ★★★ · second try ★★ · later ★</p>
+    <h3>Versus</h3>
+    <ol>
+      <li>You both see the same people. You both have a different secret person.</li>
+      <li>Take turns: ask one yes/no question, then your partner asks one.</li>
+      <li>Cross out the people it can't be.</li>
+      <li>Do you know your partner's person? Make a guess – but if you're wrong, you lose!</li>
+      <li>Speak English only. If you speak German, you miss your next question.</li>
+    </ol>`);
 }
 
 /* --- Events --- */
@@ -278,17 +376,23 @@ document.addEventListener("click", e => {
   if (!t) return;
   switch (t.dataset.act){
     case "home": S = store.fresh(); save(); go("home"); break;
-    case "new": go("newgame"); break;
+    case "new": go("choosemode"); break;
+    case "mode": S.pendingMode = t.dataset.mode; go("newgame"); break;
     case "join": go("join"); break;
-    case "level": S = { ...store.fresh(), code: newCode(parseInt(t.dataset.level, 10)), player: 1 }; go("code"); break;
+    case "level": S = { ...store.fresh(), code: codeFor(parseInt(t.dataset.level, 10), S.pendingMode), player: 1 }; go("code"); break;
     case "toIntro": go("intro"); break;
     case "doJoin": doJoin(); break;
     case "start": go("play"); break;
     case "pick": pick(+t.dataset.idx); break;
     case "cross": e.stopPropagation(); cross(+t.dataset.idx); break;
     case "guess": guess(); break;
+    case "confirmGuess": closeSheet(); endVersus(R.selected === R.theirs ? "found" : "wrong"); break;
+    case "partnerGuessed": partnerGuessed(); break;
+    case "partnerRight": closeSheet(); endVersus("partnerFound"); break;
+    case "partnerWrongBtn": closeSheet(); endVersus("partnerWrong"); break;
     case "partnerFound": endRoundDescriber(); break;
     case "oops": S.penalties++; save(); toast(`−${CONFIG.germanPenalty} ★ – keep going in English!`); break;
+    case "oopsVs": toast("Oops! You miss your next question."); break;
     case "next": nextRound(); break;
     case "restart": S = store.fresh(); save(); go("home"); break;
     case "phrases": phrases(); break;
