@@ -15,11 +15,11 @@ export const CONFIG = {
      Every look is shared by at least a quarter of the people, so a good question always rules out a group. */
   levels: {
     1: { name: "Easy",   info: "they look very different", suspects: 6,  board: 12, seconds: 150,
-         pool: ["hairColour", "hairStyle", "glasses", "headwear", "top", "topColour", "facialHair"], vary: 4, values: [2, 3] },
+         pool: ["skin", "hairColour", "hairStyle", "glasses", "headwear", "top", "topColour", "facialHair"], vary: 4, values: [2, 3] },
     2: { name: "Medium", info: "some of them look alike",  suspects: 8,  board: 16, seconds: 150,
-         pool: ["hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 5, values: [2, 3] },
+         pool: ["skin", "hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 5, values: [2, 3] },
     3: { name: "Hard",   info: "they look very similar",   suspects: 10, board: 20, seconds: 180,
-         pool: ["hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 6, values: [2, 2] },
+         pool: ["skin", "hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 6, values: [2, 2] },
     4: { name: "Expert", info: "only small details are different", suspects: 12, board: 24, seconds: 210,
          pool: ["glasses", "freckles", "earrings", "necklace", "pattern", "hairStyle", "facialHair", "headwear"], vary: 6, values: [2, 2] }
   },
@@ -49,6 +49,7 @@ export const CONFIG = {
   phrases: {
     describer: [
       "This person has got … hair.",
+      "This person has got light / brown / dark skin.",
       "This person is wearing a … .",
       "This person has got glasses / a beard / a moustache / freckles.",
       "This person has got a ponytail / a bun / spiky hair.",
@@ -62,6 +63,7 @@ export const CONFIG = {
       "Has your person got … ?",
       "Is your person wearing a … ?",
       "What colour is the … ?",
+      "What colour is your person's skin?",
       "Is it striped or spotted?",
       "Sorry, can you say that again, please?",
       "What do you mean by … ?",
@@ -71,6 +73,7 @@ export const CONFIG = {
       "Has your person got … ?",
       "Is your person wearing … ?",
       "Is your person's hair long or short?",
+      "Has your person got light / brown / dark skin?",
       "Yes, he/she has. / No, he/she hasn't.",
       "Yes, he/she is. / No, he/she isn't.",
       "It's your turn.",
@@ -81,6 +84,10 @@ export const CONFIG = {
 
 /* Features of the people. "word" is what appears in the word bank. */
 export const FEATURES = {
+  skin: { group: "Skin", values: [
+    { id: "light", word: "light skin", c: "#f3d0b2" },
+    { id: "brown", word: "brown skin", c: "#bd845c" },
+    { id: "dark",  word: "dark skin",  c: "#6b432c" } ] },
   hairColour: { group: "Hair", values: [
     { id: "blond", word: "blond", c: "#e9c46a" },
     { id: "brown", word: "brown", c: "#7b4a25" },
@@ -133,4 +140,3 @@ export const FEATURES = {
     { id: "striped", word: "striped" },
     { id: "spotted", word: "spotted" } ] }
 };
-export const SKINS = ["#f6d4b6", "#e9b791", "#c98f66", "#9c6645", "#6e4630"];

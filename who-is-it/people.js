@@ -1,5 +1,5 @@
 /* Who is it? – creating and drawing the people. No screen code in here (so it can be tested). */
-import { CONFIG, FEATURES, SKINS } from "./content.js";
+import { CONFIG, FEATURES } from "./content.js";
 import { roundRng, shuffle, pickWeighted } from "../shared/random.js";
 import { levelOf } from "../shared/session.js";
 
@@ -14,7 +14,6 @@ function normalise(p){
 export function randomPerson(rng){
   const p = {};
   for (const k of FEATURE_KEYS) p[k] = pickWeighted(rng, FEATURES[k].values);
-  p.skin = Math.floor(rng() * SKINS.length);   // skin tone is never a deciding feature
   return normalise(p);
 }
 function visible(p){
@@ -91,7 +90,6 @@ function generatePeople(rng, L, count){
       if (nd <= d){ people = next; d = nd; } else [cols[k][i], cols[k][j]] = [cols[k][j], cols[k][i]];
     }
     if (d > 0) continue;
-    people.forEach(p => { p.skin = Math.floor(rng() * SKINS.length); });   // skin tone is never a deciding feature
     return people;
   }
   throw new Error("Could not create a fair set of people");
@@ -130,7 +128,7 @@ function light(hex){
 }
 export function avatarSVG(p){
   const id = "av" + (++uid);
-  const skin = SKINS[p.skin], skinDark = shade(skin, -22);
+  const skin = val("skin", p.skin).c, skinDark = shade(skin, -22);
   const hair = val("hairColour", p.hairColour).c;
   const top = val("topColour", p.topColour).c, topDark = shade(top, -45);
   const mark = light(top) ? "rgba(27,42,65,.45)" : "rgba(255,255,255,.75)";

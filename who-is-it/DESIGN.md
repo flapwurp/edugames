@@ -16,7 +16,8 @@ Zwei Modi, Auswahl beim Start (Team game / Versus). Der Spielcode enthält Level
   „Oops, German!“ = nächste Frage aussetzen. 4 Spiele, am Ende „You won X of 4“ (nur Punkte am Ende, kein Ranking).
 
 ## Festgelegte Entscheidungen
-- Personen werden aus Merkmalen erzeugt (keine Bilddateien, keine Bildrechte); Hauttöne variieren, sind aber nie das entscheidende Merkmal.
+- Personen werden aus Merkmalen erzeugt (keine Bilddateien, keine Bildrechte).
+- **Hautfarbe ist ein normales Merkmal (Rob, 16.10.2026):** light / brown / dark skin, kann wie jedes andere Merkmal unterscheiden und steht in Wortliste und „More phrases“. Auf Expert ist sie nicht im Pool (zu auffällig), dort haben alle Personen eines Bretts dieselbe Hautfarbe.
 - Drei feste Redemittel je Rolle sind während der Runde dauerhaft sichtbar; die vollständige Liste und eine Wortliste gibt es über „More phrases“ (ohne Punktabzug).
 - „Oops, German!“ kostet einen Stern; Sterne: 3 / 2 / 1 je nach Fehlversuchen.
 - Jedes Gerät zählt die Sterne der eigenen Raterunden; das Paar addiert am Ende.
@@ -38,6 +39,4 @@ Zwei Modi, Auswahl beim Start (Team game / Versus). Der Spielcode enthält Level
 - **Versus-Modus** als Alternative (Wunsch der SuS), siehe oben.
 
 ## Offen / geplant
-- Hauttöne sind nie das entscheidende Merkmal, variieren aber. Gerade im Versus auf Expert, wo sonst fast alles gleich ist,
-  könnten SuS nach der Hautfarbe fragen. Mit Rob klären, ob das so bleiben soll.
 - Weitere Rätseltypen im selben Gerüst, z. B. „Arrange the room“ (Ortsangaben) oder „Find the way“ (Wegbeschreibungen).
