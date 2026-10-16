@@ -28,7 +28,13 @@ Zwei Modi, Auswahl beim Start (Team game / Versus). Der Spielcode enthält Level
   Dadurch war die gesuchte Person immer die „typischste“ und nie die, die als Einzige anders aussieht. Jetzt sind alle Personen
   Abwandlungen einer unsichtbaren Musterperson; die gesuchte Person wird zufällig gewählt. Ein Test prüft das (`tests/who-is-it.test.js`).
 - **Mehr Merkmale** (Wunsch der SuS): Frisuren ponytail, bun, spiky hair; Brillen round, square, sunglasses; freckles; earrings; a necklace.
-- **Höherer Schwierigkeitsgrad:** neues Level 4 „Expert“ (12 Personen bzw. 24 im Versus, alle unterscheiden sich von der Musterperson in genau einem Merkmal).
+- **Höherer Schwierigkeitsgrad:** neues Level 4 „Expert“ (12 Personen bzw. 24 im Versus).
+- **Gute Fragen schließen Gruppen aus (Rob, 16.10.2026):** Die erste Fassung von Expert ließ sich nur Person für Person lösen,
+  weil jedes Merkmal nur bei einer Person vorkam. Jetzt gilt für alle Level: Pro Runde unterscheiden sich nur einige Merkmale
+  (`vary` aus `pool` in `content.js`), alles andere ist bei allen gleich. Jede Ausprägung teilen sich mindestens ein Viertel der
+  Personen (mindestens 2) – keine Einzelmerkmale, eine Ja/Nein-Frage streicht immer eine Gruppe. Schwierigkeit entsteht über die
+  Zahl der Personen und darüber, welche Merkmale sich unterscheiden: auf Expert nur unauffällige (Brillenform, Ohrringe,
+  Sommersprossen, Kette, Muster, Frisur, Bart, Kopfbedeckung). Tests prüfen Fairness und Mindestanteil.
 - **Versus-Modus** als Alternative (Wunsch der SuS), siehe oben.
 
 ## Offen / geplant

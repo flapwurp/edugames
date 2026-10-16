@@ -9,11 +9,19 @@ export const CONFIG = {
   /* Two ways to play:
      team   – one describes, one guesses (suspects = people on the guesser's screen)
      versus – like the board game: both have a secret person, take turns asking (board = people on the board) */
+  /* People:  suspects = people on the guesser's screen (team game), board = people on the board (versus).
+     How they differ: in every round, "vary" features are picked from "pool" – only these features differ,
+     everything else is the same for everybody. Each feature gets "values" different looks (e.g. [2, 3] = 2 or 3).
+     Every look is shared by at least a quarter of the people, so a good question always rules out a group. */
   levels: {
-    1: { name: "Easy",   info: "they look very different", suspects: 6,  board: 12, seconds: 150, distractors: "random",  minDifferences: 3 },
-    2: { name: "Medium", info: "some of them look alike",  suspects: 8,  board: 16, seconds: 150, distractors: "similar", changes: [2, 3] },
-    3: { name: "Hard",   info: "they look very similar",   suspects: 10, board: 20, seconds: 180, distractors: "similar", changes: [1, 2] },
-    4: { name: "Expert", info: "they look almost the same", suspects: 12, board: 24, seconds: 210, distractors: "similar", changes: [1, 1] }
+    1: { name: "Easy",   info: "they look very different", suspects: 6,  board: 12, seconds: 150,
+         pool: ["hairColour", "hairStyle", "glasses", "headwear", "top", "topColour", "facialHair"], vary: 4, values: [2, 3] },
+    2: { name: "Medium", info: "some of them look alike",  suspects: 8,  board: 16, seconds: 150,
+         pool: ["hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 5, values: [2, 3] },
+    3: { name: "Hard",   info: "they look very similar",   suspects: 10, board: 20, seconds: 180,
+         pool: ["hairColour", "hairStyle", "glasses", "facialHair", "freckles", "earrings", "necklace", "headwear", "top", "topColour", "pattern"], vary: 6, values: [2, 2] },
+    4: { name: "Expert", info: "only small details are different", suspects: 12, board: 24, seconds: 210,
+         pool: ["glasses", "freckles", "earrings", "necklace", "pattern", "hairStyle", "facialHair", "headwear"], vary: 6, values: [2, 2] }
   },
   modes: {
     team:   { name: "Team game", info: "Work together: one of you describes, the other one asks and guesses." },

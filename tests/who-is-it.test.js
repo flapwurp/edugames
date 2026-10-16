@@ -60,3 +60,21 @@ test("people can be drawn", () => {
   const { people } = makeBoard(4600, 1);
   for (const p of people) assert.match(avatarSVG(p), /^<svg/);
 });
+
+/* Every question should rule out a group: no look belongs to only one person,
+   and every look of a differing feature is shared by at least a quarter of the people. */
+test("no unique looks: every look is shared by at least a quarter of the people", () => {
+  const visible = p => ({ ...p, hairColour: p.hairStyle === "bald" && p.facialHair === "none" ? "-" : p.hairColour });
+  const check = (people, where) => {
+    const min = Math.max(2, Math.ceil(people.length / 4));
+    for (const k of FEATURE_KEYS){
+      const counts = {};
+      people.forEach(p => { const v = visible(p)[k]; counts[v] = (counts[v] || 0) + 1; });
+      const looks = Object.entries(counts);
+      if (looks.length < 2) continue;
+      for (const [v, n] of looks) assert.ok(n >= min, `${where}: "${k} = ${v}" only ${n}× of ${people.length}`);
+    }
+  };
+  for (const [, c] of teamCodes()) for (let r = 1; r <= CONFIG.roundsPerGame; r++) check(makeRound(c, r).people, `${c}/${r}`);
+  for (const [, c] of versusCodes()) for (let r = 1; r <= CONFIG.roundsPerGame; r++) check(makeBoard(c, r).people, `${c}/${r}`);
+});

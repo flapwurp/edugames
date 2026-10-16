@@ -28,48 +28,73 @@ export function differences(a, b){
   return FEATURE_KEYS.filter(k => va[k] !== vb[k]).length;
 }
 export function lookKey(p){ const v = visible(p); return FEATURE_KEYS.map(k => v[k]).join("|"); }
-function mutate(base, n, rng){
-  const p = { ...base };
-  const keys = shuffle([...FEATURE_KEYS], rng).slice(0, n);
-  for (const k of keys){
-    const others = FEATURES[k].values.filter(v => v.id !== base[k]);
-    p[k] = others[Math.floor(rng() * others.length)].id;
-  }
-  p.skin = Math.floor(rng() * SKINS.length);
-  return normalise(p);
-}
-
 /* ---------- Game modes and codes ----------
    The game code also tells the mode, so the partner who joins gets the same mode automatically:
    x000–x499 = team game, x500–x999 = versus (x = level). */
 export const modeOf = code => (code % 1000 < 500 ? "team" : "versus");
 export const codeFor = (level, mode, rnd = Math.random()) => level * 1000 + (mode === "versus" ? 500 : 0) + Math.floor(rnd * 500);
 
-/* All people of a round. Nobody is special:
-   - "similar": everybody is a small variation of the same invisible model person,
-     so the searched person is not more "typical" than the others.
-   - "random": everybody differs from everybody else in at least minDifferences features. */
-function generatePeople(rng, L, count){
-  const people = [], seen = new Set();
-  const add = p => { const k = lookKey(p); if (seen.has(k)) return; seen.add(k); people.push(p); };
-  let guard = 0;
-  if (L.distractors === "similar"){
-    const model = randomPerson(rng);
-    const [lo, hi] = L.changes;
-    while (people.length < count && guard++ < 20000){
-      const p = mutate(model, lo + Math.floor(rng() * (hi - lo + 1)), rng);
-      if (differences(p, model) < lo) continue;
-      add(p);
-    }
-  } else {
-    while (people.length < count && guard++ < 20000){
-      const p = randomPerson(rng);
-      if (people.some(q => differences(p, q) < L.minDifferences)) continue;
-      add(p);
-    }
+/* All people of a round.
+   Only a few features differ (picked per round from the level's pool), everything else is the same for everybody.
+   Every look of a differing feature is shared by at least a quarter of the people (and at least 2),
+   so there are no "unique" features and a yes/no question always rules out a group.
+   Nobody is special: the searched person is picked at random afterwards. */
+function pickValues(k, keys, base, rng, n){
+  let vals = FEATURES[k].values.map(v => v.id);
+  const hatPossible = keys.includes("headwear") || base.headwear !== "none";
+  if (k === "hairStyle"){
+    if (hatPossible) vals = vals.filter(v => !["bald", "bun", "spiky"].includes(v));
+    if (keys.includes("hairColour") || keys.includes("facialHair")) vals = vals.filter(v => v !== "bald");   // hair colour must stay visible
   }
-  while (people.length < count) add(randomPerson(rng));
-  return people;
+  if (k === "top" && keys.includes("necklace")) vals = vals.filter(v => v !== "shirt");
+  shuffle(vals, rng);
+  return vals.slice(0, n);
+}
+function splitCounts(total, k, rng){
+  const min = Math.max(2, Math.ceil(total / 4));
+  const counts = new Array(k).fill(min);
+  let rest = total - min * k;
+  while (rest-- > 0) counts[Math.floor(rng() * k)]++;
+  return counts;
+}
+function generatePeople(rng, L, count){
+  for (let attempt = 0; attempt < 200; attempt++){
+    const base = randomPerson(rng);
+    const keys = shuffle([...L.pool], rng).slice(0, L.vary);
+    // keep the fixed features compatible with the ones that vary
+    if (keys.includes("headwear") && !keys.includes("hairStyle") && ["bald", "bun", "spiky"].includes(base.hairStyle)) base.hairStyle = "short";
+    if (keys.includes("hairColour") && !keys.includes("hairStyle") && base.hairStyle === "bald") base.hairStyle = "short";
+    if (keys.includes("necklace") && !keys.includes("top") && base.top === "shirt") base.top = "tshirt";
+    const cols = {};
+    let ok = true;
+    for (const k of keys){
+      const want = L.values[0] + Math.floor(rng() * (L.values[1] - L.values[0] + 1));
+      const vals = pickValues(k, keys, base, rng, Math.min(want, Math.floor(count / 2)));
+      if (vals.length < 2){ ok = false; break; }
+      const counts = splitCounts(count, vals.length, rng);
+      cols[k] = shuffle(vals.flatMap((v, i) => new Array(counts[i]).fill(v)), rng);
+    }
+    if (!ok) continue;
+    const build = () => Array.from({ length: count }, (_, i) => {
+      const p = { ...base };
+      for (const k of keys) p[k] = cols[k][i];
+      return normalise(p);
+    });
+    // make every person unique by swapping looks between people (keeps the numbers of each look)
+    const dupes = ppl => { const seen = new Map(); let d = 0; ppl.forEach((p, i) => { const key = lookKey(p); if (seen.has(key)) d++; else seen.set(key, i); }); return d; };
+    let people = build(), d = dupes(people);
+    for (let step = 0; step < 3000 && d > 0; step++){
+      const k = keys[Math.floor(rng() * keys.length)];
+      const i = Math.floor(rng() * count), j = Math.floor(rng() * count);
+      [cols[k][i], cols[k][j]] = [cols[k][j], cols[k][i]];
+      const next = build(), nd = dupes(next);
+      if (nd <= d){ people = next; d = nd; } else [cols[k][i], cols[k][j]] = [cols[k][j], cols[k][i]];
+    }
+    if (d > 0) continue;
+    people.forEach(p => { p.skin = Math.floor(rng() * SKINS.length); });   // skin tone is never a deciding feature
+    return people;
+  }
+  throw new Error("Could not create a fair set of people");
 }
 
 /* Team game: the describer's person is people[target] */
