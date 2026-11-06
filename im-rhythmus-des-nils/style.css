@@ -19,6 +19,8 @@ h1,h2,h3{line-height:1.2}
 .top .cal{flex:1;max-width:560px;margin:0 auto}
 .tools{display:flex;gap:6px}
 .chip{min-height:44px;padding:0 12px;border-radius:999px;border:2px solid rgba(246,234,209,.45);font-weight:700;font-size:.92rem;color:#f6ead1;white-space:nowrap}
+.chip.fs{display:inline-flex;align-items:center;justify-content:center;min-width:44px;padding:0 10px}
+html:fullscreen,html:-webkit-full-screen{overflow:auto;background:var(--paper)}
 .chip:active{background:rgba(255,255,255,.15)}
 .badge{display:inline-block;min-width:1.5em;padding:0 .35em;border-radius:999px;background:var(--gold);color:#2b2014;font-size:.85rem}
 
@@ -34,8 +36,6 @@ h1,h2,h3{line-height:1.2}
 .say p{margin:4px 0;max-width:68ch}
 .side{display:flex;flex-direction:column;gap:12px;align-items:stretch;width:300px;flex-shrink:0}
 .side .neu{margin-top:0}
-.neu-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:10px}
-.neu-row .neu{margin-top:0}
 .actions{display:flex;flex-direction:column;gap:10px}
 .page .actions{flex-direction:row;justify-content:center;margin:22px 0 8px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 1.3em;border-radius:14px;font-weight:700;font-size:1.08rem;background:var(--gold);color:#2b2014;box-shadow:0 4px 0 var(--gold-edge)}
@@ -250,20 +250,3 @@ html,body{touch-action:manipulation}
 .lehrer-menu h3{margin:14px 0 6px;font-size:1rem}
 .lehrer-menu .ziele{display:flex;flex-wrap:wrap;gap:6px}
 .lehrer-menu .ziele .opt{flex:0 0 auto;padding:8px 12px}
-
-/* Querformat: Spielbildschirme passen ohne Scrollen in den sichtbaren Bereich (Rob, 6.11.2026).
-   Die Szene wird kleiner, wenn der Text darunter mehr Platz braucht; die Safari-Leiste verdeckt nichts mehr.
-   100dvh = sichtbare Höhe ohne Browserleisten. Hochkant bleibt alles wie bisher (scrollen). */
-@media (orientation:landscape){
-  #app.fit{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
-  #app.fit > .top{flex:none;position:static}
-  #app.fit > .stage, #app.fit .startpage > .stage{flex:0 1 auto;min-height:150px;display:flex;justify-content:center;background:var(--paper)}
-  #app.fit .stage .scene{width:100%;height:auto;max-height:100%;min-height:0}
-  #app.fit > .panel{flex:1 0 auto;width:100%}
-  #app.fit.start .startpage{flex:1;min-height:0;display:flex;flex-direction:column}
-  #app.fit.start .startbox{flex:none;padding:6px 18px 12px}
-  #app.fit.start .startbox h1{font-size:clamp(28px,5.5vh,44px);margin:4px 0 0}
-  #app.fit.start .startbox .sub{margin:0 0 6px}
-  #app.fit.start .startbox p{margin:3px auto}
-  #app.fit.start .startbox .btn{margin-top:8px}
-}

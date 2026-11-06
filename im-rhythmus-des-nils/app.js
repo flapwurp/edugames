@@ -80,6 +80,26 @@ function calendar(){
   }).join("")}</div>`;
 }
 
+/* Vollbild (Rob, 6.11.2026): auf dem iPad verdeckt sonst die Safari-Leiste den unteren Rand. Nur, wenn der Browser es kann. */
+const fsOk = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+const FS_EIN = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>`;
+const FS_AUS = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>`;
+function toggleVollbild(){
+  const d = document.documentElement;
+  try {
+    const r = fsEl() ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+                     : (d.requestFullscreen || d.webkitRequestFullscreen).call(d);
+    if (r && r.catch) r.catch(() => toast(UI.vollbildNicht, "", 3200));
+  } catch { toast(UI.vollbildNicht, "", 3200); }
+}
+["fullscreenchange", "webkitfullscreenchange"].forEach(ev => document.addEventListener(ev, () => {
+  const b = document.querySelector('[data-act="vollbild"]');
+  if (!b) return;
+  const t = fsEl() ? UI.vollbildAus : UI.vollbild;
+  b.innerHTML = fsEl() ? FS_AUS : FS_EIN; b.setAttribute("aria-label", t); b.title = t;
+}));
+
 function topbar(){
   const n = S.rolle.length;
   return `<header class="top">
@@ -89,6 +109,7 @@ function topbar(){
       <button class="chip" data-act="rolle">${esc(UI.rolle)}${n ? ` <span class="badge">${n}</span>` : ""}</button>
       <button class="chip" data-act="begriffe">${esc(UI.begriffe)}</button>
       <button class="chip" data-act="pause">${esc(UI.pause)}</button>
+      ${fsOk ? `<button class="chip fs" data-act="vollbild" aria-label="${esc(fsEl() ? UI.vollbildAus : UI.vollbild)}" title="${esc(fsEl() ? UI.vollbildAus : UI.vollbild)}">${fsEl() ? FS_AUS : FS_EIN}</button>` : ""}
     </div>
   </header>`;
 }
@@ -178,23 +199,17 @@ function onSownField(dx = 40){
 /* ---------- Bildschirme ---------- */
 
 let quiet = false;   // beim Vorspielen der Lehrerkonsole nichts zeichnen
-function render(){
-  if (quiet) return;
-  $app.className = "";   // layout() und start() setzen „fit“: alles passt ohne Scrollen auf den Bildschirm
-  ({ start, spiel, bilanz, quelle, urteil, impuls }[S.screen] || start)();
-}
+function render(){ if (quiet) return; ({ start, spiel, bilanz, quelle, urteil, impuls }[S.screen] || start)(); }
 
 function layout(sceneSVG, panelHTML){
-  $app.className = "fit";
   $app.innerHTML = `${topbar()}<div class="stage">${sceneSVG}</div><section class="panel">${panelHTML}</section>
     <p class="portrait-hint">${esc(GAME.hochkant)}</p>`;
 }
 
 function panel({ titel, text = "", extra = "", actions = "", side = "" }){
   const notes = newNotes();
-  // neue Merksätze stehen unter dem Text (nicht in der rechten Spalte), damit alles auf den Bildschirm passt
-  const right = side || actions ? `<div class="side"><div class="actions">${actions}</div>${side}</div>` : "";
-  return `<div class="say"><h2>${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ""}${extra}${notes ? `<div class="neu-row">${notes}</div>` : ""}</div>${right}`;
+  const right = side || actions || notes ? `<div class="side"><div class="actions">${actions}</div>${side}${notes}</div>` : "";
+  return `<div class="say"><h2>${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ""}${extra}</div>${right}`;
 }
 const btn = (act, label, attrs = "", cls = "") => `<button class="btn ${cls}" data-act="${act}" ${attrs}>${esc(label)}</button>`;
 const choices = (act, opts, p = {}) => `<div class="choices">${Object.entries(opts).map(([id, o]) =>
@@ -204,7 +219,6 @@ const hint = t => `<p class="geste"><b>${esc(UI.geste)}</b> ${esc(t)}</p>`;
 function start(){
   const intro = scene({ sky: "peret", water: { level: LEVEL.normal }, fields: [{ soil: "gepflueg", plants: "aehre" }, { soil: "gepflueg", plants: "aehre" }, { soil: "gepflueg", plants: "halm" }],
     hof: { fill: 0.5 }, hut: true, people: [{ x: 300, pose: "hacken", n: 0 }, { x: 900, pose: "tragen", n: 1 }, { x: 940, pose: "stehen", n: 2, kind: true }] });
-  $app.className = "fit start";
   $app.innerHTML = `${topbar()}<main class="startpage">
     <div class="stage">${intro}</div>
     <div class="startbox">
@@ -816,6 +830,7 @@ const actions = {
       <p class="restart"><button class="linkbtn" data-act="restart">${esc(UI.neustart)}</button></p>`, false);
   },
   restart(){ closeSheet(); S = fresh(); save(); render(); },
+  vollbild(){ toggleVollbild(); },
   closeSheet(){ closeSheet(); }
 };
 /* ---------- Lehrerkonsole: bis zu einer Stelle vorspielen (lehrer.js) ----------
