@@ -310,16 +310,17 @@ export const BILANZ = {
    Übersetzung von Peter Dils im Thesaurus Linguae Aegyptiae (CC BY-SA 4.0). Wortlaut nicht verändern.
    Bearbeitung (steht auch in der Angabe): gekürzt, Auslassungen mit […]; die Klammerzeichen { } und 〈 〉
    der Übersetzung (Tilgungen und Ergänzungen der Herausgeber) sind weggelassen, die Wörter darin stehen.
+   Bei „(oder: …)“-Varianten ist eine ausgewählt (Vers 9: „weich“, „verarmt“; Vers 15: „alles Gute“).
    Jeder Block ist eine Stelle, an die man Aussagen ziehen kann (Nummer = „stelle“ bei den Aussagen, ab 0 gezählt). */
 export const QUELLE = {
   placeholder: false,
   titel: "M3 Ein ägyptisches Lied über den Nil aus dem 2. Jahrtausend v. Chr. (Auszug)",
-  angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen.",
+  angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen; wo die Übersetzung mit „oder:“ Varianten anbietet, ist eine davon ausgewählt.",
   bloecke: [
     { text: "Sei gegrüßt, o Hapi¹, der aus der Erde hervorgegangen ist, gekommen, um Ägypten (wieder)zubeleben;" },
     { text: "[…] (O Hapi,) Herr der Fische […], der die Wasser/Zugvögel nach Süden führt, […] der die Gerste erschafft, der den Emmerweizen² entstehen läßt, damit er die Tempel errichten kann." },
-    { text: "Sind seine Finger zögerlich und ist er weich (oder: verärgert), dann sind alle Unzähligen (zwangsläufig) verwaist (oder: arm/verarmt)." },
-    { text: "[…] (O Hapi), der Nahrung herbeibringt, groß an Speisen, der alles Gute (oder: alle Wohltaten) erschafft;" },
+    { text: "Sind seine Finger zögerlich und ist er weich, dann sind alle Unzähligen (zwangsläufig) verarmt." },
+    { text: "[…] (O Hapi), der Nahrung herbeibringt, groß an Speisen, der alles Gute erschafft;" },
     { text: "[…] Deine Jungmannschaft und deine Kinder mögen dich bejubeln. (Dann) wird man dich als König begrüßen; (dich, der) mit festem Regelmaß, der in Anwesenheit des Gefolges von Oberägypten und Unterägypten hervorkommt." },
     { text: "[…] Fließe für uns, O Hapi, damit man dir opfert, damit man für dich Langhornrinder/Mastrinder schlachtet, […]" }
   ],

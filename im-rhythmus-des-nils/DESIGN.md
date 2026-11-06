@@ -154,8 +154,9 @@ Lizenz CC BY-SA 4.0 – von Rob ausgewählt (6.11.2026). Die Schulbuchfassung na
 Auszug in derselben Auswahl wie im Schulbuch: Verse 2, 7–8, 9, 15, 26–27, 59 (Zählung nach van der Plas wie im TLA).
 Bearbeitung, in der Angabe vermerkt: Auslassungen mit […]; die Klammerzeichen { } und 〈 〉 (Tilgungen und Ergänzungen
 der Herausgeber) weggelassen, die Wörter darin bleiben stehen – außer in Vers 7, wo die getilgte Lesart „auf der Fahrt
-nach Süden zu dem Kataraktengebiet“ als Auslassung […] erscheint. Runde Klammern, „(oder: …)“ und Schrägstriche der
-Übersetzung bleiben unverändert. Anmerkungen zu „Hapi“ und „Emmerweizen“ sind eigene Worterklärungen.
+nach Süden zu dem Kataraktengebiet“ als Auslassung […] erscheint. Bei „(oder: …)“-Varianten ist eine ausgewählt
+(Rob: liest sich sonst holprig) – Vers 9 „weich“ und „verarmt“ (passt zur Aussage „werden die Menschen arm“),
+Vers 15 „alles Gute“. Übrige runde Klammern und Schrägstriche der Übersetzung bleiben unverändert. Anmerkungen zu „Hapi“ und „Emmerweizen“ sind eigene Worterklärungen.
 
 Der Teil mit „habgierig“ (bei Assmann) bzw. „der plündert“ (Vers 11) fehlt bewusst: Er könnte als Warnung vor zu viel
 Wasser gelesen werden, und das Spiel sagt, das Lied nenne nur die Gefahr bei zu wenig Wasser (Rob, 6.11.2026).
