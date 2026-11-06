@@ -144,6 +144,8 @@ Jeder Punkt des Sachwissens wird an einer festen Stelle erlebt; danach erscheint
 - **Grafik:** eigene SVGs, einheitlicher flächiger Stil, Querschnitt. Berufe in einer eigenen Nahansicht des Dorfes.
 - **Querformat** (Rob). Hochkant funktioniert es auch, mit Hinweis „quer halten“. Kein Doppeltipp-Zoom.
 - **Pause** jederzeit; Zustand nur in `sessionStorage`.
+- **Vollbild** (Rob, 6.11.2026): Knopf rechts in der Kopfzeile, weil auf dem iPad sonst die Safari-Leiste den unteren
+  Rand verdeckt. Nutzt die Fullscreen-API und erscheint nur, wenn der Browser sie kann; Safari zeigt im Vollbild oben links ein ✕ zum Beenden.
 
 ## Quelle: der große Nilhymnus
 Im Spiel heißt sie „Der große Nilhymnus“ (Titel im TLA), nicht „M3“ – die Buchzählung ergibt außerhalb des Buches

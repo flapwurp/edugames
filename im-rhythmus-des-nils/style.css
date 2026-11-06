@@ -19,6 +19,8 @@ h1,h2,h3{line-height:1.2}
 .top .cal{flex:1;max-width:560px;margin:0 auto}
 .tools{display:flex;gap:6px}
 .chip{min-height:44px;padding:0 12px;border-radius:999px;border:2px solid rgba(246,234,209,.45);font-weight:700;font-size:.92rem;color:#f6ead1;white-space:nowrap}
+.chip.fs{display:inline-flex;align-items:center;justify-content:center;min-width:44px;padding:0 10px}
+html:fullscreen,html:-webkit-full-screen{overflow:auto;background:var(--paper)}
 .chip:active{background:rgba(255,255,255,.15)}
 .badge{display:inline-block;min-width:1.5em;padding:0 .35em;border-radius:999px;background:var(--gold);color:#2b2014;font-size:.85rem}
 

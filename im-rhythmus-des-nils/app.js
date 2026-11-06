@@ -80,6 +80,26 @@ function calendar(){
   }).join("")}</div>`;
 }
 
+/* Vollbild (Rob, 6.11.2026): auf dem iPad verdeckt sonst die Safari-Leiste den unteren Rand. Nur, wenn der Browser es kann. */
+const fsOk = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+const FS_EIN = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>`;
+const FS_AUS = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>`;
+function toggleVollbild(){
+  const d = document.documentElement;
+  try {
+    const r = fsEl() ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+                     : (d.requestFullscreen || d.webkitRequestFullscreen).call(d);
+    if (r && r.catch) r.catch(() => toast(UI.vollbildNicht, "", 3200));
+  } catch { toast(UI.vollbildNicht, "", 3200); }
+}
+["fullscreenchange", "webkitfullscreenchange"].forEach(ev => document.addEventListener(ev, () => {
+  const b = document.querySelector('[data-act="vollbild"]');
+  if (!b) return;
+  const t = fsEl() ? UI.vollbildAus : UI.vollbild;
+  b.innerHTML = fsEl() ? FS_AUS : FS_EIN; b.setAttribute("aria-label", t); b.title = t;
+}));
+
 function topbar(){
   const n = S.rolle.length;
   return `<header class="top">
@@ -89,6 +109,7 @@ function topbar(){
       <button class="chip" data-act="rolle">${esc(UI.rolle)}${n ? ` <span class="badge">${n}</span>` : ""}</button>
       <button class="chip" data-act="begriffe">${esc(UI.begriffe)}</button>
       <button class="chip" data-act="pause">${esc(UI.pause)}</button>
+      ${fsOk ? `<button class="chip fs" data-act="vollbild" aria-label="${esc(fsEl() ? UI.vollbildAus : UI.vollbild)}" title="${esc(fsEl() ? UI.vollbildAus : UI.vollbild)}">${fsEl() ? FS_AUS : FS_EIN}</button>` : ""}
     </div>
   </header>`;
 }
@@ -809,6 +830,7 @@ const actions = {
       <p class="restart"><button class="linkbtn" data-act="restart">${esc(UI.neustart)}</button></p>`, false);
   },
   restart(){ closeSheet(); S = fresh(); save(); render(); },
+  vollbild(){ toggleVollbild(); },
   closeSheet(){ closeSheet(); }
 };
 /* ---------- Lehrerkonsole: bis zu einer Stelle vorspielen (lehrer.js) ----------
