@@ -127,8 +127,15 @@ test("Texte: keine Kraft-Zahlen, Merksätze vollständig, Berufe beschrieben", (
   assert.ok(!/\d+ Kraft/.test(alles), "keine Zahlen vor „Kraft“");
   assert.ok(!/Erdwall|allein auf dem Hof/i.test(alles));
   assert.ok(AUSSAGEN.some(a => a.imLied) && AUSSAGEN.some(a => !a.imLied));
-  for (const a of AUSSAGEN) if (a.imLied) assert.ok(a.stelle >= 0 && a.stelle < QUELLE.bloecke.length, a.text);
+  for (const a of AUSSAGEN) if (a.imLied) for (const st of [].concat(a.stelle)) assert.ok(st >= 0 && st < QUELLE.bloecke.length, a.text);
   if (QUELLE.placeholder) assert.ok(QUELLE.bloecke.every(b => b.text.startsWith("[Platzhalter")));
+  else {
+    assert.ok(QUELLE.bloecke.every(b => !b.text.includes("Platzhalter")), "kein Platzhalter mehr im Quelltext");
+    assert.ok(/Thesaurus Linguae Aegyptiae/.test(QUELLE.angabe) && /CC BY-SA 4.0/.test(QUELLE.angabe), "Quellenangabe mit Lizenz vorhanden");
+    // jede Fußnotenziffer im Text hat eine Anmerkung
+    const sup = QUELLE.bloecke.map(b => b.text).join(" ").match(/[¹²³]/g) || [];
+    for (const z of sup) assert.ok((QUELLE.anmerkungen || []).some(t => t.startsWith(z)), "Anmerkung zu " + z);
+  }
   for (const y of [1, 2, 3, 4]) assert.equal(TEXT.achet[y].monate.length, 4);
   assert.ok(SPIELBELEGE.beruf && SPIELBELEGE.deich);
 });

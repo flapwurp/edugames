@@ -146,8 +146,19 @@ Jeder Punkt des Sachwissens wird an einer festen Stelle erlebt; danach erscheint
 - **Pause** jederzeit; Zustand nur in `sessionStorage`.
 
 ## Quelle M3 (Nilhymnus)
-Ägyptisches Lied über den Nil, 2. Jahrtausend v. Chr. **Noch Platzhalter** in `content.js`; der Text wird eingesetzt,
-sobald geklärt ist, in welcher Übersetzung er im öffentlichen Repo stehen darf.
+Großer Nilhymnus (Lied auf Hapi, den Gott der Nilflut), 2. Jahrtausend v. Chr. Verwendet wird die Übersetzung von
+Peter Dils im **Thesaurus Linguae Aegyptiae** (Text-ID PMARXRST45A6PL4SDWQ7URKABI, Korpus-Ausgabe 20, Zugriff 6.11.2026),
+Lizenz CC BY-SA 4.0 – von Rob ausgewählt (6.11.2026). Die Schulbuchfassung nach Assmann (1975) wird **nicht** verwendet
+(urheberrechtlich geschützt, Repo und Seite sind öffentlich).
+
+Auszug in derselben Auswahl wie im Schulbuch: Verse 2, 7–8, 9, 15, 26–27, 59 (Zählung nach van der Plas wie im TLA).
+Bearbeitung, in der Angabe vermerkt: Auslassungen mit […]; die Klammerzeichen { } und 〈 〉 (Tilgungen und Ergänzungen
+der Herausgeber) weggelassen, die Wörter darin bleiben stehen – außer in Vers 7, wo die getilgte Lesart „auf der Fahrt
+nach Süden zu dem Kataraktengebiet“ als Auslassung […] erscheint. Runde Klammern, „(oder: …)“ und Schrägstriche der
+Übersetzung bleiben unverändert. Anmerkungen zu „Hapi“ und „Emmerweizen“ sind eigene Worterklärungen.
+
+Der Teil mit „habgierig“ (bei Assmann) bzw. „der plündert“ (Vers 11) fehlt bewusst: Er könnte als Warnung vor zu viel
+Wasser gelesen werden, und das Spiel sagt, das Lied nenne nur die Gefahr bei zu wenig Wasser (Rob, 6.11.2026).
 
 Quellencheck: Aussagen in zufälliger Reihenfolge per Ziehen oder Antippen an die passende Stelle im Lied oder in das
 Feld „Steht nicht im Lied – das zeigt nur mein Spiel“. Falsche Zuordnung → Tipp, Karte bleibt liegen.

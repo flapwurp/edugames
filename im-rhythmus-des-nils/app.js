@@ -564,7 +564,8 @@ function quelle(){
   const placedIn = zone => Object.entries(q.placed).filter(([, z]) => String(z) === String(zone)).map(([i]) =>
     `<div class="placed-card"><b>${esc(AUSSAGEN[i].text)}</b><small>${esc(AUSSAGEN[i].erklaerung)}</small></div>`).join("");
   const zones = QUELLE.bloecke.map((b, k) => `<div class="zone" data-zone="${k}" data-act="dropSel" role="button" tabindex="0">
-      <p class="verse">${esc(b.text)}</p>${placedIn(k)}${q.sel != null ? `<span class="drop-hint">${esc(T.ablegen)}</span>` : ""}</div>`).join(`<p class="cut">[…]</p>`);
+      <p class="verse">${esc(b.text)}</p>${placedIn(k)}${q.sel != null ? `<span class="drop-hint">${esc(T.ablegen)}</span>` : ""}</div>`).join("");
+  const notes = (QUELLE.anmerkungen || []).map(t => `<p class="note">${esc(t)}</p>`).join("");
   const pile = q.order.filter(i => !(i in q.placed)).map(i =>
     `<button class="card ${q.sel === i ? "sel" : ""}" data-card="${i}" data-act="selCard">${esc(AUSSAGEN[i].text)}</button>`).join("");
   const done = Object.keys(q.placed).length === AUSSAGEN.length;
@@ -579,7 +580,7 @@ function quelle(){
       <div>
         <figure class="source ${QUELLE.placeholder ? "placeholder" : ""}">
           ${QUELLE.placeholder ? `<p class="ph">Platzhalter – der Text der Quelle folgt.</p>` : ""}
-          <figcaption><b>${esc(QUELLE.titel)}</b></figcaption>${zones}<p class="ref">${esc(QUELLE.angabe)}</p>
+          <figcaption><b>${esc(QUELLE.titel)}</b></figcaption>${zones}${notes}<p class="ref">${esc(QUELLE.angabe)}</p>
         </figure>
       </div>
       <aside class="pile-wrap"><h3>${esc(T.frage)}</h3><p class="small">${esc(T.anleitung)}</p>${msg}<div class="pile">${pile}</div>
@@ -589,7 +590,7 @@ function quelle(){
 
 function placeCard(i, zone){
   const a = AUSSAGEN[i];
-  const ok = a.imLied ? String(zone) === String(a.stelle) : zone === "nicht";
+  const ok = a.imLied ? [].concat(a.stelle).map(String).includes(String(zone)) : zone === "nicht";
   if (ok){ S.q.placed[i] = zone; S.q.msg = { ok: true, text: QUELLTEXT.richtig + " " + a.erklaerung }; }
   else S.q.msg = { ok: false, text: QUELLTEXT.falsch + a.tipp };
   S.q.sel = null; save(); render();

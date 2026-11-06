@@ -101,6 +101,7 @@ h1,h2,h3{line-height:1.2}
 .source{background:#f7ecd0;border:2px solid #c9b07a;border-radius:6px;padding:14px 18px;margin:0;font-family:Georgia,"Times New Roman",serif}
 .source p{margin:6px 0}
 .source .cut{color:#8a7350;margin:2px 0}
+.source .note{font-size:.85rem;margin:10px 0 2px;font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
 .source .ref{font-size:.85rem;color:var(--muted);font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
 .source.placeholder{border-style:dashed}
 .source .ph{background:#ffe48a;display:inline-block;padding:2px 8px;border-radius:6px;font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-weight:700;margin-top:0}

@@ -306,17 +306,26 @@ export const BILANZ = {
   weiter: "Weiter zur Quelle"
 };
 
-/* ---------- Quelle M3 – PLATZHALTER ---------- */
+/* ---------- Quelle M3 ----------
+   Übersetzung von Peter Dils im Thesaurus Linguae Aegyptiae (CC BY-SA 4.0). Wortlaut nicht verändern.
+   Bearbeitung (steht auch in der Angabe): gekürzt, Auslassungen mit […]; die Klammerzeichen { } und 〈 〉
+   der Übersetzung (Tilgungen und Ergänzungen der Herausgeber) sind weggelassen, die Wörter darin stehen.
+   Jeder Block ist eine Stelle, an die man Aussagen ziehen kann (Nummer = „stelle“ bei den Aussagen, ab 0 gezählt). */
 export const QUELLE = {
-  placeholder: true,
-  titel: "M3 Ein ägyptisches Lied über den Nil (2. Jahrtausend v. Chr.)",
-  angabe: "Übersetzung folgt (gemeinfreie Fassung, z. B. A. Erman 1923)",
+  placeholder: false,
+  titel: "M3 Ein ägyptisches Lied über den Nil aus dem 2. Jahrtausend v. Chr. (Auszug)",
+  angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen.",
   bloecke: [
-    { text: "[Platzhalter Block 1: Begrüßung des Nils – er ist gekommen, um Ägypten am Leben zu erhalten]" },
-    { text: "[Platzhalter Block 2: Er lässt Gerste und Bohnen wachsen]" },
-    { text: "[Platzhalter Block 3: Wenn er träge ist, werden alle arm, und das Land wird krank]" },
-    { text: "[Platzhalter Block 4: Er kommt regelmäßig zu seiner Zeit]" },
-    { text: "[Platzhalter Block 5: Man bringt ihm Opfer und ruft ihn: Komm nach Ägypten!]" }
+    { text: "Sei gegrüßt, o Hapi¹, der aus der Erde hervorgegangen ist, gekommen, um Ägypten (wieder)zubeleben;" },
+    { text: "[…] (O Hapi,) Herr der Fische […], der die Wasser/Zugvögel nach Süden führt, […] der die Gerste erschafft, der den Emmerweizen² entstehen läßt, damit er die Tempel errichten kann." },
+    { text: "Sind seine Finger zögerlich und ist er weich (oder: verärgert), dann sind alle Unzähligen (zwangsläufig) verwaist (oder: arm/verarmt)." },
+    { text: "[…] (O Hapi), der Nahrung herbeibringt, groß an Speisen, der alles Gute (oder: alle Wohltaten) erschafft;" },
+    { text: "[…] Deine Jungmannschaft und deine Kinder mögen dich bejubeln. (Dann) wird man dich als König begrüßen; (dich, der) mit festem Regelmaß, der in Anwesenheit des Gefolges von Oberägypten und Unterägypten hervorkommt." },
+    { text: "[…] Fließe für uns, O Hapi, damit man dir opfert, damit man für dich Langhornrinder/Mastrinder schlachtet, […]" }
+  ],
+  anmerkungen: [
+    "¹ Hapi: der Gott der Nilflut. Die Ägypter verehrten die jährliche Überschwemmung des Nils als Gott.",
+    "² Emmerweizen: eine alte Weizenart."
   ]
 };
 
@@ -337,15 +346,15 @@ export const QUELLTEXT = {
 };
 
 export const AUSSAGEN = [
-  { text: "Der Nil erhält Ägypten am Leben.", imLied: true, stelle: 0,
+  { text: "Der Nil belebt Ägypten.", imLied: true, stelle: 0,
     erklaerung: "Das steht gleich am Anfang des Liedes.", tipp: "Lies noch einmal den Anfang des Liedes." },
-  { text: "Der Nil lässt Gerste und Bohnen wachsen.", imLied: true, stelle: 1,
-    erklaerung: "Das Lied nennt Pflanzen, die durch den Nil wachsen.", tipp: "Such im Lied nach Pflanzen." },
+  { text: "Der Nil lässt Gerste und Weizen wachsen.", imLied: true, stelle: [1, 3],
+    erklaerung: "Das Lied nennt Getreide und Nahrung, die durch den Nil entstehen.", tipp: "Such im Lied nach Pflanzen." },
   { text: "Bringt der Nil zu wenig Wasser, werden die Menschen arm.", imLied: true, stelle: 2,
-    erklaerung: "Auch das Lied kennt die Gefahr, wenn die Flut ausbleibt – wie in deinem Jahr 2.", tipp: "Lies, was passiert, wenn der Nil „träge“ ist." },
-  { text: "Der Nil kommt regelmäßig, jedes Jahr zu seiner Zeit.", imLied: true, stelle: 3,
-    erklaerung: "Das Lied lobt, dass der Nil pünktlich kommt – wie im Kalender.", tipp: "Such im Lied nach einer Stelle über die Zeit." },
-  { text: "Die Menschen bringen dem Nil Opfer und bitten ihn zu kommen.", imLied: true, stelle: 4,
+    erklaerung: "Auch das Lied kennt die Gefahr, wenn die Flut ausbleibt – wie in deinem Jahr 2.", tipp: "Lies, was passiert, wenn seine Finger „zögerlich“ sind." },
+  { text: "Der Nil kommt regelmäßig.", imLied: true, stelle: 4,
+    erklaerung: "Das Lied lobt, dass der Nil „mit festem Regelmaß“ kommt – wie im Kalender.", tipp: "Such im Lied, wie der Nil kommt." },
+  { text: "Die Menschen opfern dem Nil und bitten ihn zu fließen.", imLied: true, stelle: 5,
     erklaerung: "Das Lied ist ein Gebet: Die Menschen verehren den Nil als Gott.", tipp: "Lies noch einmal den letzten Teil des Liedes." },
   { text: "Die Bauern müssen pflügen, säen und Wasser schöpfen.", imLied: false,
     erklaerung: "Das hast du im Spiel erlebt. Im Lied kommt die Arbeit der Bauern nicht vor.", tipp: "Such im Lied nach Arbeit. Findest du etwas? Vielleicht kennst du das aus dem Spiel." },
@@ -375,10 +384,10 @@ export const URTEIL = {
 };
 
 export const QUELLE_BELEGE = [
-  "der Nil Ägypten am Leben erhält",
-  "durch den Nil Gerste und Bohnen wachsen",
-  "der Nil jedes Jahr zu seiner Zeit kommt",
-  "die Menschen arm werden, wenn der Nil ausbleibt"
+  "der Nil Ägypten belebt",
+  "der Nil Gerste und Emmerweizen entstehen lässt",
+  "der Nil mit festem Regelmaß kommt",
+  "die Menschen verarmen, wenn der Nil zögerlich ist"
 ];
 
 export const ALLERDINGS = [
@@ -438,6 +447,8 @@ export const BEGRIFFE = [
   ["Überschuss", "was übrig bleibt, wenn alle satt sind"],
   ["Arbeitskraft", "wie viel Arbeit eine Familie in einem Jahr schaffen kann; im Spiel zeigt sie der Balken"],
   ["Grenzstein", "ein Stein am Rand eines Feldes; er zeigt, wo ein Feld aufhört und das nächste anfängt"],
+  ["Hapi", "der Gott der Nilflut; die Ägypter verehrten die Überschwemmung des Nils als Gott"],
+  ["Flachs", "eine Pflanze; aus ihren Fasern stellt man Leinen her"],
   ["Kupfer", "ein Metall; Sicheln aus Kupfer schneiden besser als Sicheln aus Feuerstein"],
   ["Arbeitsteilung", "nicht alle machen dasselbe: Manche bauen Getreide an, andere töpfern, weben oder vermessen Land – und sie tauschen untereinander"]
 ];
