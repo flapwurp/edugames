@@ -310,19 +310,20 @@ export const BILANZ = {
    Übersetzung von Peter Dils im Thesaurus Linguae Aegyptiae (CC BY-SA 4.0). Wortlaut nicht verändern.
    Bearbeitung (steht auch in der Angabe): gekürzt, Auslassungen mit […]; die Klammerzeichen { } und 〈 〉
    der Übersetzung (Tilgungen und Ergänzungen der Herausgeber) sind weggelassen, die Wörter darin stehen.
-   Bei „(oder: …)“-Varianten ist eine ausgewählt (Vers 9: „weich“, „verarmt“; Vers 15: „alles Gute“).
+   Bei Varianten („oder: …“, Schrägstrich) ist eine ausgewählt (Vers 7: „Zugvögel“; Vers 9: „weich“, „verarmt“;
+   Vers 15: „alles Gute“; Vers 59: „Langhornrinder“).
    Jeder Block ist eine Stelle, an die man Aussagen ziehen kann (Nummer = „stelle“ bei den Aussagen, ab 0 gezählt). */
 export const QUELLE = {
   placeholder: false,
   titel: "M3 Ein ägyptisches Lied über den Nil aus dem 2. Jahrtausend v. Chr. (Auszug)",
-  angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen; wo die Übersetzung mit „oder:“ Varianten anbietet, ist eine davon ausgewählt.",
+  angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen; wo die Übersetzung Varianten anbietet („oder:“, Schrägstrich), ist eine davon ausgewählt.",
   bloecke: [
     { text: "Sei gegrüßt, o Hapi¹, der aus der Erde hervorgegangen ist, gekommen, um Ägypten (wieder)zubeleben;" },
-    { text: "[…] (O Hapi,) Herr der Fische […], der die Wasser/Zugvögel nach Süden führt, […] der die Gerste erschafft, der den Emmerweizen² entstehen läßt, damit er die Tempel errichten kann." },
+    { text: "[…] (O Hapi,) Herr der Fische […], der die Zugvögel nach Süden führt, […] der die Gerste erschafft, der den Emmerweizen² entstehen läßt, damit er die Tempel errichten kann." },
     { text: "Sind seine Finger zögerlich und ist er weich, dann sind alle Unzähligen (zwangsläufig) verarmt." },
     { text: "[…] (O Hapi), der Nahrung herbeibringt, groß an Speisen, der alles Gute erschafft;" },
     { text: "[…] Deine Jungmannschaft und deine Kinder mögen dich bejubeln. (Dann) wird man dich als König begrüßen; (dich, der) mit festem Regelmaß, der in Anwesenheit des Gefolges von Oberägypten und Unterägypten hervorkommt." },
-    { text: "[…] Fließe für uns, O Hapi, damit man dir opfert, damit man für dich Langhornrinder/Mastrinder schlachtet, […]" }
+    { text: "[…] Fließe für uns, O Hapi, damit man dir opfert, damit man für dich Langhornrinder schlachtet, […]" }
   ],
   anmerkungen: [
     "¹ Hapi: der Gott der Nilflut. Die Ägypter verehrten die jährliche Überschwemmung des Nils als Gott.",
@@ -385,32 +386,32 @@ export const URTEIL = {
 };
 
 export const QUELLE_BELEGE = [
-  "der Nil Ägypten belebt",
-  "der Nil Gerste und Emmerweizen entstehen lässt",
-  "der Nil mit festem Regelmaß kommt",
-  "die Menschen verarmen, wenn der Nil zögerlich ist"
+  "Nil belebt Ägypten",
+  "Nil lässt Gerste und Emmerweizen entstehen",
+  "Nil kommt mit festem Regelmaß",
+  "Nil zögerlich → Menschen verarmen"
 ];
 
 export const ALLERDINGS = [
-  "ohne die Arbeit der Menschen gab es keine Ernte",
-  "die Flut war nicht jedes Jahr gleich – mal zu niedrig, mal zu hoch",
-  "erst Dörfer, Deiche und Vorräte machten das Leben am Nil sicherer",
-  "das Lied ist ein Gebet und lobt den Nil – über die Arbeit der Bauern sagt es nichts"
+  "ohne Arbeit der Menschen keine Ernte",
+  "Flut nicht jedes Jahr gleich: mal zu niedrig, mal zu hoch",
+  "mehr Sicherheit erst durch Dörfer, Deiche, Vorräte",
+  "Lied = Gebet, lobt den Nil, nichts über die Arbeit der Bauern"
 ];
 
 /* Belege aus dem Spiel – das Spiel wählt die passenden aus */
 export const SPIELBELEGE = {
-  schlamm: "nach der Flut fruchtbarer Schlamm auf den Feldern lag und dort Getreide wuchs",
-  ernte1: "wir im normalen Jahr {n} Säcke geerntet haben – genug für ein ganzes Jahr",
-  kraft: "jede Arbeit auf dem Feld Arbeitskraft gekostet hat und unsere Kraft nicht für alles gereicht hat",
-  niedrig: "in Jahr 2 die Flut zu niedrig war und Felder trocken blieben",
-  hunger: "meine Familie in Jahr 2 hungern musste",
-  knapp: "in Jahr 2 die Ernte nicht gereicht hat und wir vom Vorrat leben mussten",
-  schaduf: "wir in Jahr 2 mit dem Schaduf Eimer für Eimer Wasser schöpfen mussten",
-  hoch: "in Jahr 3 die Flut zu hoch war und die Feldhütte fortriss",
-  deich: "der Deich in Jahr 3 das Dorf vor dem Hochwasser geschützt hat",
-  speicher: "der Dorfspeicher in Jahr 3 allen Familien geholfen hat, die zu wenig hatten",
-  beruf: "durch die Arbeitsteilung im Dorf in Jahr 4 mehr übrig blieb als in Jahr 1"
+  schlamm: "fruchtbarer Schlamm nach der Flut → Getreide wächst",
+  ernte1: "Jahr 1: {n} Säcke Ernte, genug für ein Jahr",
+  kraft: "Feldarbeit kostet Arbeitskraft, reicht nicht für alles",
+  niedrig: "Jahr 2: Flut zu niedrig, Felder trocken",
+  hunger: "Jahr 2: Hunger in der Familie",
+  knapp: "Jahr 2: Ernte zu klein, Leben vom Vorrat",
+  schaduf: "Jahr 2: Wasser schöpfen mit dem Schaduf, Eimer für Eimer",
+  hoch: "Jahr 3: Flut zu hoch, Feldhütte zerstört",
+  deich: "Jahr 3: Deich schützt das Dorf",
+  speicher: "Jahr 3: Dorfspeicher hilft Familien in Not",
+  beruf: "Jahr 4: Arbeitsteilung → mehr übrig als in Jahr 1"
 };
 
 export const IMPULS = {
