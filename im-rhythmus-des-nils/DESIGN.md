@@ -163,6 +163,19 @@ nach Süden zu dem Kataraktengebiet“ als Auslassung […] erscheint. Bei Varia
 ausgewählt (Rob: liest sich sonst holprig) – Vers 7 „Zugvögel“, Vers 9 „weich“ und „verarmt“ (passt zur Aussage
 „werden die Menschen arm“), Vers 15 „alles Gute“, Vers 59 „Langhornrinder“. Übrige runde Klammern bleiben unverändert.
 
+## Quellencheck
+Aussagen in zufälliger Reihenfolge per Ziehen oder Antippen an die passende Stelle im Lied oder in das Feld „Steht nicht
+im Lied – das zeigt nur mein Spiel“. Falsche Zuordnung → Tipp, Karte bleibt liegen.
+**Sagt die Quelle:** Leben, Nahrung, Regelmäßigkeit, Not bei schwacher Flut, Verehrung als Gott ·
+**Belegt die Quelle nicht:** Arbeit der Menschen, Gefahr einer zu hohen Flut, Dörfer und Deiche.
+
+Abschnitte mit zugeordneter Aussage sind hellgrün hinterlegt. Die rechte Spalte (Aussagen in zwei Spalten, Feld „Steht
+nicht im Lied“ ohne Erklärungen) muss in die sichtbare Höhe passen – sonst ist das untere Feld auf dem iPad nicht
+erreichbar, weil man auf den Karten nicht scrollen kann (Rob, 6.11.2026). Sind alle Aussagen zugeordnet, erscheint
+der Denkanstoß zur Quellenkritik als Fenster („Moment mal!“, `QUELLTEXT.denk`): Warum fehlt die Arbeit der Menschen?
+Was für ein Text ist das, wen spricht er an, was soll er bewirken? „Weiter“ scrollt zur Zusammenfassung. Sicherung
+im Heft: später entscheiden.
+
 ## Urteil (Rob, 6.11.2026)
 Ziel: ein klares historisches Sachurteil zur Leitfrage. Satzgeländer **Einerseits / Andererseits / Insgesamt**; zu
 jeder Zeile wählen die SuS einen **Stichpunkt** (keine fertigen Nebensätze) und schreiben die Sätze selbst ins Heft.
