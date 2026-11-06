@@ -584,9 +584,11 @@ function quelle(){
   const T = QUELLTEXT;
   if (!S.q || S.q.order.length !== AUSSAGEN.length) S.q = { order: shuffled(AUSSAGEN.length), placed: {}, sel: null, msg: null };
   const q = S.q;
-  const placedIn = zone => Object.entries(q.placed).filter(([, z]) => String(z) === String(zone)).map(([i]) =>
-    `<div class="placed-card"><b>${esc(AUSSAGEN[i].text)}</b><small>${esc(AUSSAGEN[i].erklaerung)}</small></div>`).join("");
-  const zones = QUELLE.bloecke.map((b, k) => `<div class="zone" data-zone="${k}" data-act="dropSel" role="button" tabindex="0">
+  // im Feld „Steht nicht im Lied“ nur kurz (ohne Erklärung), damit die rechte Spalte auf den Bildschirm passt
+  const placedIn = (zone, kurz) => Object.entries(q.placed).filter(([, z]) => String(z) === String(zone)).map(([i]) =>
+    `<div class="placed-card"><b>${esc(AUSSAGEN[i].text)}</b>${kurz ? "" : `<small>${esc(AUSSAGEN[i].erklaerung)}</small>`}</div>`).join("");
+  const filled = zone => Object.values(q.placed).some(z => String(z) === String(zone)) ? " filled" : "";
+  const zones = QUELLE.bloecke.map((b, k) => `<div class="zone${filled(k)}" data-zone="${k}" data-act="dropSel" role="button" tabindex="0">
       <p class="verse">${esc(b.text)}</p>${placedIn(k)}${q.sel != null ? `<span class="drop-hint">${esc(T.ablegen)}</span>` : ""}</div>`).join("");
   const notes = (QUELLE.anmerkungen || []).map(t => `<p class="note">${esc(t)}</p>`).join("");
   const pile = q.order.filter(i => !(i in q.placed)).map(i =>
@@ -598,7 +600,7 @@ function quelle(){
       <section><h3>${esc(T.spiel)}</h3><ul>${AUSSAGEN.filter(a => !a.imLied).map(a => `<li>${esc(a.text)}</li>`).join("")}</ul></section>
       <div class="feedback"><p>${esc(T.schluss)}</p></div></div>
       <div class="actions">${btn("go", T.weiter, 'data-to="urteil"')}</div>` : "";
-  $app.innerHTML = `${topbar()}<main class="page quelle-page"><h2>${esc(T.titel)}</h2><p>${esc(T.text)}</p>
+  $app.innerHTML = `${topbar()}<main class="page quelle-page"><h2>${esc(T.titel)}</h2><p>${esc(T.text)} ${esc(T.anleitung)}</p>
     <div class="qgrid">
       <div>
         <figure class="source ${QUELLE.placeholder ? "placeholder" : ""}">
@@ -606,8 +608,8 @@ function quelle(){
           <figcaption><b>${esc(QUELLE.titel)}</b></figcaption>${zones}${notes}<p class="ref">${esc(QUELLE.angabe)}</p>
         </figure>
       </div>
-      <aside class="pile-wrap"><h3>${esc(T.frage)}</h3><p class="small">${esc(T.anleitung)}</p>${msg}<div class="pile">${pile}</div>
-        <div class="zone nicht" data-zone="nicht" data-act="dropSel" role="button" tabindex="0"><p class="verse"><b>${esc(T.nichtFeld)}</b></p>${placedIn("nicht")}${q.sel != null ? `<span class="drop-hint">${esc(T.ablegen)}</span>` : ""}</div></aside>
+      <aside class="pile-wrap"><h3>${esc(T.frage)}</h3>${msg}<div class="pile">${pile}</div>
+        <div class="zone nicht${filled("nicht")}" data-zone="nicht" data-act="dropSel" role="button" tabindex="0"><p class="verse"><b>${esc(T.nichtFeld)}</b></p>${placedIn("nicht", true)}${q.sel != null ? `<span class="drop-hint">${esc(T.ablegen)}</span>` : ""}</div></aside>
     </div>${summary}</main>`;
 }
 
@@ -617,6 +619,15 @@ function placeCard(i, zone){
   if (ok){ S.q.placed[i] = zone; S.q.msg = { ok: true, text: QUELLTEXT.richtig + " " + a.erklaerung }; }
   else S.q.msg = { ok: false, text: QUELLTEXT.falsch + a.tipp };
   S.q.sel = null; save(); render();
+  if (ok && Object.keys(S.q.placed).length === AUSSAGEN.length) denkFenster();
+}
+
+/* Sobald alles zugeordnet ist: Denkanstoß zur Quellenkritik als Fenster, damit er nicht überlesen wird */
+function denkFenster(){
+  const D = QUELLTEXT.denk;
+  openSheet(`<h2>${esc(D.titel)}</h2><p class="big">${esc(D.text)}</p>
+    <ul class="denk">${D.fragen.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+    <div class="btnrow">${btn("denkOk", D.ok)}</div>`, false);
 }
 
 /* Ziehen mit Finger oder Maus */
@@ -820,6 +831,7 @@ const actions = {
   },
   go(el){ S.screen = el.dataset.to; save(); render(); window.scrollTo(0, 0); },
   selCard(el){ if (suppressClick) return; const i = +el.dataset.card; S.q.sel = S.q.sel === i ? null : i; S.q.msg = null; save(); render(); },
+  denkOk(){ closeSheet(); document.querySelector(".summary")?.scrollIntoView({ behavior: "smooth", block: "start" }); },
   dropSel(el){ if (S.q && S.q.sel != null) placeCard(S.q.sel, el.dataset.zone); },
   pick(el){ S.pick[el.dataset.k] = Number(el.dataset.i); save(); render(); },
   rolle(){ openSheet(`<h2>${esc(UI.rolle)}</h2>${rolleHTML()}${closeBtn()}`, false); },

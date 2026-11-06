@@ -347,7 +347,14 @@ export const QUELLTEXT = {
   sagt: "Das sagt die Quelle",
   spiel: "Das zeigt dein Spiel – die Quelle belegt es nicht",
   schluss: "Im Lied kommt die Arbeit der Menschen nicht vor. Warum wohl? Denk daran: Das Lied ist ein Gebet an den Nil, den die Menschen als Gott verehrten.",
-  weiter: "Weiter zum Urteil"
+  weiter: "Weiter zum Urteil",
+  /* Fenster, das erscheint, sobald alle Aussagen richtig zugeordnet sind (Rob, 6.11.2026) */
+  denk: {
+    titel: "Moment mal!",
+    text: "Im Lied steht nichts davon, dass die Menschen Deiche bauen, Wasser schöpfen und Vorräte anlegen mussten. Warum wohl?",
+    fragen: ["Was für ein Text ist das Lied?", "Wen spricht es an – und was wollen die Menschen damit erreichen?"],
+    ok: "Weiter"
+  }
 };
 
 export const AUSSAGEN = [
