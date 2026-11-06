@@ -408,7 +408,7 @@ export const IMPULS = {
   text: "Dieses Spiel wurde heute gemacht. Es zeigt das alte Ägypten vereinfacht. Was war damals wohl anders als im Spiel?",
   zurueck: "Zurück zum Urteil",
   fragen: [
-    { frage: "Im Spiel entstehen das Dorf und die Berufe in zwei Jahren. Wie lange hat das wohl wirklich gedauert?",
+    { frage: "Im Spiel entstehen das Dorf und die Berufe in nur vier Jahren. Wie lange hat das wohl wirklich gedauert?",
       hinweis: "Dörfer und Berufe am Nil entstanden über viele Generationen. Das Spiel drängt diese lange Zeit in vier Jahre zusammen." },
     { frage: "Den Schaduf nutzten die Ägypter erst etwa ab 2000 v. Chr. – lange nach den ersten Dörfern. Warum zeigt ihn das Spiel trotzdem?",
       hinweis: "Spiele wählen aus und ordnen neu, damit man etwas erleben kann. Hier soll man spüren, wie viel Arbeit Bewässerung kostete." },

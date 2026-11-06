@@ -69,6 +69,6 @@ export const GAMES = [
     players: 1,
     minutes: [20, 25],
     grades: [6, 6],
-    stage: "alpha"
+    stage: "beta"
   }
 ];
