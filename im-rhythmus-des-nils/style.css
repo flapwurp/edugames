@@ -236,3 +236,15 @@ html,body{touch-action:manipulation}
 .usebar span{display:block;height:100%;background:var(--c)}
 .uselegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;color:var(--muted);margin:8px 0 0}
 .uselegend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1.5px solid #7c5a2a;background:var(--c)}
+
+/* Lehrerkonsole (lehrer.js) */
+.lehrer-knopf{position:fixed;left:10px;bottom:10px;z-index:15;font:inherit;font-size:.8rem;padding:6px 12px;border-radius:999px;
+  border:1px solid rgba(0,0,0,.25);background:rgba(255,250,235,.92);color:#3b2718;opacity:.75}
+.lehrer-login input{display:block;width:100%;margin-top:6px;font:inherit;font-size:1.1rem;padding:10px;border:2px solid #c9b48a;border-radius:10px}
+.lehrer-menu{max-height:80vh;overflow:auto}
+.lehrer-menu .weg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 16px;border:1px solid #d8c9a6;border-radius:10px;padding:10px 12px;margin:10px 0}
+.lehrer-menu .weg label{display:flex;flex-direction:column;font-size:.85rem;gap:4px}
+.lehrer-menu select{font:inherit;padding:6px;border-radius:8px}
+.lehrer-menu h3{margin:14px 0 6px;font-size:1rem}
+.lehrer-menu .ziele{display:flex;flex-wrap:wrap;gap:6px}
+.lehrer-menu .ziele .opt{flex:0 0 auto;padding:8px 12px}

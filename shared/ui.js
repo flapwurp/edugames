@@ -15,7 +15,10 @@ export function openSheet(html, withClose = true){
   const root = document.getElementById("sheet-root");
   const close = withClose ? `<button class="btn secondary close" data-act="closeSheet">Close</button>` : "";
   root.innerHTML = `<div class="sheet" data-act="closeSheet"><div class="panel" role="dialog" aria-modal="true">${html}${close}</div></div>`;
-  root.querySelector(".panel").addEventListener("click", e => { if (!e.target.closest('[data-act="closeSheet"]')) e.stopPropagation(); });
+  // Klicks im Fenster nur weiterreichen, wenn sie einen Knopf mit data-act im Fenster treffen
+  // (sonst fände closest() den Hintergrund mit data-act="closeSheet" und das Fenster ginge bei jedem Klick zu)
+  const panel = root.querySelector(".panel");
+  panel.addEventListener("click", e => { const c = e.target.closest("[data-act]"); if (!c || !panel.contains(c)) e.stopPropagation(); });
 }
 export function closeSheet(){ document.getElementById("sheet-root").innerHTML = ""; }
 export const sheetOpen = () => document.getElementById("sheet-root").innerHTML !== "";

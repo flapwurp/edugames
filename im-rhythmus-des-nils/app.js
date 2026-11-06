@@ -8,6 +8,7 @@ import * as A from "./assets.js";
 import { initGestures, resetProgress } from "./gesture.js";
 import { createStore } from "../shared/session.js";
 import { esc, openSheet, closeSheet, toast, clearToast } from "../shared/ui.js";
+import { initLehrer } from "./lehrer.js";
 
 const $app = document.getElementById("app");
 const KO = NUM.kosten;
@@ -176,7 +177,8 @@ function onSownField(dx = 40){
 
 /* ---------- Bildschirme ---------- */
 
-function render(){ ({ start, spiel, bilanz, quelle, urteil, impuls }[S.screen] || start)(); }
+let quiet = false;   // beim Vorspielen der Lehrerkonsole nichts zeichnen
+function render(){ if (quiet) return; ({ start, spiel, bilanz, quelle, urteil, impuls }[S.screen] || start)(); }
 
 function layout(sceneSVG, panelHTML){
   $app.innerHTML = `${topbar()}<div class="stage">${sceneSVG}</div><section class="panel">${panelHTML}</section>
@@ -818,6 +820,70 @@ const actions = {
   restart(){ closeSheet(); S = fresh(); save(); render(); },
   closeSheet(){ closeSheet(); }
 };
+/* ---------- Lehrerkonsole: bis zu einer Stelle vorspielen (lehrer.js) ----------
+   Ein Schritt = was ein Kind an dieser Stelle tun würde, mit denselben Funktionen wie beim Spielen.
+   weg: { koerbe1: Zahl oder null (= so viele wie möglich), schaduf: "bauen"|"lassen", eimer, beruf } */
+function autoStep(w){
+  if (S.screen === "start"){ S = fresh(); S.screen = "spiel"; goPhase(1, "sirius"); return; }
+  const after = { bilanz: "quelle", quelle: "urteil", urteil: "impuls" }[S.screen];
+  if (after){ S.screen = after; return; }
+  if (S.screen !== "spiel") return false;
+  const y = S.year;
+  switch (S.phase){
+    case "sirius": return goPhase(y, "achet");
+    case "achet":
+      if (S.month < 4){ S.month++; return; }
+      if (y === 1) learn("steigt");
+      if (y === 3){ learn("hoch"); learn("deich"); }
+      return advance();
+    case "wachsen":
+      if (S.month < growMonths(y).at(-1)){ S.month++; return; }
+      return advance();
+    case "schadufWahl":
+      if (!S.schaduf){ S.schaduf = w.schaduf; if (S.schaduf === "bauen") spend(KO.schadufBau, "schaduf"); }
+      return advance();
+    case "schaduf":
+      while (S.buckets < Math.min(w.eimer, NUM.schadufVoll) && S.kraft - KO.eimer >= schadufReserve(S.buckets + 1) - 1e-9){
+        spend(KO.eimer, "schaduf"); S.buckets++;
+      }
+      return advance();
+    case "aussaat":
+      S.fields.forEach((f, i) => { while (sowable(y, i, S.buckets) && !f.sown && affordable(i) && nextStep(i)) doStep(i); });
+      return advance();
+    case "ernte":
+      S.fields.forEach((f, i) => reap(i));
+      return actions.toVersorgung();
+    case "trockenzeit": {
+      if (pflicht()){ spend(Math.min(S.kraft, KO.deichAusbessern), "dorf"); tz().ausb = true; }
+      const max = y === 1 && w.koerbe1 != null ? w.koerbe1 : Infinity;
+      while (tz().koerbe < max && S.kraft >= KO.korb - 1e-9){
+        spend(KO.korb, "koerbe"); book("koerbe", NUM.korbTausch); tz().koerbe++;
+        S.koerbe[y] = (S.koerbe[y] || 0) + 1;
+      }
+      return actions.tzEnde();
+    }
+    case "dorfRat": return actions.dorfStart();
+    case "dorfbau":
+      for (const d of DORFBAU) while (S.dorfProg[d.id] < d.n) dorfStep(d.id);
+      return advance();
+    case "beruf":
+      if (!S.beruf){ S.beruf = w.beruf; learn("berufe"); return; }
+      return advance();
+    case "verloren": return false;
+    default: return advance();
+  }
+}
+const reached = z => z.screen ? S.screen === z.screen : S.screen === "spiel" && S.year === z.year && S.phase === z.phase;
+function jumpTo(z, w){
+  quiet = true;
+  S = fresh();
+  try {
+    for (let n = 0; n < 1000 && !reached(z); n++) if (autoStep(w) === false) break;
+  } finally { quiet = false; }
+  S.neu = []; clearToast(); resetProgress(); save(); render(); window.scrollTo(0, 0);
+  return reached(z);
+}
+
 const closeBtn = () => `<button class="btn secondary close" data-act="closeSheet">${esc(UI.schliessen)}</button>`;
 
 document.addEventListener("click", e => {
@@ -830,4 +896,5 @@ document.addEventListener("keydown", e => {
   if ((e.key === "Enter" || e.key === " ") && e.target.matches?.('[role="button"][data-act]')){ e.preventDefault(); e.target.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
 });
 
+initLehrer(jumpTo);
 render();

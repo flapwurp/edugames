@@ -184,5 +184,12 @@ Feld „Steht nicht im Lied – das zeigt nur mein Spiel“. Falsche Zuordnung �
 | Händler (Tausch) | J4: Krüge gegen Getreide, Leinen gegen Kupfersicheln |
 | Tempel- und Pyramidenbau, Mathematiker | nicht im Spiel – Unterrichtsgespräch bzw. Stationen |
 
+## Lehrerkonsole (Rob, 6.11.2026)
+Zum Prüfen ohne Durchspielen: Adresse mit `#lehrer` aufrufen, Passwort eingeben (`lehrer.js`, im Code steht nur der
+SHA-256-Wert; kein echter Schutz, soll nur Kinder fernhalten). Danach bleibt unten links „Lehrkraft“, bis der Tab zu ist.
+Ein Sprung startet ein neues Spiel und spielt es mit den normalen Regeln bis zur Stelle vor (`jumpTo` in `app.js`).
+Der „Weg“ legt fest, wie vorgespielt wird (Körbe in Jahr 1, Schaduf, Eimer, Beruf); „Hof verlassen“ nimmt immer den
+Verlierer-Weg. Neue Phasen müssen in `autoStep` (app.js) und in `ZIELE` (lehrer.js) ergänzt werden.
+
 ## Offen
 - Spieldauer und Werte nach dem ersten Einsatz in der 6e anpassen.

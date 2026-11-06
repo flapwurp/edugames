@@ -1,5 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { ZIELE } from "../im-rhythmus-des-nils/lehrer.js";
+import { PHASES } from "../im-rhythmus-des-nils/sim.js";
 import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, SPIELBELEGE, BILANZ } from "../im-rhythmus-des-nils/content.js";
 import { nextPhase, sowable, harvest, supply, simulate, seasonsKnown, fieldRest, fieldSteps, growMonths, RISE_HOCH, tauschMoeglich, dorfbauGesten, kraftImJahr, hofVerloren } from "../im-rhythmus-des-nils/sim.js";
 import { scene, villageView, LEVEL, groundY, waterReach } from "../im-rhythmus-des-nils/scene.js";
@@ -138,4 +140,12 @@ test("Texte: keine Kraft-Zahlen, Merksätze vollständig, Berufe beschrieben", (
   }
   for (const y of [1, 2, 3, 4]) assert.equal(TEXT.achet[y].monate.length, 4);
   assert.ok(SPIELBELEGE.beruf && SPIELBELEGE.deich);
+});
+
+test("Lehrerkonsole: jedes Sprungziel gibt es im Spiel", () => {
+  const screens = ["bilanz", "quelle", "urteil", "impuls"];
+  for (const z of ZIELE.flatMap(g => g.ziele)){
+    if (z.screen) assert.ok(screens.includes(z.screen), z.label);
+    else assert.ok(PHASES[z.year].some(p => p.id === z.phase), `${z.label}: Jahr ${z.year}, ${z.phase}`);
+  }
 });
