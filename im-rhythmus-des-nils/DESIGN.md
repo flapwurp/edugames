@@ -61,7 +61,7 @@ bestellen, Wachstum; vier Monate nach der Aussaat ist das Getreide reif) → **S
 - **Jahr 4:** Gute Flut wie in Jahr 1. Noch in Achet (Felder unter Wasser) **beraten die Familien über Berufe**; alle
   vier sind zu sehen, die Beschreibung jedes Berufs knüpft an das an, was in Jahr 3 viel Kraft gekostet hat.
   Nach der Wahl ist der eigene markiert. Der Vorteil wird im Lauf des Jahres sichtbar.
-- **Bilanz** → **Quellencheck M3** → **Urteil mit Satzgeländer** → optional **Denkanstoß** für Schnelle.
+- **Bilanz** → **Quellencheck (Nilhymnus)** → **Urteil mit Satzgeländer** → optional **Denkanstoß** für Schnelle.
 
 Tausch von Körben nur in Jahr 1, 3 und 4 – nach der schlechten Flut in Jahr 2 hat niemand Getreide zum Tauschen.
 Kürzen, falls zu lang: zuerst die Monate in Achet zusammenfassen, nie die Quellenarbeit.
@@ -145,7 +145,10 @@ Jeder Punkt des Sachwissens wird an einer festen Stelle erlebt; danach erscheint
 - **Querformat** (Rob). Hochkant funktioniert es auch, mit Hinweis „quer halten“. Kein Doppeltipp-Zoom.
 - **Pause** jederzeit; Zustand nur in `sessionStorage`.
 
-## Quelle M3 (Nilhymnus)
+## Quelle: der große Nilhymnus
+Im Spiel heißt sie „Der große Nilhymnus“ (Titel im TLA), nicht „M3“ – die Buchzählung ergibt außerhalb des Buches
+keinen Sinn, und die Übersetzung ist nicht die aus dem Buch (Rob, 6.11.2026).
+
 Großer Nilhymnus (Lied auf Hapi, den Gott der Nilflut), 2. Jahrtausend v. Chr. Verwendet wird die Übersetzung von
 Peter Dils im **Thesaurus Linguae Aegyptiae** (Text-ID PMARXRST45A6PL4SDWQ7URKABI, Korpus-Ausgabe 20, Zugriff 6.11.2026),
 Lizenz CC BY-SA 4.0 – von Rob ausgewählt (6.11.2026). Die Schulbuchfassung nach Assmann (1975) wird **nicht** verwendet
@@ -159,7 +162,7 @@ ausgewählt (Rob: liest sich sonst holprig) – Vers 7 „Zugvögel“, Vers 9 �
 „werden die Menschen arm“), Vers 15 „alles Gute“, Vers 59 „Langhornrinder“. Übrige runde Klammern bleiben unverändert.
 
 ## Urteil
-Satzgeländer mit drei Wahllisten (Beleg aus dem Spiel, Beleg aus M3, „Allerdings …“). Die Belege sind bewusst
+Satzgeländer mit drei Wahllisten (Beleg aus dem Spiel, Beleg aus dem Nilhymnus, „Allerdings …“). Die Belege sind bewusst
 **Stichpunkte** (Rob, 6.11.2026), keine fertigen Nebensätze – die SuS formulieren das Urteil selbst im Heft. Anmerkungen zu „Hapi“ und „Emmerweizen“ sind eigene Worterklärungen.
 
 Der Teil mit „habgierig“ (bei Assmann) bzw. „der plündert“ (Vers 11) fehlt bewusst: Er könnte als Warnung vor zu viel

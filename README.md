@@ -38,7 +38,7 @@ Texte, Redemittel, Zeiten und Level stehen jeweils in `content.js`:
 - `reactor-rescue/content.js` – Level, Zeiten, Redemittel, Glossar
 - `spot-the-difference/content.js` – Level, Zeit, Zeitabzug für Fehltipps, Redemittel, Wörter für die Sätze in der Auflösung
 - `tools/vocab-football/content.js` – Vokabellisten (Englisch ; Deutsch, eine Zeile pro Vokabel) und Torwart-Stärke
-- `im-rhythmus-des-nils/content.js` – alle Texte, Zahlen (Ernte, Bedarf, Arbeitskraft und Kosten jeder Arbeit, Schaduf-Eimer, Dorfspeicher, Berufe), Merksätze, Quelle M3, Begriffe
+- `im-rhythmus-des-nils/content.js` – alle Texte, Zahlen (Ernte, Bedarf, Arbeitskraft und Kosten jeder Arbeit, Schaduf-Eimer, Dorfspeicher, Berufe), Merksätze, Quelle (Nilhymnus), Begriffe
 
 Nur die Wörter zwischen den Anführungszeichen ändern, Kommas und Klammern stehen lassen.
 Die Regeln im Reactor-Handbuch stehen in `reactor-rescue/rules.js`, weil jeder Regeltext

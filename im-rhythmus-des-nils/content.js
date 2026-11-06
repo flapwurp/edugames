@@ -306,7 +306,7 @@ export const BILANZ = {
   weiter: "Weiter zur Quelle"
 };
 
-/* ---------- Quelle M3 ----------
+/* ---------- Quelle: der große Nilhymnus ----------
    Übersetzung von Peter Dils im Thesaurus Linguae Aegyptiae (CC BY-SA 4.0). Wortlaut nicht verändern.
    Bearbeitung (steht auch in der Angabe): gekürzt, Auslassungen mit […]; die Klammerzeichen { } und 〈 〉
    der Übersetzung (Tilgungen und Ergänzungen der Herausgeber) sind weggelassen, die Wörter darin stehen.
@@ -315,7 +315,7 @@ export const BILANZ = {
    Jeder Block ist eine Stelle, an die man Aussagen ziehen kann (Nummer = „stelle“ bei den Aussagen, ab 0 gezählt). */
 export const QUELLE = {
   placeholder: false,
-  titel: "M3 Ein ägyptisches Lied über den Nil aus dem 2. Jahrtausend v. Chr. (Auszug)",
+  titel: "Der große Nilhymnus – ein ägyptisches Lied über den Nil, 2. Jahrtausend v. Chr. (Auszug)",
   angabe: "Übersetzung: Peter Dils, unter Mitarbeit von AV Wortschatz der ägyptischen Sprache, Lutz Popko, Anja Weber, Christine Greger, Svenja Damm, Sätze von Text „Der große Nilhymnus“ (Text-ID PMARXRST45A6PL4SDWQ7URKABI), in: Thesaurus Linguae Aegyptiae, Korpus-Ausgabe 20, Web-App-Version 2.5.3, 23.10.2026, hrsg. von Tonio Sebastian Richter & Daniel A. Werning im Auftrag der Berlin-Brandenburgischen Akademie der Wissenschaften und Hans-Werner Fischer-Elfert & Peter Dils im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig (Zugriff am: 6.11.2026). Lizenz: CC BY-SA 4.0. Gekürzt (Auslassungen mit […]); Klammerzeichen { } und 〈 〉 der Übersetzung weggelassen; wo die Übersetzung Varianten anbietet („oder:“, Schrägstrich), ist eine davon ausgewählt.",
   bloecke: [
     { text: "Sei gegrüßt, o Hapi¹, der aus der Erde hervorgegangen ist, gekommen, um Ägypten (wieder)zubeleben;" },
@@ -333,7 +333,7 @@ export const QUELLE = {
 
 export const QUELLTEXT = {
   titel: "Was sagten die Menschen damals?",
-  text: "M3 ist eine Quelle: ein Lied, das Menschen im alten Ägypten über den Nil gesungen haben. Lies es und ordne dann die Aussagen ein.",
+  text: "Der Nilhymnus ist eine Quelle: ein Lied, das Menschen im alten Ägypten über den Nil gesungen haben. Lies es und ordne dann die Aussagen ein.",
   frage: "Ordne die Aussagen zu",
   anleitung: "Zieh jede Aussage an die Stelle im Lied, wo sie steht – oder in das Feld „Steht nicht im Lied“. Du kannst auch erst eine Aussage antippen und dann die Stelle.",
   nichtFeld: "Steht nicht im Lied – das zeigt nur mein Spiel",
@@ -371,12 +371,12 @@ export const URTEIL = {
   titel: "War der Nil ein Geschenk?",
   text: "Wähle für jede Zeile einen Beleg. Dann schreibst du dein Urteil ins Heft.",
   wahlSpiel: "Ein Beleg aus deinem Spiel",
-  wahlQuelle: "Ein Beleg aus dem Lied (M3)",
+  wahlQuelle: "Ein Beleg aus dem Nilhymnus",
   wahlAllerdings: "Allerdings …",
   gelaender: [
     "Der Nil war für die Menschen im alten Ägypten ein Geschenk, weil …",
     "Das zeigt sich daran, dass …",
-    "Auch im Lied (M3) heißt es, dass …",
+    "Auch im Nilhymnus heißt es, dass …",
     "Allerdings …"
   ],
   eigene: "deine eigene Begründung",
@@ -449,6 +449,7 @@ export const BEGRIFFE = [
   ["Überschuss", "was übrig bleibt, wenn alle satt sind"],
   ["Arbeitskraft", "wie viel Arbeit eine Familie in einem Jahr schaffen kann; im Spiel zeigt sie der Balken"],
   ["Grenzstein", "ein Stein am Rand eines Feldes; er zeigt, wo ein Feld aufhört und das nächste anfängt"],
+  ["Hymnus", "ein feierliches Loblied, oft auf einen Gott"],
   ["Hapi", "der Gott der Nilflut; die Ägypter verehrten die Überschwemmung des Nils als Gott"],
   ["Flachs", "eine Pflanze; aus ihren Fasern stellt man Leinen her"],
   ["Kupfer", "ein Metall; Sicheln aus Kupfer schneiden besser als Sicheln aus Feuerstein"],

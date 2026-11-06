@@ -46,7 +46,7 @@ export const ZIELE = [
   ] },
   { gruppe: "Nach dem Spiel", ziele: [
     { label: "Bilanz", screen: "bilanz" },
-    { label: "Quelle M3", screen: "quelle" },
+    { label: "Quelle: Nilhymnus", screen: "quelle" },
     { label: "Urteil", screen: "urteil" },
     { label: "Denkanstoß", screen: "impuls" }
   ] }
