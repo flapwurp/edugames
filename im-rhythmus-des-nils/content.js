@@ -369,49 +369,52 @@ export const AUSSAGEN = [
 /* ---------- Urteil ---------- */
 export const URTEIL = {
   titel: "War der Nil ein Geschenk?",
-  text: "Wähle für jede Zeile einen Beleg. Dann schreibst du dein Urteil ins Heft.",
-  wahlSpiel: "Ein Beleg aus deinem Spiel",
-  wahlQuelle: "Ein Beleg aus dem Nilhymnus",
-  wahlAllerdings: "Allerdings …",
-  gelaender: [
-    "Der Nil war für die Menschen im alten Ägypten ein Geschenk, weil …",
-    "Das zeigt sich daran, dass …",
-    "Auch im Nilhymnus heißt es, dass …",
-    "Allerdings …"
-  ],
-  eigene: "deine eigene Begründung",
+  text: "Wähle für jede Zeile einen Stichpunkt. Dann schreibst du dein Urteil in ganzen Sätzen ins Heft.",
+  /* Überschriften der vier Wahllisten (gleiche Reihenfolge wie die Zeilen unten) */
+  wahl: {
+    pro: "Einerseits: ein Beleg aus deinem Spiel",
+    quelle: "Ein Beleg aus dem Nilhymnus",
+    contra: "Andererseits …",
+    fazit: "Dein Ergebnis"
+  },
+  gelaender: {
+    pro: "Einerseits war der Nil ein Geschenk. Im Spiel zeigt sich das daran, dass …",
+    quelle: "Auch im Nilhymnus wird der Nil gelobt: …",
+    contra: "Andererseits …",
+    fazit: "Insgesamt war der Nil …"
+  },
   stichpunkt: "Stichpunkt: ",
-  heft: "Schreibe dein Urteil jetzt ins Heft. Du darfst auch zu einem anderen Ergebnis kommen, zum Beispiel: „Der Nil war nur zum Teil ein Geschenk, weil …“",
+  heft: "Schreibe dein Urteil jetzt ins Heft. Mach aus jedem Stichpunkt einen ganzen Satz.",
   impulsKnopf: "Fertig? Noch ein Denkanstoß"
 };
 
-export const QUELLE_BELEGE = [
-  "Nil belebt Ägypten",
-  "Nil lässt Gerste und Emmerweizen entstehen",
-  "Nil kommt mit festem Regelmaß",
-  "Nil zögerlich → Menschen verarmen"
-];
-
-export const ALLERDINGS = [
-  "ohne Arbeit der Menschen keine Ernte",
-  "Flut nicht jedes Jahr gleich: mal zu niedrig, mal zu hoch",
-  "mehr Sicherheit erst durch Dörfer, Deiche, Vorräte",
-  "Lied = Gebet, lobt den Nil, nichts über die Arbeit der Bauern"
-];
-
-/* Belege aus dem Spiel – das Spiel wählt die passenden aus */
-export const SPIELBELEGE = {
-  schlamm: "fruchtbarer Schlamm nach der Flut → Getreide wächst",
-  ernte1: "Jahr 1: {n} Säcke Ernte, genug für ein Jahr",
-  kraft: "Feldarbeit kostet Arbeitskraft, reicht nicht für alles",
-  niedrig: "Jahr 2: Flut zu niedrig, Felder trocken",
-  hunger: "Jahr 2: Hunger in der Familie",
-  knapp: "Jahr 2: Ernte zu klein, Leben vom Vorrat",
-  schaduf: "Jahr 2: Wasser schöpfen mit dem Schaduf, Eimer für Eimer",
-  hoch: "Jahr 3: Flut zu hoch, Feldhütte zerstört",
-  deich: "Jahr 3: Deich schützt das Dorf",
-  speicher: "Jahr 3: Dorfspeicher hilft Familien in Not",
-  beruf: "Jahr 4: Arbeitsteilung → mehr übrig als in Jahr 1"
+/* Stichpunkte für das Urteil. Jede Liste hat genau eine Aufgabe, damit jede Kombination ein stimmiges Urteil ergibt:
+   pro = was für „Geschenk“ spricht (Spiel), quelle = was der Nilhymnus lobt, contra = was dagegen spricht,
+   fazit = das Ergebnis. Welche Spiel-Stichpunkte erscheinen, hängt vom gespielten Weg ab (sim.js → urteilListen). */
+export const BELEGE = {
+  pro: {
+    schlamm: "fruchtbarer Schlamm nach der Flut → Getreide wächst",
+    ernte1: "Jahr 1: {n} Säcke Ernte, genug für ein Jahr",
+    guteFlut: "Jahr 1 und 4: gute Flut → alle drei Felder fruchtbar"
+  },
+  quelle: [
+    "Nil belebt Ägypten",
+    "Nil lässt Gerste und Emmerweizen entstehen",
+    "Nil kommt mit festem Regelmaß"
+  ],
+  contra: {
+    kraft: "Feldarbeit kostet viel Arbeitskraft",
+    niedrig: "Jahr 2: Flut zu niedrig, Felder trocken",
+    hunger: "Jahr 2: Hunger in der Familie",
+    knapp: "Jahr 2: Ernte zu klein, Leben vom Vorrat",
+    schaduf: "Jahr 2: Wasser schöpfen mit dem Schaduf, Eimer für Eimer",
+    hoch: "Jahr 3: Flut zu hoch, Feldhütte zerstört",
+    hymnus: "auch im Nilhymnus: zögerlicher Nil → Menschen verarmen"
+  },
+  fazit: [
+    "ein Geschenk: Grundlage für alles, trotz Gefahren und harter Arbeit",
+    "nur zum Teil ein Geschenk: Flut unsicher, nutzbar erst durch Arbeit und Dorfgemeinschaft"
+  ]
 };
 
 export const IMPULS = {

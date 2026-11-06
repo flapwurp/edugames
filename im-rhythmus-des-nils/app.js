@@ -1,8 +1,8 @@
 /* Im Rhythmus des Nils 0.6 – Bildschirme und Bedienung (Querformat) */
 import { NUM, GAME, SEASONS, UI, MERKSAETZE, ROLLE_REIHENFOLGE, TEXT, BILANZ, QUELLE, QUELLTEXT, AUSSAGEN,
-  URTEIL, QUELLE_BELEGE, ALLERDINGS, SPIELBELEGE, IMPULS, BEGRIFFE } from "./content.js";
+  URTEIL, IMPULS, BEGRIFFE } from "./content.js";
 import { nextPhase, monthOf, growMonths, RISE, RISE_HOCH, seasonsKnown, sowable, fieldYield, supply,
-  fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, DORFBAU, dorfbauGesten, kraftImJahr, hofVerloren } from "./sim.js";
+  fieldSteps, fieldRest, ernteKosten, tauschMoeglich, FLOOD, DORFBAU, dorfbauGesten, kraftImJahr, hofVerloren, urteilListen } from "./sim.js";
 import { scene, villageView, LEVEL, GROUND, big, fieldRange, stonePos, DIKE } from "./scene.js";
 import * as A from "./assets.js";
 import { initGestures, resetProgress } from "./gesture.js";
@@ -638,26 +638,17 @@ document.addEventListener("pointercancel", () => { if (drag && drag.ghost) drag.
 
 /* ---------- Urteil, Impuls ---------- */
 
-function spielbelege(){
-  const B = SPIELBELEGE, s2 = S.supplies[2] || {};
-  const list = [B.schlamm, fill(B.ernte1, { n: (S.supplies[1] || {}).harvest || 12 }), B.kraft, B.niedrig];
-  list.push(s2.status === "hunger" ? B.hunger : B.knapp);
-  if (S.schaduf === "bauen") list.push(B.schaduf);
-  list.push(B.hoch, B.deich, B.speicher);
-  if (S.supplies[4] && S.beruf) list.push(B.beruf);
-  return list;
-}
-
+const URTEIL_ZEILEN = ["pro", "quelle", "contra", "fazit"];
 function urteil(){
   const T = URTEIL;
-  const spiel = spielbelege();
-  const pickList = (key, list, title) => `<details class="pick" ${S.pick[key] === undefined ? "open" : ""}><summary><b>${esc(title)}</b>${S.pick[key] !== undefined ? `<span>${esc(list[S.pick[key]])}</span>` : ""}</summary>
-    <div class="options">${list.map((t, i) => `<button class="opt ${S.pick[key] === i ? "sel" : ""}" data-act="pick" data-k="${key}" data-i="${i}">${esc(t)}</button>`).join("")}</div></details>`;
-  const ready = ["spiel", "quelle", "allerdings"].every(k => S.pick[k] !== undefined);
-  const hints = [null, spiel[S.pick.spiel], QUELLE_BELEGE[S.pick.quelle], ALLERDINGS[S.pick.allerdings]];
-  const frame = T.gelaender.map((line, i) => `<li><span>${esc(line)}</span>${hints[i] ? `<small>${esc(T.stichpunkt + hints[i])}</small>` : i === 0 ? `<small>${esc(T.eigene)}</small>` : ""}</li>`).join("");
+  const L = urteilListen({ ernte1: (S.supplies[1] || {}).harvest || 0, status2: (S.supplies[2] || {}).status, schaduf: S.schaduf });
+  const pickList = key => { const list = L[key], p = S.pick[key];
+    return `<details class="pick" ${p === undefined ? "open" : ""}><summary><b>${esc(T.wahl[key])}</b>${p !== undefined ? `<span>${esc(list[p])}</span>` : ""}</summary>
+    <div class="options">${list.map((t, i) => `<button class="opt ${p === i ? "sel" : ""}" data-act="pick" data-k="${key}" data-i="${i}">${esc(t)}</button>`).join("")}</div></details>`; };
+  const ready = URTEIL_ZEILEN.every(k => L[k][S.pick[k]] !== undefined);
+  const frame = URTEIL_ZEILEN.map(k => `<li><span>${esc(T.gelaender[k])}</span><small>${esc(T.stichpunkt + L[k][S.pick[k]])}</small></li>`).join("");
   $app.innerHTML = `${topbar()}<main class="page"><h2>${esc(T.titel)}</h2><p>${esc(T.text)}</p>
-    <div class="two"><div>${pickList("spiel", spiel, T.wahlSpiel)}${pickList("quelle", QUELLE_BELEGE, T.wahlQuelle)}${pickList("allerdings", ALLERDINGS, T.wahlAllerdings)}</div>
+    <div class="two"><div>${URTEIL_ZEILEN.map(pickList).join("")}</div>
     <div>${ready ? `<ol class="frame">${frame}</ol><div class="feedback"><p>${esc(T.heft)}</p></div>
     <div class="actions">${btn("go", T.impulsKnopf, 'data-to="impuls"', "secondary")}</div>` : ""}</div></div></main>`;
 }

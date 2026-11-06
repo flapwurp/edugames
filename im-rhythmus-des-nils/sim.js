@@ -2,7 +2,7 @@
    Vier Jahre ohne Zufall: Jahr 1 normale Flut, Jahr 2 zu niedrig, Jahr 3 zu hoch, Jahr 4 wieder normal.
    Jede Arbeit kostet Arbeitskraft; die Familie hat pro Jahr nur eine begrenzte Arbeitskraft (NUM.kraft).
    Die Werte sieht man im Spiel nicht als Zahlen, nur als Balken. Alle Zahlen stehen in content.js (NUM). */
-import { NUM } from "./content.js";
+import { NUM, BELEGE } from "./content.js";
 
 export const FLOOD = { 1: "gut", 2: "niedrig", 3: "hoch", 4: "gut" };
 const K = () => NUM.kosten;
@@ -192,4 +192,19 @@ export function simulate({ koerbe1 = null, buckets = NUM.schadufVoll, beruf = "t
     kraft[year] = { ...use, frei: Math.max(0, have) };
   }
   return { years, kraft, verloren: lost };
+}
+
+/* Stichpunkte für das Urteil, passend zum gespielten Weg.
+   weg: { ernte1: Säcke in Jahr 1, status2: Versorgung in Jahr 2 ("satt"|"knapp"|"hunger"|…), schaduf: "bauen"|"lassen" }
+   Jede Liste hat genau eine Aufgabe (dafür / Nilhymnus / dagegen / Ergebnis), damit jede Kombination stimmig ist. */
+export function urteilListen({ ernte1 = 0, status2 = "", schaduf = null } = {}, B = BELEGE){
+  const pro = [B.pro.schlamm];
+  if (ernte1 >= NUM.bedarf) pro.push(B.pro.ernte1.replace("{n}", ernte1));
+  pro.push(B.pro.guteFlut);
+  const contra = [B.contra.kraft, B.contra.niedrig];
+  if (status2 === "hunger") contra.push(B.contra.hunger);
+  if (status2 === "knapp") contra.push(B.contra.knapp);
+  if (schaduf === "bauen") contra.push(B.contra.schaduf);
+  contra.push(B.contra.hoch, B.contra.hymnus);
+  return { pro, quelle: [...B.quelle], contra, fazit: [...B.fazit] };
 }

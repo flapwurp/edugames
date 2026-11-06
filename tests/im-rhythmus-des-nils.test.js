@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { ZIELE } from "../im-rhythmus-des-nils/lehrer.js";
-import { PHASES } from "../im-rhythmus-des-nils/sim.js";
-import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, SPIELBELEGE, BILANZ } from "../im-rhythmus-des-nils/content.js";
+import { PHASES, urteilListen } from "../im-rhythmus-des-nils/sim.js";
+import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, BELEGE, BILANZ } from "../im-rhythmus-des-nils/content.js";
 import { nextPhase, sowable, harvest, supply, simulate, seasonsKnown, fieldRest, fieldSteps, growMonths, RISE_HOCH, tauschMoeglich, dorfbauGesten, kraftImJahr, hofVerloren } from "../im-rhythmus-des-nils/sim.js";
 import { scene, villageView, LEVEL, groundY, waterReach } from "../im-rhythmus-des-nils/scene.js";
 
@@ -139,7 +139,6 @@ test("Texte: keine Kraft-Zahlen, Merksätze vollständig, Berufe beschrieben", (
     for (const z of sup) assert.ok((QUELLE.anmerkungen || []).some(t => t.startsWith(z)), "Anmerkung zu " + z);
   }
   for (const y of [1, 2, 3, 4]) assert.equal(TEXT.achet[y].monate.length, 4);
-  assert.ok(SPIELBELEGE.beruf && SPIELBELEGE.deich);
 });
 
 test("Lehrerkonsole: jedes Sprungziel gibt es im Spiel", () => {
@@ -148,4 +147,20 @@ test("Lehrerkonsole: jedes Sprungziel gibt es im Spiel", () => {
     if (z.screen) assert.ok(screens.includes(z.screen), z.label);
     else assert.ok(PHASES[z.year].some(p => p.id === z.phase), `${z.label}: Jahr ${z.year}, ${z.phase}`);
   }
+});
+
+test("Urteil: jede Liste hat ihre Aufgabe, auf jedem Weg sind alle Zeilen wählbar", () => {
+  assert.equal(BELEGE.fazit.length, 2);
+  assert.ok(BELEGE.fazit[0].startsWith("ein Geschenk") && BELEGE.fazit[1].startsWith("nur zum Teil ein Geschenk"));
+  for (const status2 of ["satt", "knapp", "hunger"]) for (const schaduf of ["bauen", "lassen"]) for (const ernte1 of [12, 8]){
+    const L = urteilListen({ ernte1, status2, schaduf });
+    for (const k of ["pro", "quelle", "contra", "fazit"]) assert.ok(L[k].length >= 2, `${k} bei ${status2}/${schaduf}`);
+    assert.ok(L.pro.every(t => !L.contra.includes(t)), "kein Stichpunkt zugleich dafür und dagegen");
+    assert.ok(L.pro.every(t => !t.includes("{")), "Platzhalter ersetzt");
+    assert.equal(L.contra.includes(BELEGE.contra.hunger), status2 === "hunger");
+    assert.equal(L.contra.includes(BELEGE.contra.schaduf), schaduf === "bauen");
+  }
+  // tatsächlicher Weg: Jahr 1 reicht immer, Jahr 2 ist knapp oder Hunger
+  const sim = simulate();
+  assert.ok(sim.years[1].harvest >= NUM.bedarf);
 });

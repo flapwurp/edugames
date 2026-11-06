@@ -161,17 +161,21 @@ nach Süden zu dem Kataraktengebiet“ als Auslassung […] erscheint. Bei Varia
 ausgewählt (Rob: liest sich sonst holprig) – Vers 7 „Zugvögel“, Vers 9 „weich“ und „verarmt“ (passt zur Aussage
 „werden die Menschen arm“), Vers 15 „alles Gute“, Vers 59 „Langhornrinder“. Übrige runde Klammern bleiben unverändert.
 
-## Urteil
-Satzgeländer mit drei Wahllisten (Beleg aus dem Spiel, Beleg aus dem Nilhymnus, „Allerdings …“). Die Belege sind bewusst
-**Stichpunkte** (Rob, 6.11.2026), keine fertigen Nebensätze – die SuS formulieren das Urteil selbst im Heft. Anmerkungen zu „Hapi“ und „Emmerweizen“ sind eigene Worterklärungen.
+## Urteil (Rob, 6.11.2026)
+Ziel: ein klares historisches Sachurteil zur Leitfrage. Satzgeländer **Einerseits / Andererseits / Insgesamt**; zu
+jeder Zeile wählen die SuS einen **Stichpunkt** (keine fertigen Nebensätze) und schreiben die Sätze selbst ins Heft.
 
-Der Teil mit „habgierig“ (bei Assmann) bzw. „der plündert“ (Vers 11) fehlt bewusst: Er könnte als Warnung vor zu viel
-Wasser gelesen werden, und das Spiel sagt, das Lied nenne nur die Gefahr bei zu wenig Wasser (Rob, 6.11.2026).
+| Zeile | Liste (`content.js` → `BELEGE`) |
+|---|---|
+| Einerseits war der Nil ein Geschenk. Im Spiel zeigt sich das daran, dass … | `pro`: nur, was für „Geschenk“ spricht (Schlamm, Ernte Jahr 1, gute Flut) |
+| Auch im Nilhymnus wird der Nil gelobt: … | `quelle`: nur Lob aus dem Hymnus |
+| Andererseits … | `contra`: Arbeitskraft, Jahr 2 und 3, Schaduf (nur wenn gebaut), Hunger oder knappe Ernte (je nach Weg), Armut im Hymnus |
+| Insgesamt war der Nil … | `fazit`: genau zwei Ergebnisse – „ein Geschenk“ oder „nur zum Teil ein Geschenk“ (darunter fallen unsichere Flut und dass der Nil erst durch Arbeit und Dorfgemeinschaft nutzbar war) |
 
-Quellencheck: Aussagen in zufälliger Reihenfolge per Ziehen oder Antippen an die passende Stelle im Lied oder in das
-Feld „Steht nicht im Lied – das zeigt nur mein Spiel“. Falsche Zuordnung → Tipp, Karte bleibt liegen.
-**Sagt die Quelle:** Leben, Nahrung, Regelmäßigkeit, Not bei schwacher Flut, Verehrung als Gott ·
-**Belegt die Quelle nicht:** Arbeit der Menschen, Gefahr einer zu hohen Flut, Dörfer und Deiche.
+Jede Liste hat genau eine Aufgabe, deshalb ergibt jede Kombination ein stimmiges Urteil (auf dem Schaduf-Weg 108,
+ohne Schaduf 90 – alle im Browser durchgeklickt; Test in `tests/im-rhythmus-des-nils.test.js`). Welche Spiel-Stichpunkte
+erscheinen, bestimmt `urteilListen` in `sim.js`. Nicht im Urteil: „Lied = Gebet“ (steht im Quellencheck), Deich,
+Speicher und Berufe als Einzelbelege (stecken im Ergebnis „nur zum Teil“).
 
 ## Abdeckung des Verfassertexts S. 44–45
 | Inhalt im Buch | im Spiel |
