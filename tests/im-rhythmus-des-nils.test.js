@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { ZIELE } from "../im-rhythmus-des-nils/lehrer.js";
 import { PHASES, urteilListen } from "../im-rhythmus-des-nils/sim.js";
-import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, BELEGE, BILANZ } from "../im-rhythmus-des-nils/content.js";
+import { NUM, TEXT, MERKSAETZE, ROLLE_REIHENFOLGE, AUSSAGEN, QUELLE, BELEGE, BILANZ, URTEIL, GAME } from "../im-rhythmus-des-nils/content.js";
 import { nextPhase, sowable, harvest, supply, simulate, seasonsKnown, fieldRest, fieldSteps, growMonths, RISE_HOCH, tauschMoeglich, dorfbauGesten, kraftImJahr, hofVerloren } from "../im-rhythmus-des-nils/sim.js";
 import { scene, villageView, LEVEL, groundY, waterReach } from "../im-rhythmus-des-nils/scene.js";
 
@@ -151,7 +151,8 @@ test("Lehrerkonsole: jedes Sprungziel gibt es im Spiel", () => {
 
 test("Urteil: jede Liste hat ihre Aufgabe, auf jedem Weg sind alle Zeilen wählbar", () => {
   assert.equal(BELEGE.fazit.length, 2);
-  assert.ok(BELEGE.fazit[0].startsWith("ein Geschenk") && BELEGE.fazit[1].startsWith("nur zum Teil ein Geschenk"));
+  assert.ok(BELEGE.fazit[0].startsWith("ein Geschenk des Nils") && BELEGE.fazit[1].startsWith("nur zum Teil ein Geschenk des Nils"));
+  for (const t of [URTEIL.titel, URTEIL.gelaender.pro, URTEIL.gelaender.fazit, ...GAME.intro]) assert.ok(!/der Nil (war )?ein Geschenk/.test(t), `Formulierung falsch herum: ${t}`);
   for (const status2 of ["satt", "knapp", "hunger"]) for (const schaduf of ["bauen", "lassen"]) for (const ernte1 of [12, 8]){
     const L = urteilListen({ ernte1, status2, schaduf });
     for (const k of ["pro", "quelle", "contra", "fazit"]) assert.ok(L[k].length >= 2, `${k} bei ${status2}/${schaduf}`);

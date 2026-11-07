@@ -65,7 +65,7 @@ export const GAMES = [
     title: "Im Rhythmus des Nils",
     href: "im-rhythmus-des-nils/",
     image: "shared/thumbs/im-rhythmus-des-nils.webp",
-    text: "Vier Jahre auf einem Bauernhof im alten Ägypten. War der Nil ein Geschenk?",
+    text: "Vier Jahre auf einem Bauernhof im alten Ägypten. War das alte Ägypten ein Geschenk des Nils?",
     players: 1,
     minutes: [20, 25],
     grades: [6, 6],

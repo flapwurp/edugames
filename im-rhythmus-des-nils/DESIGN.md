@@ -177,15 +177,19 @@ Was für ein Text ist das, wen spricht er an, was soll er bewirken? „Weiter“
 im Heft: später entscheiden.
 
 ## Urteil (Rob, 6.11.2026)
+**Formulierung (Rob, 7.11.2026):** wie bei Herodot und im Buch – **Ägypten ist das Geschenk, der Nil der Schenkende.**
+Überall „Das alte Ägypten – ein Geschenk des Nils?“ bzw. „Ägypten war (nur zum Teil) ein Geschenk des Nils“, nie
+„Der Nil war ein Geschenk“. Nur die Hymnus-Zeile lobt den Nil selbst.
+
 Ziel: ein klares historisches Sachurteil zur Leitfrage. Satzgeländer **Einerseits / Andererseits / Insgesamt**; zu
 jeder Zeile wählen die SuS einen **Stichpunkt** (keine fertigen Nebensätze) und schreiben die Sätze selbst ins Heft.
 
 | Zeile | Liste (`content.js` → `BELEGE`) |
 |---|---|
-| Einerseits war der Nil ein Geschenk. Im Spiel zeigt sich das daran, dass … | `pro`: nur, was für „Geschenk“ spricht (Schlamm, Ernte Jahr 1, gute Flut) |
+| Einerseits war Ägypten ein Geschenk des Nils. Im Spiel zeigt sich das daran, dass … | `pro`: nur, was für „Geschenk“ spricht (Schlamm, Ernte Jahr 1, gute Flut) |
 | Auch im Nilhymnus wird der Nil gelobt: … | `quelle`: nur Lob aus dem Hymnus |
 | Andererseits … | `contra`: Arbeitskraft, Jahr 2 und 3, Schaduf (nur wenn gebaut), Hunger oder knappe Ernte (je nach Weg), Armut im Hymnus |
-| Insgesamt war der Nil … | `fazit`: genau zwei Ergebnisse – „ein Geschenk“ oder „nur zum Teil ein Geschenk“ (darunter fallen unsichere Flut und dass der Nil erst durch Arbeit und Dorfgemeinschaft nutzbar war) |
+| Insgesamt war Ägypten … | `fazit`: genau zwei Ergebnisse – „ein Geschenk des Nils“ oder „nur zum Teil ein Geschenk des Nils“ (darunter fallen unsichere Flut und dass es die Ernte erst durch Arbeit und Dorfgemeinschaft gab) |
 
 Jede Liste hat genau eine Aufgabe, deshalb ergibt jede Kombination ein stimmiges Urteil (auf dem Schaduf-Weg 108,
 ohne Schaduf 90 – alle im Browser durchgeklickt; Test in `tests/im-rhythmus-des-nils.test.js`). Welche Spiel-Stichpunkte

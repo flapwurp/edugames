@@ -45,7 +45,7 @@ export const GAME = {
   intro: [
     "Du lebst mit deiner Familie am Nil. Um euch herum ist Wüste, Regen gibt es fast nie.",
     "Vier Jahre lang bestellt ihr eure drei Felder. Jede Arbeit kostet Arbeitskraft – und die Arbeitskraft deiner Familie ist begrenzt. Du erlebst, was der Nil mit euch macht.",
-    "Am Ende beantwortest du die Frage: War der Nil ein Geschenk?"
+    "Am Ende beantwortest du die Frage: War das alte Ägypten ein Geschenk des Nils?"
   ],
   hochkant: "Halte das iPad am besten quer."
 };
@@ -378,7 +378,7 @@ export const AUSSAGEN = [
 
 /* ---------- Urteil ---------- */
 export const URTEIL = {
-  titel: "War der Nil ein Geschenk?",
+  titel: "Das alte Ägypten – ein Geschenk des Nils?",
   text: "Wähle für jede Zeile einen Stichpunkt. Dann schreibst du dein Urteil in ganzen Sätzen ins Heft.",
   /* Überschriften der vier Wahllisten (gleiche Reihenfolge wie die Zeilen unten) */
   wahl: {
@@ -388,10 +388,10 @@ export const URTEIL = {
     fazit: "Dein Ergebnis"
   },
   gelaender: {
-    pro: "Einerseits war der Nil ein Geschenk. Im Spiel zeigt sich das daran, dass …",
+    pro: "Einerseits war Ägypten ein Geschenk des Nils. Im Spiel zeigt sich das daran, dass …",
     quelle: "Auch im Nilhymnus wird der Nil gelobt: …",
     contra: "Andererseits …",
-    fazit: "Insgesamt war der Nil …"
+    fazit: "Insgesamt war Ägypten …"
   },
   stichpunkt: "Stichpunkt: ",
   heft: "Schreibe dein Urteil jetzt ins Heft. Mach aus jedem Stichpunkt einen ganzen Satz.",
@@ -422,8 +422,8 @@ export const BELEGE = {
     hymnus: "auch im Nilhymnus: zögerlicher Nil → Menschen verarmen"
   },
   fazit: [
-    "ein Geschenk: Grundlage für alles, trotz Gefahren und harter Arbeit",
-    "nur zum Teil ein Geschenk: Flut unsicher, nutzbar erst durch Arbeit und Dorfgemeinschaft"
+    "ein Geschenk des Nils: Grundlage für alles, trotz Gefahren und harter Arbeit",
+    "nur zum Teil ein Geschenk des Nils: Flut unsicher, Ernte erst durch Arbeit und Dorfgemeinschaft"
   ]
 };
 
