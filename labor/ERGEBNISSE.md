@@ -50,6 +50,13 @@ Was die Tests auf dem Schul-iPad ergeben haben, damit größere Spiele darauf au
 - Fehler auf dem iPad: Wer den Code eintippt, hatte ein verzerrtes Bild (Kreise als Ellipsen, obere Leiste weggescrollt). Ursache: Die Größe wurde bei offener Tastatur gemessen. Behoben: Größe kommt vom Canvas selbst, Tastatur wird vorher geschlossen. Merke für Spiele: nie `innerHeight` bei offener Tastatur messen.
 - Schul-WLAN: noch nicht getestet.
 
+## Paare und Lehrer-Monitor (Schritt 8)
+
+- Aufbau für ein Klassenspiel: ein Raum pro Paar, der Monitor hört alle Paar-Räume über **eine** Verbindung mit. Jede Nachricht zählt so 1 + 2 (Partner, Monitor).
+- Die Welt wird nicht übertragen, sondern auf jedem Gerät aus Klassencode + Paarnummer + Runde berechnet (wie in den echten Spielen). Übers Netz gehen nur Züge; der Monitor rechnet jedes Feld selbst nach.
+- Stolperstellen, die gelöst sein müssen: gleichzeitige Züge (kleinere Gerätekennung gewinnt, beide Geräte entscheiden gleich), Neuladen und spätes Beitreten (Stand beim Partner nachfragen).
+- Lokal getestet mit Monitor, zwei Paar-Geräten und 4 simulierten Paaren: ≈ 4–5 Nachrichten/s bei 10 Geräten. Test mit echten iPads: steht aus.
+
 ## Offene Punkte
 
 - Gizeh: Parallaxe-Faktoren feinjustieren.

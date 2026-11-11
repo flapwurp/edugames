@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Labor · Paare und Lehrer-Monitor</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../shared/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="start">
+  <div class="karte">
+    <p class="crumb"><a href="../">Labor</a> · Schritt 8</p>
+    <h1>Paare und Lehrer-Monitor</h1>
+    <p>Probelauf, kein fertiges Spiel: Paare suchen gemeinsam 3 Schätze auf einem 5 × 5-Feld und decken abwechselnd auf. Jedes Gerät berechnet das Feld selbst aus Klassencode und Paarnummer; übertragen werden nur die Züge. Der Monitor hört alle Paare mit.</p>
+
+    <h2>Lehrkraft (Laptop an der Tafel)</h2>
+    <div class="zeile"><button class="haupt" id="monitor">Monitor öffnen</button></div>
+
+    <h2>Paar (iPad)</h2>
+    <div class="zeile">
+      <input id="klasse" maxlength="4" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Klassencode">
+      <select id="paar" aria-label="Paarnummer"></select>
+      <button class="haupt" id="los" disabled>Los</button>
+    </div>
+    <p class="klein" id="fehler" role="alert"></p>
+    <p class="klein">Übertragen werden nur Klassencode, Paarnummer, eine zufällige Gerätekennung und die Züge, über Supabase (Frankfurt). Nichts wird gespeichert, keine Namen, kein Login.</p>
+  </div>
+</main>
+<script type="module">
+  import { neuerCode, normalisiere, gueltig } from "../06-multiplayer/raum.js";
+  import { PAARE } from "./spiel.js";
+  const $ = s => document.querySelector(s), such = location.search;
+  for (let p = 1; p <= PAARE; p++) $("#paar").add(new Option("Paar " + p, p));
+  $("#monitor").onclick = () => location.href = "monitor.html" + such + "#" + neuerCode();
+  const feld = $("#klasse");
+  feld.oninput = () => {
+    feld.value = normalisiere(feld.value);
+    $("#los").disabled = !gueltig(feld.value);
+    $("#fehler").textContent = feld.value.length === 4 && !gueltig(feld.value) ? "Codes enthalten kein I und kein O." : "";
+  };
+  $("#los").onclick = () => { feld.blur(); location.href = "paar.html" + such + "#" + feld.value + "-" + $("#paar").value; };
+</script>
+</body>
+</html>

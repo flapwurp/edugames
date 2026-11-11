@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Labor · Schatzsuche (Paar)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../shared/fonts.css">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="paar.js"></script>
+</head>
+<body>
+<header class="leiste">
+  <div class="chip">Klasse <span class="code" id="klasseCode"></span> · Paar <b id="paarNr"></b></div>
+  <div class="chip"><span class="punkt" id="punkt"></span><span id="statusText">Verbinde …</span></div>
+  <div class="chip" id="partner">Partner fehlt</div>
+  <div class="platz"></div>
+  <button id="verlassen">Verlassen</button>
+</header>
+<main class="spiel">
+  <p class="ansage" id="ansage" aria-live="polite"></p>
+  <div class="feld" id="feld" role="grid" aria-label="Spielfeld 5 mal 5"></div>
+  <p class="zahlen" id="zahlen"></p>
+  <button class="haupt" id="neueRunde" hidden>Neue Runde</button>
+</main>
+</body>
+</html>
