@@ -96,13 +96,14 @@ class Fluss extends Phaser.Scene {
     this.ziel = null;
 
     this.malHintergrund(rnd, R);
+    this.wiegen = [];   // Schilf, Palmen, Glitzern: Bewegung wird pro Bild berechnet statt mit 580 Tweens
 
     // Glitzern auf dem Wasser
     for (let i = 0; i < 80; i++){
       const x = R(0, W), y = riverY(x) + R(-.8, .8) * riverHW(x);
       const s = this.add.image(x, y, "sprites", "glint").setScale(R(.3, .7), .5).setAlpha(0).setBlendMode("ADD");
       this.welt.add(s);
-      this.tweens.add({ targets: s, alpha: R(.25, .5), x: x + R(-14, 14), duration: R(900, 1800), yoyo: true, repeat: -1, delay: R(0, 2000), ease: "Sine.easeInOut" });
+      this.wiegen.push({ o: s, art: "glanz", x0: x, a: R(.25, .5), dx: R(-14, 14), w: R(1.8, 3.4), ph: R(0, 6.28) });
     }
 
     // Schilf am Ufer: viele einzeln animierte Objekte als Lasttest
@@ -111,7 +112,7 @@ class Fluss extends Phaser.Scene {
       const y = riverY(x) + side * (riverHW(x) + R(-4, 30));
       const r = this.add.image(x, y, "sprites", "reed").setOrigin(.5, 1).setScale(R(.4, .62)).setDepth(y);
       this.welt.add(r);
-      this.tweens.add({ targets: r, angle: { from: R(-7, -2), to: R(2, 7) }, duration: R(1300, 2300), yoyo: true, repeat: -1, delay: R(0, 1500), ease: "Sine.easeInOut" });
+      this.wiegen.push({ o: r, art: "winkel", a0: R(-2, 2), a: R(3, 6), w: R(2.7, 4.6), ph: x / 180 + R(0, 1) });
     }
 
     // Palmen auf dem Land
@@ -120,7 +121,7 @@ class Fluss extends Phaser.Scene {
       const y = Phaser.Math.Clamp(riverY(x) + side * (riverHW(x) + R(230, 460)), 40, H - 40);
       const p = this.add.image(x, y, "sprites", "palm").setScale(R(.42, .68)).setRotation(R(0, 6.28)).setDepth(5000 + y);
       this.welt.add(p);
-      this.tweens.add({ targets: p, angle: p.angle + R(3, 6), duration: R(2200, 3400), yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
+      this.wiegen.push({ o: p, art: "winkel", a0: p.angle, a: R(1.5, 3), w: R(1.8, 2.8), ph: R(0, 6.28) });
     }
 
     // Amphoren mit Funkeln
@@ -170,11 +171,6 @@ class Fluss extends Phaser.Scene {
     cam.ignore(this.hud);
     this.hudCam = uiCam(this.cameras.add(0, 0, this.scale.width, this.scale.height));
     this.hudCam.ignore(this.welt);
-    this.karte = this.cameras.add(0, 0, 10, 10).setBackgroundColor("#0e1a2b");
-    this.karte.ignore(this.hud);
-    this.punkt = this.add.image(0, 0, "sprites", "dot").setTint(0xff5a4a).setScale(3).setDepth(9999);
-    this.welt.add(this.punkt);
-    cam.ignore(this.punkt);
 
     this.baueHud();
     this.layout();
@@ -197,30 +193,44 @@ class Fluss extends Phaser.Scene {
   }
 
   malHintergrund(rnd, R){
-    const g = this.add.graphics();
-    this.welt.add(g);
-    g.fillStyle(0xd8b878, 1).fillRect(0, 0, W, H);
-    for (let i = 0; i < 1600; i++) g.fillStyle(rnd() < .5 ? 0xc9a466 : 0xe9cd95, .55).fillCircle(R(0, W), R(0, H), R(1, 3.2));
-    const band = (from, to) => {           // Fläche zwischen zwei Abständen von der Flussmitte
-      const pts = [];
-      for (let x = 0; x <= W; x += 32) pts.push({ x, y: riverY(x) + from(x) });
-      for (let x = W; x >= 0; x -= 32) pts.push({ x, y: riverY(x) + to(x) });
-      return pts;
-    };
-    // Fruchtland (Kemet) an beiden Ufern, mit Furchen
-    for (const s of [-1, 1]){
-      g.fillStyle(0x5f7f34, 1).fillPoints(band(x => s * (riverHW(x) + 210), x => s * (riverHW(x) - 6)), true);
-      g.lineStyle(2, 0x4d6c28, .55);
-      for (let k = 24; k < 200; k += 17){
-        g.beginPath();
-        for (let x = 0; x <= W; x += 32){ const y = riverY(x) + s * (riverHW(x) + k); x ? g.lineTo(x, y) : g.moveTo(x, y); }
-        g.strokePath();
+    // Einmal mit Canvas 2D malen und als ein einziges Bild verwenden.
+    // (Vorher: Phaser-Graphics, das jede Form in jedem Bild neu berechnet, zu langsam auf dem iPad.)
+    const S = 1.4;    // etwas höher aufgelöst als die Welt, weil die Kamera vergrößert
+    if (!this.textures.exists("hintergrund")){
+      const cv = document.createElement("canvas");
+      cv.width = Math.round(W * S); cv.height = Math.round(H * S);
+      const c = cv.getContext("2d");
+      c.scale(S, S);
+      c.fillStyle = "#d8b878"; c.fillRect(0, 0, W, H);
+      for (let i = 0; i < 1600; i++){
+        c.fillStyle = rnd() < .5 ? "rgba(201,164,102,.55)" : "rgba(233,205,149,.55)";
+        c.beginPath(); c.arc(R(0, W), R(0, H), R(1, 3.2), 0, Math.PI * 2); c.fill();
       }
+      const band = (from, to) => {           // Fläche zwischen zwei Abständen von der Flussmitte
+        c.beginPath();
+        for (let x = 0; x <= W; x += 16) c.lineTo(x, riverY(x) + from(x));
+        for (let x = W; x >= 0; x -= 16) c.lineTo(x, riverY(x) + to(x));
+        c.closePath(); c.fill();
+      };
+      for (const s of [-1, 1]){              // Fruchtland (Kemet) mit Furchen
+        c.fillStyle = "#5f7f34"; band(x => s * (riverHW(x) + 210), x => s * (riverHW(x) - 6));
+        c.strokeStyle = "rgba(77,108,40,.55)"; c.lineWidth = 2;
+        for (let k = 24; k < 200; k += 17){
+          c.beginPath();
+          for (let x = 0; x <= W; x += 16) c.lineTo(x, riverY(x) + s * (riverHW(x) + k));
+          c.stroke();
+        }
+      }
+      c.fillStyle = "#6aa6c6"; band(x => -riverHW(x) - 4, x => riverHW(x) + 4);
+      c.fillStyle = "#3478a6"; band(x => -riverHW(x) + 18, x => riverHW(x) - 18);
+      c.fillStyle = "#2a6491"; band(x => -riverHW(x) * .55, x => riverHW(x) * .55);
+      this.textures.addCanvas("hintergrund", cv);
+      const m = document.createElement("canvas");   // verkleinerte Fassung für die Minikarte
+      m.width = 480; m.height = Math.round(480 * H / W);
+      m.getContext("2d").drawImage(cv, 0, 0, m.width, m.height);
+      this.textures.addCanvas("mini", m);
     }
-    // Wasser in drei Tiefen
-    g.fillStyle(0x6aa6c6, 1).fillPoints(band(x => -riverHW(x) - 4, x => riverHW(x) + 4), true);
-    g.fillStyle(0x3478a6, 1).fillPoints(band(x => -riverHW(x) + 18, x => riverHW(x) - 18), true);
-    g.fillStyle(0x2a6491, 1).fillPoints(band(x => -riverHW(x) * .55, x => riverHW(x) * .55), true);
+    this.welt.add(this.add.image(0, 0, "hintergrund").setOrigin(0).setScale(1 / S).setDepth(-1));
   }
 
   baueHud(){
@@ -229,6 +239,7 @@ class Fluss extends Phaser.Scene {
     this.zaehler = add(this.add.text(0, 0, "", txt(20, "#f3dc9a", { fontStyle: "bold" })));
     this.info = add(this.add.text(0, 0, "", txt(13, "#c9cce4", { backgroundColor: "#0e1a2bb3", padding: { x: 8, y: 4 } })));
     this.hilfe = add(this.add.text(0, 0, "Tippe aufs Wasser, um hinzurudern. Finde die 6 Amphoren.", txt(19, "#ffffff", { backgroundColor: "#0e1a2bcc", padding: { x: 14, y: 10 } })).setOrigin(.5, 1));
+    this.mini = add(this.add.image(0, 0, "mini").setOrigin(0));
     this.rahmen = add(this.add.graphics());
     this.knoepfe = [
       this.knopf("Vollbild", () => this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen()),
@@ -256,7 +267,7 @@ class Fluss extends Phaser.Scene {
     this.hudCam.setSize(sw, sh);
     // Minikarte oben rechts
     const mw = Math.min(220, w * .28), mh = mw * H / W, mx = w - mw - 14, my = 14;
-    this.karte.setViewport(mx * DPR, my * DPR, mw * DPR, mh * DPR).setZoom(mw * DPR / W).centerOn(W / 2, H / 2);
+    this.mini.setPosition(mx, my).setDisplaySize(mw, mh);
     this.km = { mx, my, mw, mh };
     this.panel.clear().fillStyle(0x0e1a2b, .78).fillRoundedRect(14, 14, 230, 46, 12);
     this.zaehler.setPosition(30, 26);
@@ -324,11 +335,19 @@ class Fluss extends Phaser.Scene {
       if (v.x > W + 40) v.x = -40;
     }
 
+    // Wiegen und Glitzern, ohne Tween-Objekte
+    const t = time / 1000;
+    for (const e of this.wiegen){
+      const s = Math.sin(t * e.w + e.ph);
+      if (e.art === "winkel") e.o.angle = e.a0 + s * e.a;
+      else { e.o.alpha = Math.max(0, s) * e.a; e.o.x = e.x0 + s * e.dx; }
+    }
+
     // Minikarte: Bootspunkt und sichtbarer Ausschnitt
-    this.punkt.setPosition(b.x, b.y);
     const { mx, my, mw } = this.km, f = mw / W, wv = this.cameras.main.worldView;
     this.rahmen.clear().lineStyle(1.5, 0xd9b45a, .9).strokeRect(mx, my, mw, this.km.mh)
-      .lineStyle(1.5, 0xffffff, .9).strokeRect(mx + wv.x * f, my + wv.y * f, wv.width * f, wv.height * f);
+      .lineStyle(1.5, 0xffffff, .9).strokeRect(mx + wv.x * f, my + wv.y * f, wv.width * f, wv.height * f)
+      .fillStyle(0xff5a4a, 1).fillCircle(mx + b.x * f, my + b.y * f, 3.5);
   }
 }
 
