@@ -29,6 +29,7 @@ Technische Experimente für größere Spiele (Gerätecheck, Engine, Bilder, Effe
 | Schritt | Inhalt |
 |---|---|
 | [1 Gerätecheck](labor/01-geraetecheck/) | Was kann das Gerät: Grafik, Leistung (bewegte Figuren bei 60 fps), Touch, Ton, Speicher, Download-Rate |
+| [2 Engine-Test](labor/02-engine/) | „Flussfahrt“ mit Phaser 4 (Ausnahme nur für diesen Test): Atlas, Animationen, Partikel, Kamera, Minikarte, Touch-Steuerung, Ton, Vollbild. Grafiken und Klänge erzeugt `labor/02-engine/werkzeug/atlas.py` |
 
 ## So funktioniert das Zusammenspiel ohne Server
 
