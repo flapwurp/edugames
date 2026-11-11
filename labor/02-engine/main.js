@@ -5,7 +5,10 @@
 
 import Phaser from "../vendor/phaser.esm.min.js";
 
-const DPR = Math.min(window.devicePixelRatio || 1, 2);
+// Qualitätsstufe über die Adresse: …/02-engine/#mittel oder #niedrig (Standard: hoch = volle Retina-Auflösung)
+const STUFEN = { hoch: Math.min(window.devicePixelRatio || 1, 2), mittel: 1.5, niedrig: 1 };
+const STUFE = STUFEN[location.hash.slice(1)] ? location.hash.slice(1) : "hoch";
+const DPR = Math.min(STUFEN[STUFE], window.devicePixelRatio || 1);
 const W = 3200, H = 1800;          // Weltgröße in Punkten
 const FUNDE = 6;                   // Amphoren im Fluss
 const FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -243,7 +246,11 @@ class Fluss extends Phaser.Scene {
     this.rahmen = add(this.add.graphics());
     this.knoepfe = [
       this.knopf("Vollbild", () => this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen()),
-      this.knopf("Ton aus", k => { this.sound.mute = !this.sound.mute; k.t.setText(this.sound.mute ? "Ton an" : "Ton aus"); })
+      this.knopf("Ton aus", k => { this.sound.mute = !this.sound.mute; k.t.setText(this.sound.mute ? "Ton an" : "Ton aus"); }),
+      this.knopf(`Qualität: ${STUFE}`, () => {
+        const next = { hoch: "mittel", mittel: "niedrig", niedrig: "hoch" }[STUFE];
+        location.hash = next; location.reload();
+      }, 168)
     ];
     this.zaehlerText();
     this.time.addEvent({ delay: 500, loop: true, callback: () => {
@@ -252,8 +259,8 @@ class Fluss extends Phaser.Scene {
     } });
   }
 
-  knopf(label, cb){
-    const k = { g: this.add.graphics(), t: this.add.text(0, 0, label, txt(17, "#efe4c8")).setOrigin(.5), z: this.add.zone(0, 0, 112, 48).setOrigin(0).setInteractive() };
+  knopf(label, cb, bw = 112){
+    const k = { w: bw, g: this.add.graphics(), t: this.add.text(0, 0, label, txt(17, "#efe4c8")).setOrigin(.5), z: this.add.zone(0, 0, bw, 48).setOrigin(0).setInteractive() };
     k.z.on("pointerdown", (p, lx, ly, e) => { e.stopPropagation(); cb(k); });
     this.hud.add([k.g, k.t, k.z]);
     return k;
@@ -273,10 +280,12 @@ class Fluss extends Phaser.Scene {
     this.zaehler.setPosition(30, 26);
     this.info.setPosition(14, h - 34);
     this.hilfe.setPosition(w / 2, h - 44);
-    this.knoepfe.forEach((k, i) => {
-      const x = w - 14 - (i + 1) * 120 + 8, y = h - 62;
-      k.g.clear().fillStyle(0x0e1a2b, .78).fillRoundedRect(x, y, 112, 48, 12).lineStyle(1, 0xd9b45a, .6).strokeRoundedRect(x, y, 112, 48, 12);
-      k.t.setPosition(x + 56, y + 24);
+    let rechts = w - 14;
+    this.knoepfe.forEach(k => {
+      const x = rechts - k.w, y = h - 62;
+      rechts = x - 8;
+      k.g.clear().fillStyle(0x0e1a2b, .78).fillRoundedRect(x, y, k.w, 48, 12).lineStyle(1, 0xd9b45a, .6).strokeRoundedRect(x, y, k.w, 48, 12);
+      k.t.setPosition(x + k.w / 2, y + 24);
       k.z.setPosition(x, y);
     });
   }
