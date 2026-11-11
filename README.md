@@ -24,12 +24,12 @@ Keine Lernspiele im Sinne der Leitlinien, sondern Unterrichtswerkzeuge für den 
 
 ## Labor (`labor/`)
 
-Technische Experimente für größere Spiele (Gerätecheck, Engine, Bilder, Effekte, Multiplayer, Ladezeit). Nicht für den Unterricht, nicht auf der Startseite, nur direkt erreichbar: https://flapwurp.github.io/edugames/labor/
+Technische Experimente für größere Spiele (Gerätecheck, Engine, Bilder, Effekte, Multiplayer, Ladezeit). Nicht für den Unterricht, nicht auf der Startseite, nur direkt erreichbar: https://flapwurp.github.io/edugames/labor/ – Im Labor (und nur dort) darf das Framework Phaser 4 genutzt werden: `labor/vendor/phaser.esm.min.js`.
 
 | Schritt | Inhalt |
 |---|---|
 | [1 Gerätecheck](labor/01-geraetecheck/) | Was kann das Gerät: Grafik, Leistung (bewegte Figuren bei 60 fps), Touch, Ton, Speicher, Download-Rate |
-| [2 Engine-Test](labor/02-engine/) | „Flussfahrt“ mit Phaser 4 (Ausnahme nur für diesen Test): Atlas, Animationen, Partikel, Kamera, Minikarte, Touch-Steuerung, Ton, Vollbild. Grafiken und Klänge erzeugt `labor/02-engine/werkzeug/atlas.py` |
+| [2 Engine-Test](labor/02-engine/) | „Flussfahrt“ mit Phaser 4: Atlas, Animationen, Partikel, Kamera, Minikarte, Touch-Steuerung, Ton, Vollbild. Grafiken und Klänge erzeugt `labor/02-engine/werkzeug/atlas.py` |
 
 ## So funktioniert das Zusammenspiel ohne Server
 

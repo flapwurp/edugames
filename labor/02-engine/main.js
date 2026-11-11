@@ -1,9 +1,9 @@
 // Labor, Schritt 2: Engine-Test „Flussfahrt“ mit Phaser 4.
-// Ausnahme von „keine Frameworks“ nur für diesen Ordner (siehe CLAUDE.md, Labor).
+// Ausnahme von „keine Frameworks“: Phaser ist im Labor erlaubt (siehe CLAUDE.md, Labor).
 // Getestet wird: Laden mit Fortschritt, Sammelbild (Atlas), Animationen, Tweens, Partikel,
 // Kamera mit Verfolgung, Minikarte als zweite Kamera, Touch-Steuerung, Ton, Vollbild, Retina-Schärfe.
 
-import Phaser from "./phaser.esm.min.js";
+import Phaser from "../vendor/phaser.esm.min.js";
 
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const W = 3200, H = 1800;          // Weltgröße in Punkten
