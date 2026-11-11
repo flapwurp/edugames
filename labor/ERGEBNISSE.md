@@ -41,6 +41,12 @@ Was die Tests auf dem Schul-iPad ergeben haben, damit größere Spiele darauf au
 - iPad, Qualität „mittel“: 60 fps, auch mit Hitzeflimmern. Ein Shader, der jeden Bildpunkt einzeln berechnet, ist also kein Problem.
 - Nacht war zu dunkel; aufgehellt (Mondlicht als bläuliches Umgebungslicht).
 
+## Multiplayer (Schritt 6)
+
+- Supabase Realtime (Projekt „labor“, Frankfurt), nur Broadcast und Presence, keine Tabellen. Ohne Bibliothek: Das Phoenix-Protokoll ist so schlicht, dass `verbindung.js` mit gut 150 Zeilen auskommt.
+- Gratis-Kontingent als harte Grenze fürs Spieldesign: 100 Nachrichten/s fürs ganze Projekt, Senden und jedes Empfangen zählen einzeln (1 Nachricht an 29 Mitspieler = 30). Eine ganze Klasse darf also keine Dauerströme senden, sondern nur Ereignisse (Zug, Antwort, Ergebnis). Fingerbewegungen werden deshalb auf 10/s gedrosselt und beim Empfänger weich nachgezogen.
+- Lokal gegen nachgebauten Server getestet (Neuverbinden nach Abbruch, Anwesenheit, getrennte Räume). Messung auf den iPads: steht aus.
+
 ## Offene Punkte
 
 - Gizeh: Parallaxe-Faktoren feinjustieren.
