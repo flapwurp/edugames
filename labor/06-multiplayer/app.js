@@ -38,6 +38,8 @@ $("#verlassen").addEventListener("click", verlasse);
 
 function betrete(c){
   code = c;
+  codeFeld.blur();            // Tastatur zu, bevor das Feld vermessen wird
+  scrollTo(0, 0);
   sessionStorage.setItem("labor06-raum", c);
   $("#start").hidden = true; $("#raum").hidden = false;
   $("#raumCode").textContent = c;
@@ -102,7 +104,9 @@ $("#protokollKnopf").addEventListener("click", e => {
 });
 
 function ergebnis(){
-  const ua = navigator.userAgent.match(/(iPad|iPhone|Macintosh|Windows NT [\d.]+|Android [\d.]+|Linux)/)?.[0] ?? "?";
+  // iPadOS gibt sich als Mac aus; Touchpunkte verraten das iPad
+  let ua = navigator.userAgent.match(/(iPad|iPhone|Macintosh|Windows NT [\d.]+|Android [\d.]+|Linux)/)?.[0] ?? "?";
+  if (ua === "Macintosh" && navigator.maxTouchPoints > 1) ua = "iPad";
   const safari = navigator.userAgent.match(/Version\/([\d.]+)/)?.[1];
   const st = verbindung?.stand ?? {};
   return [
@@ -178,14 +182,22 @@ const feld = $("#feld"), ctx = feld.getContext("2d");
 let B = 0, H = 0, DPR = 1;
 const eigene = new Map();   // pointerId → {x,y} (0…1)
 
+let L = 0, O = 0;
+/* Größe vom Canvas selbst nehmen, nicht vom Fenster: Auf dem iPad meldet das Fenster
+   bei offener Tastatur eine kleinere Höhe, das Bild wurde dann verzerrt. */
 function groesse(){
+  const r = feld.getBoundingClientRect();
+  if (!r.width || !r.height) return;
   DPR = Math.min(devicePixelRatio || 1, 2);
-  B = innerWidth; H = innerHeight;
-  feld.width = Math.round(B * DPR); feld.height = Math.round(H * DPR);
+  B = r.width; H = r.height; L = r.left; O = r.top;
+  const w = Math.round(B * DPR), h = Math.round(H * DPR);
+  if (feld.width !== w || feld.height !== h){ feld.width = w; feld.height = h; }
 }
+new ResizeObserver(groesse).observe(feld);
 addEventListener("resize", groesse);
+visualViewport?.addEventListener("resize", () => { groesse(); if (!$("#raum").hidden) scrollTo(0, 0); });
 
-const norm = e => [Math.round(e.clientX / B * 1000) / 1000, Math.round(e.clientY / H * 1000) / 1000];
+const norm = e => [Math.round((e.clientX - L) / B * 1000) / 1000, Math.round((e.clientY - O) / H * 1000) / 1000];
 const fingerliste = () => [...eigene.values()].map(f => [f.x, f.y]);
 
 feld.addEventListener("pointerdown", e => {

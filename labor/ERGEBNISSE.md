@@ -45,7 +45,10 @@ Was die Tests auf dem Schul-iPad ergeben haben, damit größere Spiele darauf au
 
 - Supabase Realtime (Projekt „labor“, Frankfurt), nur Broadcast und Presence, keine Tabellen. Ohne Bibliothek: Das Phoenix-Protokoll ist so schlicht, dass `verbindung.js` mit gut 150 Zeilen auskommt.
 - Gratis-Kontingent als harte Grenze fürs Spieldesign: 100 Nachrichten/s fürs ganze Projekt, Senden und jedes Empfangen zählen einzeln (1 Nachricht an 29 Mitspieler = 30). Eine ganze Klasse darf also keine Dauerströme senden, sondern nur Ereignisse (Zug, Antwort, Ergebnis). Fingerbewegungen werden deshalb auf 10/s gedrosselt und beim Empfänger weich nachgezogen.
-- Lokal gegen nachgebauten Server getestet (Neuverbinden nach Abbruch, Anwesenheit, getrennte Räume). Messung auf den iPads: steht aus.
+- Lokal gegen nachgebauten Server getestet (Neuverbinden nach Abbruch, Anwesenheit, getrennte Räume).
+- Zwei iPads, Heim-WLAN, Supabase Frankfurt (11.11.2026): Verzögerung Gerät→Gerät Median 48 ms (min 29, max 155, 30 Messungen), Server hin+zurück 66–116 ms, keine Abbrüche. Finger laufen flüssig, gefühlt 30–40 ms. Das reicht für Echtzeit-Spiele, erst recht für Zug-um-Zug.
+- Fehler auf dem iPad: Wer den Code eintippt, hatte ein verzerrtes Bild (Kreise als Ellipsen, obere Leiste weggescrollt). Ursache: Die Größe wurde bei offener Tastatur gemessen. Behoben: Größe kommt vom Canvas selbst, Tastatur wird vorher geschlossen. Merke für Spiele: nie `innerHeight` bei offener Tastatur messen.
+- Schul-WLAN: noch nicht getestet.
 
 ## Offene Punkte
 
