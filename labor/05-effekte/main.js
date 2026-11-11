@@ -15,9 +15,9 @@ const F = { niltal: .42, hinten: .82, vorne: .88, boden: 1 };       // Parallaxe
 
 // Himmelsfarben über den Tag: [Stunde, oben, Mitte, Horizont]
 const HIMMEL = [
-  [0, "#04081a", "#0a1438", "#1a2350"], [4.8, "#0a1438", "#2a2e64", "#6e4c74"], [5.9, "#23417e", "#c98a74", "#f3b67c"],
+  [0, "#0b1533", "#18265a", "#2e3a6c"], [4.8, "#0a1438", "#2a2e64", "#6e4c74"], [5.9, "#23417e", "#c98a74", "#f3b67c"],
   [7.2, "#2f63b0", "#86aedb", "#f0d6a8"], [10, "#2a67bf", "#6ea6e0", "#cfe3ee"], [14, "#2a67bf", "#76aadf", "#d8e5e8"],
-  [17.2, "#2b5aa6", "#d49a74", "#f6c788"], [18.4, "#1a2860", "#8c4b6e", "#e8805a"], [19.6, "#0b1640", "#25285a", "#3c2f5e"], [24, "#04081a", "#0a1438", "#1a2350"]
+  [17.2, "#2b5aa6", "#d49a74", "#f6c788"], [18.4, "#1a2860", "#8c4b6e", "#e8805a"], [19.6, "#122050", "#2a3066", "#45396a"], [24, "#0b1533", "#18265a", "#2e3a6c"]
 ];
 const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
 const mixv = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
@@ -209,7 +209,8 @@ function licht(h){
   const golden = dayF * (1 - smooth(.05, .45, altN));
   const sunCol = mixv([1, .5, .22], [1, .97, .88], smooth(0, .55, altN));
   const light = sunCol.map(v => v * dayF * .78);
-  const amb = mixv([.1, .13, .27], [.42, .45, .52], dayF).map((v, i) => v + golden * [.1, .04, 0][i]);
+  const amb = mixv([.27, .31, .5], [.42, .45, .52], dayF)   // Nacht: Mondlicht, bläulich, aber gut erkennbar
+   .map((v, i) => v + golden * [.1, .04, 0][i]);
   const heat = smooth(.6, .95, altN);
   const front = -Math.cos(rad), side = Math.sin(rad);
   const sunX = 1920 + rel * 24, sunY = 640 - altGrad * 24;

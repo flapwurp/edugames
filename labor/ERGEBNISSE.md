@@ -38,7 +38,8 @@ Was die Tests auf dem Schul-iPad ergeben haben, damit größere Spiele darauf au
 
 - Eigener WebGL-Shader statt Phaser: alle Ebenen in einem Durchgang, Licht pro Bildpunkt berechnet. Phaser 4 hätte dafür ein neues Filter- und Shader-System, das sich zum Testen weniger eignet.
 - Ton komplett aus Web Audio berechnet (Wind, Vögel, Grillen), ohne Tondateien; Start erst nach Tippen.
-- Messwerte auf dem iPad: folgen.
+- iPad, Qualität „mittel“: 60 fps, auch mit Hitzeflimmern. Ein Shader, der jeden Bildpunkt einzeln berechnet, ist also kein Problem.
+- Nacht war zu dunkel; aufgehellt (Mondlicht als bläuliches Umgebungslicht).
 
 ## Offene Punkte
 
