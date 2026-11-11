@@ -22,6 +22,14 @@ Keine Lernspiele im Sinne der Leitlinien, sondern Unterrichtswerkzeuge für den 
 |---|---|---|
 | [Vocab Football](tools/vocab-football/) | Englisch Kl. 6 und 9 | Digitaler Vokabelfußball: zwei Teams schreiben an der Tafel, bei richtiger Antwort wird der Ball per Wischen Richtung Tor gespielt. Vokabellisten in `tools/vocab-football/content.js` oder spontan einfügen |
 
+## Labor (`labor/`)
+
+Technische Experimente für größere Spiele (Gerätecheck, Engine, Bilder, Effekte, Multiplayer, Ladezeit). Nicht für den Unterricht, nicht auf der Startseite, nur direkt erreichbar: https://flapwurp.github.io/edugames/labor/
+
+| Schritt | Inhalt |
+|---|---|
+| [1 Gerätecheck](labor/01-geraetecheck/) | Was kann das Gerät: Grafik, Leistung (bewegte Figuren bei 60 fps), Touch, Ton, Speicher, Download-Rate |
+
 ## So funktioniert das Zusammenspiel ohne Server
 
 Spieler 1 startet ein Spiel und bekommt einen vierstelligen Code (die erste Ziffer ist das Level).

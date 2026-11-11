@@ -27,3 +27,7 @@ test("Links und Vorschaubilder der Startseite existieren", () => {
 test("Werkzeuge aus tools/ stehen nicht auf der Startseite", () => {
   for (const g of GAMES) assert.ok(!g.href.startsWith("tools/"), `${g.title} ist ein Werkzeug`);
 });
+
+test("Experimente aus labor/ stehen nicht auf der Startseite", () => {
+  for (const g of GAMES) assert.ok(!g.href.startsWith("labor/"), `${g.title} ist ein Labor-Experiment`);
+});
