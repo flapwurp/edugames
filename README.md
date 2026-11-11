@@ -31,6 +31,7 @@ Technische Experimente für größere Spiele (Gerätecheck, Engine, Bilder, Effe
 | [1 Gerätecheck](labor/01-geraetecheck/) | Was kann das Gerät: Grafik, Leistung (bewegte Figuren bei 60 fps), Touch, Ton, Speicher, Download-Rate |
 | [2 Engine-Test](labor/02-engine/) | „Flussfahrt“ mit Phaser 4: Atlas, Animationen, Partikel, Kamera, Minikarte, Touch-Steuerung, Ton, Vollbild. Grafiken und Klänge erzeugt `labor/02-engine/werkzeug/atlas.py` |
 | [3 Bilder im Spiel](labor/03-bilder/) | Echte Bilder: NASA-Satellitenbild als Karte, Gizeh-Panorama in Parallax-Ebenen, Menna-Malerei als Quelle mit Umzeichnung. Texte in `content.js`, Bildnachweise in `NACHWEISE.md`, Bildbearbeitung mit `werkzeug/bilder.py` |
+| [5 Gizeh im Tageslauf](labor/05-effekte/) | Eigener WebGL-Shader (ohne Phaser) setzt die Foto-Ebenen aus Schritt 3 zusammen: Tageszeit, Licht, Schatten, Hitzeflimmern; Klangkulisse aus Web Audio (`ton.js`). Schritt 4 übersprungen, weil `content.js` schon Standard ist |
 
 ## So funktioniert das Zusammenspiel ohne Server
 

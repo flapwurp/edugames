@@ -90,6 +90,10 @@ def gizeh():
     r, g, b = [im[..., i].astype(np.float32) for i in range(3)]
     stein = np.clip((r - b - 6) / 12, 0, 1)
 
+    masken = []   # Umrisse aller Pyramiden: dort bekommt der Boden ein Loch
+
+    # Polygone enden genau an der Fußlinie der Pyramide; darunter gehört alles zum Boden.
+    # So bewegt sich jede Pyramide als Ganzes und bricht beim Wischen nicht durch.
     def ebene(polygone, name):
         m = Image.new("L", (W, H), 0)
         d = ImageDraw.Draw(m)
@@ -97,21 +101,35 @@ def gizeh():
         innen = cv2.erode(np.array(m), np.ones((21, 21), np.uint8)).astype(np.float32) / 255  # sicher Stein
         m = np.array(m.filter(ImageFilter.GaussianBlur(0.8))).astype(np.float32) / 255
         # Nur am Rand entscheidet die Farbe (Stufenkanten), innen ist alles Stein
-        a = m * np.maximum.reduce([stein, innen, (yy > hor[None, :] - 4).astype(np.float32)])
+        a = m * np.maximum(stein, innen)
+        masken.append(m)
         ys, xs = np.where(a > 0.02)
         x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
         rgba = np.dstack([im[y0:y1, x0:x1], (a[y0:y1, x0:x1] * 255).astype(np.uint8)])
         size = webp(Image.fromarray(rgba, "RGBA"), name, 84)
         return {"datei": name, "x": int(x0), "y": int(y0), "w": int(x1 - x0), "h": int(y1 - y0), "bytes": size}
 
-    vorne = ebene([[(100, 604), (513, 236), (770, 460), (1197, 14), (1770, 645), (1770, 672), (100, 672)]], "gizeh-cheops-chephren.webp")
-    hinten = ebene([[(2765, 712), (3128, 294), (3455, 700), (3562, 744), (3562, 762), (2765, 762)],
-                    [(3678, 768), (3812, 604), (3840, 628), (3840, 778)]], "gizeh-mykerinos.webp")
-    y0 = int(min(y for _, y in horizont)) - 4
+    vorne = ebene([[(100, 606), (513, 236), (770, 460), (1197, 14), (1770, 646), (620, 630)]], "gizeh-cheops-chephren.webp")
+    hinten = ebene([[(2768, 704), (3128, 294), (3455, 702)]], "gizeh-mykerinos.webp")
+    # Boden: unter den Pyramiden beginnt er erst an der Fußlinie (kein Loch, kein Pyramidenrest im Boden).
+    # Die kleine Nebenpyramide am rechten Rand bleibt Teil des Bodens.
+    fuss = {**{x: strecke([(100, 606), (620, 630), (1770, 646)], x) for x in range(100, 1771)},
+            **{x: strecke([(2768, 704), (3455, 702)], x) for x in range(2768, 3456)}}
+    hor2 = np.array([max(hor[x], fuss.get(x, -1)) for x in range(W)])
+    boden_a = np.clip((yy - hor2[None, :] + 2) / 4, 0, 1)
+    klein = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(klein).polygon([(3672, 770), (3812, 600), (3840, 626), (3840, 772)], fill=255)
+    klein = np.array(klein.filter(ImageFilter.GaussianBlur(0.8))).astype(np.float32) / 255
+    boden_a = np.maximum(boden_a, klein * stein)
+    y_min_boden = 598
+    y0 = min(int(min(y for _, y in horizont)) - 4, y_min_boden)
     rgba = np.dstack([im[y0:], (boden_a[y0:] * 255).astype(np.uint8)])
     boden = {"datei": "gizeh-boden.webp", "x": 0, "y": y0, "w": W, "h": H - y0,
              "bytes": webp(Image.fromarray(rgba, "RGBA"), "gizeh-boden.webp", 80)}
-    meta = {"breite": W, "hoehe": H, "horizont": horizont, "ebenen": {"vorne": vorne, "hinten": hinten, "boden": boden}}
+    # Spitzen der Pyramiden (für die Lichtrichtung in Schritt 5): x der Spitze, Bereich in x
+    spitzen = [{"name": "Cheops", "x": 513, "von": 0, "bis": 770}, {"name": "Chephren", "x": 1197, "von": 770, "bis": 2000},
+               {"name": "Mykerinos", "x": 3128, "von": 2000, "bis": 3840}]
+    meta = {"breite": W, "hoehe": H, "horizont": horizont, "spitzen": spitzen, "ebenen": {"vorne": vorne, "hinten": hinten, "boden": boden}}
     (OUT / "gizeh.json").write_text(json.dumps(meta, indent=1))
     Image.fromarray(im).save("/tmp/gizeh_repariert.jpg", quality=90)
     return meta

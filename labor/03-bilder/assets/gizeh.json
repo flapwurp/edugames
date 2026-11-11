@@ -39,22 +39,42 @@
    742
   ]
  ],
+ "spitzen": [
+  {
+   "name": "Cheops",
+   "x": 513,
+   "von": 0,
+   "bis": 770
+  },
+  {
+   "name": "Chephren",
+   "x": 1197,
+   "von": 770,
+   "bis": 2000
+  },
+  {
+   "name": "Mykerinos",
+   "x": 3128,
+   "von": 2000,
+   "bis": 3840
+  }
+ ],
  "ebenen": {
   "vorne": {
    "datei": "gizeh-cheops-chephren.webp",
-   "x": 98,
+   "x": 99,
    "y": 23,
-   "w": 1675,
-   "h": 652,
-   "bytes": 221822
+   "w": 1673,
+   "h": 625,
+   "bytes": 202076
   },
   "hinten": {
    "datei": "gizeh-mykerinos.webp",
-   "x": 2763,
+   "x": 2767,
    "y": 300,
-   "w": 1077,
-   "h": 480,
-   "bytes": 91498
+   "w": 690,
+   "h": 406,
+   "bytes": 62438
   },
   "boden": {
    "datei": "gizeh-boden.webp",
@@ -62,7 +82,7 @@
    "y": 596,
    "w": 3840,
    "h": 317,
-   "bytes": 382376
+   "bytes": 384486
   }
  }
 }

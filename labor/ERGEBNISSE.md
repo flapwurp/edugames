@@ -32,6 +32,14 @@ Was die Tests auf dem Schul-iPad ergeben haben, damit größere Spiele darauf au
 - Tiefenwirkung Gizeh: als Machbarkeitsnachweis gelungen, braucht Feinschliff (siehe unten).
 - Phaser-Treffererkennung für Objekte versagt bei gezoomter Kamera; eigene Berechnung über `cam.getWorldPoint()` funktioniert.
 
+- Behoben: Pyramiden enden jetzt an ihrer Fußlinie, der Boden beginnt dort (kein Bruch mehr beim Wischen). Die kleine Nebenpyramide gehört zum Boden.
+
+## Effekte und Ton (Schritt 5)
+
+- Eigener WebGL-Shader statt Phaser: alle Ebenen in einem Durchgang, Licht pro Bildpunkt berechnet. Phaser 4 hätte dafür ein neues Filter- und Shader-System, das sich zum Testen weniger eignet.
+- Ton komplett aus Web Audio berechnet (Wind, Vögel, Grillen), ohne Tondateien; Start erst nach Tippen.
+- Messwerte auf dem iPad: folgen.
+
 ## Offene Punkte
 
-- Gizeh: Pyramidenfüße liegen teils in der Bodenebene, der Rest in der Pyramidenebene; beim Wischen entsteht ein Versatz. Bodenebene unter den Pyramiden aussparen bzw. Horizontlinie unter die Pyramidenfüße legen. Parallaxe-Faktoren feinjustieren.
+- Gizeh: Parallaxe-Faktoren feinjustieren.

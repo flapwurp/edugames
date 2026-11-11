@@ -86,7 +86,7 @@ export const GIZEH = {
     { x: 300, y: 640, ebene: "boden", name: "Sonnenbarke des Cheops", text: "1954 fand man neben der Cheops-Pyramide ein zerlegtes Schiff aus Zedernholz in einer Grube. Es wurde wieder zusammengesetzt und stand lange in einem eigenen Museum. Heute ist es im Grand Egyptian Museum.", bilder: ["barke1", "barke4"] },
     { x: 2300, y: 600, ebene: "niltal", name: "Niltal im Dunst", text: "Im Dunst liegt das Niltal. Heute steht dort die Großstadt Gizeh/Kairo. In dieser Szene ist sie durch eine gezeichnete Ebene ersetzt: Das Bild ist also bearbeitet." },
     { x: 3128, y: 520, ebene: "hinten", name: "Mykerinos-Pyramide", text: "Grabmal des Königs Mykerinos (Menkaure), die kleinste der drei großen Pyramiden von Gizeh, ursprünglich rund 65 m hoch." },
-    { x: 3780, y: 700, ebene: "hinten", name: "Nebenpyramide", text: "Kleinere Nebenpyramiden neben den großen. Sie werden meist als Gräber von Königinnen gedeutet." }
+    { x: 3780, y: 700, ebene: "boden", name: "Nebenpyramide", text: "Kleinere Nebenpyramiden neben den großen. Sie werden meist als Gräber von Königinnen gedeutet." }
   ]
 };
 
