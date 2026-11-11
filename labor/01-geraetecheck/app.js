@@ -168,8 +168,11 @@ function sound(){
   o.frequency.setValueAtTime(523, t); o.frequency.setValueAtTime(659, t + .15); o.frequency.setValueAtTime(784, t + .3);
   g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.25, t + .02); g.gain.setValueAtTime(.25, t + .42); g.gain.linearRampToValueAtTime(0, t + .5);
   o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .52);
-  set("audio", "Ton", "Web Audio", ctx.state === "running" ? "Ton gestartet: drei Töne hörbar? Sonst Lautstärke prüfen" : `Zustand: ${ctx.state}`, ctx.state === "running" ? "ok" : "warn");
-  setTimeout(() => ctx.close(), 800);
+  // Safari startet Web Audio im Zustand "suspended"; resume() direkt im Tipp-Handler gibt den Ton frei.
+  ctx.resume().finally(() => {
+    set("audio", "Ton", "Web Audio", ctx.state === "running" ? "läuft nach Tippen: drei Töne hörbar? Sonst Lautstärke prüfen" : `Zustand: ${ctx.state}`, ctx.state === "running" ? "ok" : "warn");
+  });
+  setTimeout(() => ctx.close(), 900);
 }
 
 /* ---------- Speicher und Netz ---------- */
