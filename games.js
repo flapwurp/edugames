@@ -32,7 +32,7 @@ export const GAMES = [
     title: "Who is it?",
     href: "who-is-it/",
     image: "shared/thumbs/who-is-it.webp",
-    text: "One of you sees one person, the other one sees many. Describe, ask and find the right one.",
+    text: "Describe, ask and find the right person – as a team or against each other, like the board game.",
     players: 2,
     minutes: [10, 15],
     grades: [5, 7],
