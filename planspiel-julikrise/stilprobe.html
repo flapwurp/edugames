@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Planspiel Julikrise – Stilprobe</title>
+<style>
+:root{
+  --tisch:#2f3b33; --tisch2:#26302a;
+  --papier:#f3ead6; --papier2:#e9dcbf; --linie:#cbb991;
+  --tinte:#24201a; --tinte2:#5a5043;
+  --rot:#9e2b25; --gold:#b48a3c; --blau:#2c4a6b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(ellipse at 50% 30%,#3b4a40 0%,var(--tisch) 55%,var(--tisch2) 100%);
+  color:var(--tinte);font-family:Georgia,"Times New Roman",serif;-webkit-text-size-adjust:100%;
+  display:flex;flex-direction:column;min-height:100vh;
+}
+.sans{font-family:-apple-system,system-ui,"Segoe UI",sans-serif}
+
+/* Kopfzeile: Staat + Kalender */
+header{display:flex;align-items:center;gap:16px;padding:12px 18px 8px;color:#efe6cf}
+.siegel{width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#c4463d,#8a211c 70%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.15),0 3px 8px rgba(0,0,0,.4);
+  font:700 15px/1 -apple-system,system-ui,sans-serif;color:#f6e7c8;letter-spacing:.5px}
+.titel h1{margin:0;font-weight:400;font-size:24px;letter-spacing:.3px}
+.titel div{font-size:13px;opacity:.75;letter-spacing:1.5px;text-transform:uppercase}
+.kalender{margin-left:auto;display:flex;gap:2px;align-items:flex-end}
+.tag{width:9px;height:20px;border-radius:2px;background:rgba(239,230,207,.18)}
+.tag.vorbei{background:rgba(239,230,207,.45)}
+.tag.jetzt{background:var(--gold);height:30px;box-shadow:0 0 10px rgba(180,138,60,.7)}
+.tag.marke{background:rgba(239,230,207,.3);height:26px}
+.kal-text{color:#efe6cf;font-size:13px;margin-left:12px;text-align:right;line-height:1.25}
+.kal-text b{display:block;font-size:20px;font-weight:400}
+
+/* Arbeitsfläche */
+main{flex:1;display:grid;grid-template-columns:minmax(300px,0.9fr) 1.4fr;gap:18px;padding:8px 18px 18px}
+.blatt{background:linear-gradient(180deg,var(--papier),var(--papier2));border-radius:3px;
+  box-shadow:0 1px 0 #fff8 inset,0 10px 24px rgba(0,0,0,.35);padding:18px 22px;position:relative}
+.blatt h2{margin:0 0 6px;font-weight:400;font-size:21px}
+.blatt .klein{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tinte2)}
+.lage p{margin:.5em 0;font-size:16.5px;line-height:1.5}
+.akte{margin-top:16px;padding:14px 16px 12px;background:#efe2c4;border:1px solid var(--linie);position:relative}
+.stempel{position:absolute;right:12px;top:-14px;transform:rotate(-6deg);border:3px solid var(--rot);color:var(--rot);
+  font:800 15px/1 -apple-system,system-ui,sans-serif;letter-spacing:3px;padding:5px 9px;background:#efe2c4cc;opacity:.9}
+.akte p{margin:0;font-style:italic;font-size:15.5px;line-height:1.45}
+
+/* Telegramm */
+.telegramm{margin-top:16px;background:#f7f1df;border:1px solid #d9caa6;padding:10px 14px 12px;transform:rotate(.4deg);
+  box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.telegramm .kopf{display:flex;justify-content:space-between;font:700 11px/1 -apple-system,system-ui,sans-serif;letter-spacing:2px;color:var(--blau);
+  border-bottom:2px solid var(--blau);padding-bottom:6px;margin-bottom:8px}
+.streifen{display:inline;background:#fffdf4;box-shadow:0 0 0 3px #fffdf4;font:600 14px/1.9 "Courier New",monospace;text-transform:uppercase;letter-spacing:.5px}
+
+/* Optionen */
+.optionen{display:flex;flex-direction:column;gap:12px}
+.option{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start;cursor:pointer;
+  transition:transform .15s,box-shadow .15s;border:2px solid transparent}
+.option:active{transform:scale(.99)}
+.option.gewaehlt{border-color:var(--gold);box-shadow:0 0 0 4px rgba(180,138,60,.25),0 10px 24px rgba(0,0,0,.35)}
+.buchstabe{width:54px;height:54px;border-radius:50%;border:2px solid var(--tinte2);display:grid;place-items:center;font-size:26px;color:var(--tinte2)}
+.gewaehlt .buchstabe{background:var(--gold);border-color:var(--gold);color:#fff}
+.option h3{margin:2px 0 8px;font-weight:400;font-size:19px;line-height:1.3}
+.abwaegung{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14.5px;line-height:1.4}
+.abwaegung div{padding-left:10px;border-left:3px solid #8aa17c}
+.abwaegung div+div{border-left-color:#b9786f}
+.abwaegung span{display:block;font:700 11px/1.6 -apple-system,system-ui,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:var(--tinte2)}
+
+/* Kabinett */
+.kabinett{display:flex;align-items:center;gap:14px;color:#efe6cf;padding:4px 4px 0}
+.kabinett .stuehle{display:flex;gap:8px}
+.stuhl{width:34px;height:34px;border-radius:50%;border:2px solid rgba(239,230,207,.5);display:grid;place-items:center;font:700 14px/1 -apple-system,system-ui,sans-serif}
+.stuhl.a{background:var(--gold);border-color:var(--gold);color:#fff}
+.stuhl.b{background:#6c7d71;border-color:#6c7d71}
+.kabinett p{margin:0;font-size:15px;opacity:.9}
+.knopf{margin-left:auto;background:var(--gold);color:#fff;border:0;border-radius:6px;padding:14px 22px;font:700 16px/1 -apple-system,system-ui,sans-serif;letter-spacing:.5px;opacity:.45}
+
+.hinweis{color:#efe6cfaa;font:13px/1.4 -apple-system,system-ui,sans-serif;text-align:center;padding:0 18px 12px}
+@media (max-width:900px){ main{grid-template-columns:1fr} .kalender .tag:nth-child(odd){display:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="siegel" id="siegel">D</div>
+  <div class="titel"><div>Delegation</div><h1 id="staat">Deutsches Reich</h1></div>
+  <div class="kalender" id="kalender" aria-hidden="true"></div>
+  <div class="kal-text sans">Runde 3 · Die Antwort<b>27. Juli 1914</b></div>
+</header>
+
+<main>
+  <section class="blatt lage">
+    <div class="klein sans">Die Lage</div>
+    <div id="lage"></div>
+    <div class="akte">
+      <div class="stempel">GEHEIM</div>
+      <div class="klein sans" style="margin-bottom:6px">Nur für euch</div>
+      <p id="geheim"></p>
+    </div>
+    <div class="telegramm">
+      <div class="kopf"><span>TELEGRAMM · AUS LONDON</span><span>26.7. · 14.20 UHR</span></div>
+      <span class="streifen">Würdet ihr einer Konferenz der Botschafter zustimmen? Stop. Antwort erbeten. Stop.</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="optionen" id="optionen"></div>
+  </section>
+</main>
+
+<div style="padding:0 18px 12px">
+  <div class="kabinett">
+    <div class="stuehle"><div class="stuhl a">A</div><div class="stuhl a">A</div><div class="stuhl b">C</div><div class="stuhl"></div><div class="stuhl"></div></div>
+    <p>Kabinett: Der Beschluss gilt, wenn alle dieselbe Möglichkeit gewählt haben.</p>
+    <button class="knopf" disabled>Beschluss fassen</button>
+  </div>
+</div>
+<p class="hinweis">Stilprobe – nur Aussehen, noch keine Funktion. Texte aus content.js (Runde 3, Deutsches Reich).</p>
+
+<script type="module">
+import { RUNDEN } from "./content.js";
+const r = RUNDEN[2], k = r.staaten.d;
+document.getElementById("lage").innerHTML = r.lage.map(t => `<p>${t}</p>`).join("");
+document.getElementById("geheim").textContent = k.geheim[0];
+const box = document.getElementById("optionen");
+for (const [b, o] of Object.entries(k.optionen)) {
+  const el = document.createElement("div");
+  el.className = "blatt option" + (b === "A" ? " gewaehlt" : "");
+  el.innerHTML = `<div class="buchstabe">${b}</div><div><h3>${o.text}</h3>
+    <div class="abwaegung"><div><span>Dafür spricht</span>${o.pro}</div><div><span>Dagegen spricht</span>${o.contra}</div></div></div>`;
+  el.onclick = () => { box.querySelectorAll(".option").forEach(x => x.classList.remove("gewaehlt")); el.classList.add("gewaehlt"); };
+  box.append(el);
+}
+// Kalender 28. Juni – 4. August: 38 Tage, heute 27. Juli (Tag 29)
+const kal = document.getElementById("kalender");
+for (let i = 0; i < 38; i++) {
+  const t = document.createElement("div");
+  t.className = "tag" + (i < 29 ? " vorbei" : "") + (i === 29 ? " jetzt" : "") + ([0, 25, 30, 34].includes(i) && i !== 29 ? " marke" : "");
+  kal.append(t);
+}
+</script>
+</body>
+</html>
