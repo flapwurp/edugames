@@ -260,6 +260,7 @@ export function sicht(s, team, geraet) {
     karte: { optionen: Object.fromEntries(Object.entries(k.optionen).map(([b, o]) => [b, { text: o.text, pro: o.pro, contra: o.contra }])),
              kurswechsel: k.kurswechsel, zusatz: k.zusatz ? { frage: k.zusatz.frage, wahl: k.zusatz.wahl } : null },
     entscheidetJetzt: welleTeams(s).includes(team),
+    meineWelle: RUNDEN[s.runde - 1].wellen.findIndex(w => w.includes(staat)), wellen: RUNDEN[s.runde - 1].wellen.length,
     grenze: s.grenzen[key] ? { titel: s.grenzen[key].titel, text: s.grenzen[key].text, neu: s.grenzen[key].neu } : null,
     kabinett: { geraete: geraeteVon(s, team).length, stimmen: s.stimmen[key] || {}, meineStimme: s.stimmen[key]?.[geraet] || null,
                 beschlossen: entschieden(s, key) ? s.zustand[key] : null },

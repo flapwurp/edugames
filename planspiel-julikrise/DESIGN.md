@@ -279,19 +279,38 @@ erfolgreich gelaufen ist.
 - [ ] Simulation mit 30 Testgeräten in Node
 - [ ] Notfall: Lehrkraft kann eine Wahl am Laptop eintragen
 
-### G. Delegations-App (iPad)
-- [ ] Beitreten (Raumcode, Delegation)
-- [ ] Dossier, Strategieblatt, Begriffe, Europa 1914 (jederzeit erreichbar)
-- [ ] Lage, Geheimakte, Posteingang
-- [ ] Noten schreiben: Pflichtnote als Formular, Vorschlag halb vorgefertigt, eine freie Note pro Runde
-- [ ] Prognose, Entscheidung mit Begründungsgerüst, Kabinettsbeschluss, Verkündung
-- [ ] Folgenkarte, Akte 1914
+### G. Delegations-App (iPad) – `index.html`, `delegation.js`
+- [x] Beitreten (Raumcode von der Tafel, Delegation mit Flagge wählen; Serbien-Team mit Hinweis „ab Runde 4: Belgien“)
+- [x] Kopf mit Flagge, Phasenband („Ihr entscheidet jetzt“, „Wartet …“), Leiste mit Stimmungsanzeigen und Uhren
+- [x] Reiter Lage (Lage, Geheimakte, verkündete Entscheidungen, Erinnerungskarten, Auflösung, Ausgangskarte, Ende),
+      Entscheidung (drei Optionen, Kurswechsel-Stempel, Zeitpunkt, Prognose, Begründungsgerüst, Kabinett mit
+      Stimmen aller iPads, Beschluss, Grenze als rote Ereigniskarte), Diplomatie (Vorlagen mit Pflicht/Vorschlag,
+      freie Note mit Empfängern, Posteingang mit Antworten, Zeichenzähler), Dossier (Dossier, Strategieblatt,
+      Europa 1914, Begriffe)
+- [x] Reiter wechselt bei Phasenwechsel automatisch; roter Punkt, wo etwas zu tun ist; Eingaben überstehen
+      Aktualisierungen (Entwürfe, Fokus bleibt)
+- [ ] Erprobung auf echten iPads (Safari): Tastatur, Hochformat, Neuladen
 
-### H. Lehrer-Monitor (Laptop)
-- [ ] Raum öffnen, Phasensteuerung mit Timer, Stand jeder Delegation
-- [ ] Verkünden je Welle, Folgen, „Was 1914 geschah“, Geheimakten
-- [ ] Mitlesen aller Noten
-- [ ] Auswertung „Unsere Entscheidungen und 1914“ (druckbar A4 quer)
+### H. Lehrer-Monitor (Laptop) – `lehrer.html`, `lehrer.js`
+- [x] Raumcode, Phasenleiste, Timer mit Richtwerten je Phase, „Weiter“
+- [x] Zwei Ansichten: **Tafel** (für den Beamer: Lage für alle, Kacheln „berät / hat beschlossen / verkündet“,
+      geheime Entscheidungen nur als „geheim“, öffentliche Erklärungen, Auflösung, Ausgang, Ende, Geheimakten) und
+      **Spielleitung** (Stimmen je Delegation, Option 1914, Grenzen, offene Pflichtnoten, alle Noten, Hinweise und
+      typische Abweichungen, Platzhalter-Quellen, Notfall-Knöpfe, Auswertung, Drucken, Neues Spiel)
+- [x] Eigene Bestätigungsdialoge (kein `confirm`)
+- [x] Stand überlebt Neuladen (Aktionsliste in `sessionStorage`)
+- [x] Auswertung „Unsere Entscheidungen und 1914“ mit Verkündung und Prognosen, druckbar
+- [ ] Drucklayout A4 quer verfeinern; Auswertung als eigene Seite für die Reflexion
+
+**Ausprobieren:** Die Verbindung ist vorerst „lokal“ (BroadcastChannel): Laptop und iPads müssen Fenster
+desselben Browsers auf einem Rechner sein. Webserver starten (`npm run serve`), `lehrer.html` in einem Fenster,
+`index.html` in weiteren Fenstern öffnen. Automatischer Probedurchlauf: `planspiel-julikrise/werkzeug/durchlauf.cjs`
+(Runde 1 mit 7 iPad-Fenstern, prüft Geheimhaltung und Neuladen). Geprüft am 18.11.: ganze Partie bis Ende und
+Geheimakten ohne Fehler, Ausgang wird auf Tafel und iPads gezeigt.
+
+Ehrlicher Hinweis zur Geheimhaltung: `content.js` mit allen Dossiers liegt öffentlich im Code. Wer gezielt sucht,
+findet die Dossiers anderer Staaten (wie auf Papier am Nachbartisch). Die **Entscheidungen** der anderen und private
+Noten bekommt ein iPad dagegen nie zu sehen – sie bleiben auf dem Laptop.
 
 ### I. Telegramme mit Laufzeit
 - [ ] Laufzeit je Strecke, verspätete Noten nach der Welle, Linie auf der Karte
