@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planspiel Julikrise – Entscheidungsnetz</title>
+<style>
+body{margin:0;background:#2f3b33;color:#efe6cf;font:15px/1.45 -apple-system,system-ui,"Segoe UI",sans-serif}
+h1{font:400 22px Georgia,serif;margin:14px 18px 2px}
+.kopf{margin:0 18px 10px;font-size:13px;opacity:.85}
+.wrap{display:flex;flex-wrap:wrap;align-items:flex-start}
+#netz{flex:1 1 760px;min-width:0}
+svg{width:100%;height:auto;display:block}
+.spalte{fill:#efe6cf;font:700 12px -apple-system,system-ui,sans-serif;letter-spacing:1.4px}
+.runde{fill:#efe6cf;opacity:.6;font:600 11px -apple-system,system-ui,sans-serif}
+.k rect{fill:#f3ead6;stroke:#cbb991;cursor:pointer}
+.k.m rect{fill:#dfe7ef;stroke:#7fa6d1}
+.k.anz rect{fill:#e9dcef;stroke:#a58bc0}
+.k.aus rect{fill:#b48a3c;stroke:#f3ead6}
+.k.aus text{fill:#fff}
+.k.aktiv rect{stroke:#b48a3c;stroke-width:3.5}
+.k text{fill:#24201a;font:600 12px -apple-system,system-ui,sans-serif;pointer-events:none}
+.kante{fill:none;stroke-width:1.6;opacity:.35}
+.kante.hell{opacity:1;stroke-width:3}
+.kante.dim{opacity:.05}
+#info{flex:0 1 430px;background:#f3ead6;color:#24201a;margin:8px 18px 18px;padding:14px 18px;border-radius:3px;max-height:92vh;overflow:auto;font-family:Georgia,serif;position:sticky;top:8px}
+#info h2{font-weight:400;margin:0 0 8px;font-size:20px}
+#info h3{font:700 12px/1.6 -apple-system,system-ui,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#5a5043;margin:14px 0 4px}
+#info .wenn{font:13px -apple-system,system-ui,sans-serif;color:#2c4a6b;margin:6px 0 2px}
+#info p{margin:2px 0 8px}
+#info .opt{margin:4px 0 8px;padding-left:10px;border-left:3px solid #cbb991}
+#info .setzt{font:12px -apple-system,system-ui,sans-serif;color:#2c4a6b}
+#info .kw{color:#9e2b25;font:700 11px -apple-system,system-ui,sans-serif;letter-spacing:1px}
+#info table{border-collapse:collapse;font:13px -apple-system,system-ui,sans-serif}
+#info td{padding:2px 8px 2px 0;vertical-align:top}
+</style>
+</head>
+<body>
+<h1>Entscheidungsnetz – Entwurf</h1>
+<div class="kopf">Links die Entscheidungen, in der Mitte die Merkmale (blau) und Stimmungsanzeigen (lila), rechts was sich dadurch ändert. Tippe auf einen Kasten.</div>
+<div class="wrap">
+<div id="netz"></div>
+<div id="info"><h2>So liest man das Netz</h2><p>Eine Entscheidung setzt Merkmale, zum Beispiel „Berlins Linie gegenüber Wien: Rat zur Mäßigung“. Spätere Karten, Lagetexte, Grenzen und Ausgänge fragen nur diese Merkmale ab. Tippe links auf eine Entscheidung, in der Mitte auf ein Merkmal oder rechts auf eine Karte.</p></div>
+</div>
+
+<script type="module">
+import { RUNDEN, STAATEN } from "./content.js";
+import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "./netz.js";
+import { akte1914, merkmaleBis } from "./logik.js";
+
+const ns = "http://www.w3.org/2000/svg";
+const el = (n, a = {}, p) => { const e = document.createElementNS(ns, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); p && p.append(e); return e; };
+const HZ = 26, GAP = 4, XL = 20, XM = 330, XR = 640, WL = 200, WM = 220, WR = 210;
+const kurz = s => STAATEN[s].kurz;
+
+/* Knoten links: Entscheidungen */
+const links = [], mitte = [], rechts = [];
+let y = 40;
+const rundenY = {};
+for (const r of RUNDEN) {
+  rundenY[r.nr] = y; y += 16;
+  for (const w of r.wellen) for (const s of w) { links.push({ id: `${r.nr}.${s}`, r: r.nr, s, y }); y += HZ + GAP; }
+  y += 8;
+}
+const hoeheL = y;
+/* Mitte: Merkmale */
+const mIds = Object.keys(MERKMALE);
+const dyM = Math.max(HZ + GAP, (hoeheL - 56) / mIds.length);
+mIds.forEach((id, i) => mitte.push({ id, y: 56 + i * dyM }));
+/* Rechts: Karten mit Abhängigkeiten, Grenzen, Ausgänge, Ende */
+const ziele = new Map();
+const ziel = (id, label, typ) => { if (!ziele.has(id)) ziele.set(id, { id, label, typ, quellen: new Set() }); return ziele.get(id); };
+VARIANTEN.forEach(v => Object.keys(v.wenn).forEach(k => ziel(`${v.runde}.${v.staat}`, `R${v.runde} · ${STAATEN[v.staat].name}`, "karte").quellen.add(k)));
+LAGE.forEach(l => Object.keys(l.wenn).forEach(k => (l.fuer === "alle" ? Object.keys(RUNDEN[l.runde - 1].staaten) : l.fuer)
+  .forEach(s => ziel(`${l.runde}.${s}`, `R${l.runde} · ${STAATEN[s].name}`, "karte").quellen.add(k))));
+GRENZEN.forEach(g => Object.keys(g.wenn).forEach(k => ziel(`g:${g.titel}`, `Grenze R${g.runde}: ${g.titel}`, "grenze").quellen.add(k)));
+AUSGAENGE.forEach(a => [a, ...a.weil].forEach(w => Object.keys(w.wenn).forEach(k => ziel(`a:${a.id}`, `Ausgang nach R${a.nachRunde}`, "aus").quellen.add(k))));
+[ENDE, ...ENDE.weil].forEach(w => Object.keys(w.wenn || {}).forEach(k => ziel("ende", "Ende: Euer August 1914", "aus").quellen.add(k)));
+const sortKey = z => z.typ === "karte" ? Number(z.id.split(".")[0]) * 10 : z.typ === "grenze" ? Number(z.label.match(/R(\d)/)[1]) * 10 + 5 : 99;
+const rListe = [...ziele.values()].sort((a, b) => sortKey(a) - sortKey(b));
+const dyR = Math.max(HZ + GAP, (hoeheL - 56) / rListe.length);
+rListe.forEach((z, i) => rechts.push({ ...z, y: 56 + i * dyR }));
+
+const svg = el("svg", { viewBox: `0 0 ${XR + WR + 20} ${hoeheL + 10}` });
+document.getElementById("netz").append(svg);
+[["ENTSCHEIDUNGEN", XL], ["MERKMALE", XM], ["DAS ÄNDERT SICH", XR]].forEach(([t, x]) => el("text", { x, y: 22, class: "spalte" }, svg).textContent = t);
+for (const r of RUNDEN) el("text", { x: XL, y: rundenY[r.nr] + 11, class: "runde" }, svg).textContent = `Runde ${r.nr} · ${r.titel}`;
+const gK = el("g", {}, svg), gN = el("g", {}, svg);
+
+/* Kanten */
+const kanten = [];
+const setzer = new Map(); // merkmal -> Set(Entscheidung)
+for (const [k, opts] of Object.entries(SETZT)) {
+  const ent = k.replace(".wann", "");
+  for (const s of Object.values(opts)) for (const m of Object.keys(s)) { if (!setzer.has(m)) setzer.set(m, new Set()); setzer.get(m).add(ent); }
+}
+VARIANTEN.forEach(v => Object.values(v.optionen || {}).forEach(o => Object.keys(o.setzt || {}).forEach(m => setzer.get(m)?.add(`${v.runde}.${v.staat}`))));
+const pos = { };
+links.forEach(n => pos["L" + n.id] = { x: XL + WL, y: n.y + HZ / 2 });
+mitte.forEach(n => { pos["Mi" + n.id] = { x: XM, y: n.y + HZ / 2 }; pos["Mo" + n.id] = { x: XM + WM, y: n.y + HZ / 2 }; });
+rechts.forEach(n => pos["R" + n.id] = { x: XR, y: n.y + HZ / 2 });
+const kurve = (a, b) => `M${a.x},${a.y} C ${a.x + 50},${a.y} ${b.x - 50},${b.y} ${b.x},${b.y}`;
+for (const [m, ents] of setzer) for (const e of ents) kanten.push({ von: "L" + e, zu: "M" + m, path: el("path", { d: kurve(pos["L" + e], pos["Mi" + m]), class: "kante", stroke: "#7fa6d1" }, gK) });
+for (const z of rechts) for (const m of z.quellen) kanten.push({ von: "M" + m, zu: "R" + z.id, path: el("path", { d: kurve(pos["Mo" + m], pos["R" + z.id]), class: "kante", stroke: z.typ === "grenze" ? "#d9665c" : z.typ === "aus" ? "#e0b55a" : "#cfc3a3" }, gK) });
+
+function box(x, yy, w, text, cls, key, info) {
+  const g = el("g", { class: "k " + cls, transform: `translate(${x},${yy})` }, gN);
+  el("rect", { width: w, height: HZ, rx: 4 }, g);
+  el("text", { x: 8, y: 17 }, g).textContent = text;
+  g.onclick = () => {
+    document.querySelectorAll(".k").forEach(n => n.classList.remove("aktiv")); g.classList.add("aktiv");
+    for (const k of kanten) { const an = k.von === key || k.zu === key; k.path.classList.toggle("hell", an); k.path.classList.toggle("dim", !an); }
+    document.getElementById("info").innerHTML = info();
+  };
+}
+links.forEach(n => box(XL, n.y, WL, `${STAATEN[n.s].name}`, "", "L" + n.id, () => infoEntscheidung(n.r, n.s)));
+mitte.forEach(n => box(XM, n.y, WM, MERKMALE[n.id].name.slice(0, 32), MERKMALE[n.id].anzeige ? "m anz" : "m", "M" + n.id, () => infoMerkmal(n.id)));
+rechts.forEach(n => box(XR, n.y, WR, n.label.slice(0, 32), n.typ === "aus" ? "aus" : "", "R" + n.id, () => infoZiel(n)));
+
+/* Info-Texte */
+const wertName = (m, w) => MERKMALE[m].werte[w];
+const wennText = wenn => Object.entries(wenn || {}).map(([m, ws]) => `${MERKMALE[m].name}: ${ws.map(w => wertName(m, w)).join(" oder ")}`).join(" <b>und</b> ") || "immer";
+const setztText = s => Object.entries(s || {}).map(([m, w]) => `${MERKMALE[m].name} → ${wertName(m, w)}`).join(" · ") || "setzt nichts";
+
+function infoEntscheidung(r, s) {
+  const k = RUNDEN[r - 1].staaten[s];
+  let h = `<h2>${STAATEN[s].name} · Runde ${r}</h2>`;
+  h += ["A", "B", "C"].map(b => `<div class="opt"><b>${b}</b>${b === k.historisch ? " (1914)" : ""} ${k.optionen[b].text}<div class="setzt">${setztText(SETZT[`${r}.${s}`]?.[b])}</div></div>`).join("");
+  const vs = VARIANTEN.filter(v => v.runde === r && v.staat === s && Object.values(v.optionen || {}).some(o => o.setzt));
+  if (vs.length) h += `<h3>In Varianten wirkt eine Option anders</h3>` + vs.map(v => `<div class="wenn">wenn ${wennText(v.wenn)}</div>` +
+    Object.entries(v.optionen).filter(([, o]) => o.setzt).map(([b, o]) => `<div class="opt"><b>${b}</b> ${o.text || ""}<div class="setzt">${setztText(o.setzt)}</div></div>`).join("")).join("");
+  return h;
+}
+
+function infoMerkmal(id) {
+  const m = MERKMALE[id];
+  let h = `<h2>${m.name}</h2><table>${Object.entries(m.werte).map(([w, t]) => `<tr><td>${w === m.start ? "Start" : ""}</td><td>${t}</td></tr>`).join("")}</table>`;
+  const z = akte1914(5);
+  h += `<h3>1914 nach jeder Runde</h3><table>${RUNDEN.map(r => `<tr><td>Runde ${r.nr}</td><td>${wertName(id, merkmaleBis(z, r.nr, Infinity)[id])}</td></tr>`).join("")}</table>`;
+  if (m.anzeige) h += `<h3>Anzeige für ${m.anzeige.fuer.map(kurz).join(", ")}: ${m.anzeige.titel}</h3>` + Object.entries(m.anzeige.text).map(([w, t]) => `<p><b>${w}:</b> ${t}</p>`).join("");
+  h += `<h3>Gesetzt von</h3><p>${[...(setzer.get(id) || [])].map(e => { const [r, s] = e.split("."); return `R${r} ${kurz(s)}`; }).join(", ") || "–"}</p>`;
+  return h;
+}
+
+function infoZiel(n) {
+  if (n.typ === "karte") {
+    const [r, s] = n.id.split(".").map((x, i) => i ? x : Number(x));
+    let h = `<h2>${STAATEN[s].name} · Runde ${r}</h2>`;
+    const vs = VARIANTEN.filter(v => v.runde === r && v.staat === s);
+    const ls = LAGE.filter(l => l.runde === r && (l.fuer === "alle" || l.fuer.includes(s)));
+    if (vs.length) h += `<h3>Optionen ändern sich</h3>` + vs.map(v => `<div class="wenn">wenn ${wennText(v.wenn)}${v.auch1914 ? " · auch 1914" : ""}</div>` +
+      Object.entries(v.optionen || {}).map(([b, o]) => `<div class="opt"><b>${b}</b>${(v.kurswechsel || []).includes(b) ? ' <span class="kw">KURSWECHSEL</span>' : ""}${o.text ? " " + o.text : ""}${o.pro ? `<br>Dafür: ${o.pro}` : ""}${o.contra ? `<br>Dagegen: ${o.contra}` : ""}</div>`).join("") +
+      (v.zusatz ? `<div class="opt">Zeitpunkt: ${v.zusatz.wahl.join(" / ")}</div>` : "")).join("");
+    if (ls.length) h += `<h3>Lage</h3>` + ls.map(l => `<div class="wenn">wenn ${wennText(l.wenn)}${l.fuer === "alle" ? " · für alle" : ""}${l.ersetzt ? " · ersetzt den Lagetext" : ""}</div><p>${l.text}</p>`).join("");
+    return h;
+  }
+  if (n.typ === "grenze") {
+    const g = GRENZEN.find(x => `g:${x.titel}` === n.id);
+    return `<h2>Grenze: ${g.titel}</h2><div class="wenn">Runde ${g.runde}, ${STAATEN[g.staat].name}, wenn ${wennText(g.wenn)} → neu wählen: ${g.neu.join(", ")}</div><p>${g.text}</p><p style="font-size:13px;color:#5a5043">Beleg: ${g.beleg}</p>`;
+  }
+  const a = n.id === "ende" ? ENDE : AUSGAENGE.find(x => `a:${x.id}` === n.id);
+  return `<h2>${a.titel}</h2>${a.nachRunde ? `<div class="wenn">nach Runde ${a.nachRunde}, wenn ${wennText(a.wenn)}</div>` : ""}
+    <h3>Konkret, weil …</h3>${a.weil.map(w => `<div class="wenn">${Object.keys(w.wenn).length ? "wenn " + wennText(w.wenn) : "immer"}</div><p>${w.text}</p>`).join("")}
+    ${a.aber ? `<h3>Aber</h3><p>${a.aber}</p>` : ""}<h3>1914</h3><p>${a.war1914}</p>
+    ${a.nachRunde ? `<p style="font-size:13px;color:#5a5043">Danach: Übergang in die Akte 1914 – die übrigen Runden beginnen vom Stand 1914.</p>` : ""}`;
+}
+</script>
+</body>
+</html>

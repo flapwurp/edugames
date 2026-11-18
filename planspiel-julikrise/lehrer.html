@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planspiel Julikrise 1914 – Lehrer-Monitor</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.lehrer{padding:0 18px 18px}
+.steuer{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:6px 18px 12px;color:var(--hell)}
+.steuer .knopf{min-width:140px}
+.raum{font:700 15px var(--sans);letter-spacing:2px;background:rgba(239,230,207,.12);border-radius:6px;padding:8px 12px}
+.raum b{font-size:24px;letter-spacing:6px;margin-left:6px}
+.timer{font:700 28px var(--sans);min-width:90px;text-align:center}
+.timer.ab{color:#ff8a7a}
+.ablauf{display:flex;gap:4px;flex-wrap:wrap}
+.ablauf span{font:600 12px var(--sans);padding:5px 9px;border-radius:12px;background:rgba(239,230,207,.1);color:var(--hell)}
+.ablauf span.jetzt{background:var(--gold);color:#fff}
+.ablauf span.vorbei{opacity:.45}
+.kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:8px 0 14px}
+.kachel{background:linear-gradient(180deg,var(--papier),var(--papier2));border-radius:4px;padding:12px 14px;box-shadow:0 8px 18px rgba(0,0,0,.3);position:relative}
+.kachel .kopfz{display:flex;gap:10px;align-items:center}
+.kachel h3{margin:0;font:400 19px var(--serif)}
+.kachel .status{font:600 14px var(--sans);margin-top:8px}
+.kachel.dran{outline:3px solid var(--gold)}
+.kachel.fertig .status{color:#3b6b3f}
+.kachel .wahl{font:14px/1.4 var(--serif);margin-top:6px}
+.notfall{display:flex;gap:6px;margin-top:8px}
+.notfall button{border:1.5px solid var(--rot);color:var(--rot);background:transparent;border-radius:6px;padding:6px 10px;font:700 13px var(--sans)}
+.modus{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid rgba(239,230,207,.4)}
+.modus button{border:0;background:transparent;color:var(--hell);padding:9px 14px;font:600 14px var(--sans)}
+.modus button.an{background:var(--hell);color:var(--tinte)}
+table{border-collapse:collapse;width:100%;font:14px/1.35 var(--sans)}
+td,th{border-bottom:1px solid var(--linie);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--tinte2)}
+.ja{color:#3b6b3f;font-weight:700}.nein{color:var(--rot);font-weight:700}
+.gross p,.gross li{font-size:20px}
+@media print{body{background:#fff}.steuer,.kopf,.nicht-drucken{display:none!important}.flaeche{box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="lehrer.js"></script>
+</body>
+</html>
