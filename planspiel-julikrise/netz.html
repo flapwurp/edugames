@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planspiel Julikrise – Entscheidungsnetz</title>
+<style>
+body{margin:0;background:#2f3b33;color:#efe6cf;font:15px/1.45 -apple-system,system-ui,"Segoe UI",sans-serif;display:flex;flex-wrap:wrap}
+h1{font:400 22px Georgia,serif;margin:14px 18px 2px;width:100%}
+.legende{margin:0 18px 8px;width:100%;font-size:13px;opacity:.85}
+.legende span{display:inline-block;width:22px;height:3px;vertical-align:middle;margin:0 4px 0 12px}
+#netz{flex:1 1 760px;min-width:0}
+svg{width:100%;height:auto;display:block}
+.knoten rect{fill:#f3ead6;stroke:#cbb991;cursor:pointer}
+.knoten.aktiv rect{stroke:#b48a3c;stroke-width:4}
+.knoten text{fill:#24201a;font:600 14px -apple-system,system-ui,sans-serif;pointer-events:none}
+.chip{font:700 12px -apple-system,system-ui,sans-serif}
+.kante{fill:none;stroke-width:2;opacity:.55}
+.kante.hell{opacity:1;stroke-width:3.5}
+.kante.dim{opacity:.08}
+#info{flex:0 1 420px;background:#f3ead6;color:#24201a;margin:8px 18px 18px;padding:14px 18px;border-radius:3px;max-height:92vh;overflow:auto;font-family:Georgia,serif}
+#info h2{font-weight:400;margin:0 0 8px;font-size:20px}
+#info h3{font:700 12px/1.6 -apple-system,system-ui,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#5a5043;margin:14px 0 4px}
+#info .wenn{font:13px -apple-system,system-ui,sans-serif;color:#2c4a6b;margin:6px 0 2px}
+#info p{margin:2px 0 8px}
+#info .opt{margin:4px 0 8px;padding-left:10px;border-left:3px solid #cbb991}
+#info .kw{color:#9e2b25;font:700 11px -apple-system,system-ui,sans-serif;letter-spacing:1px}
+.ausgang rect{fill:#b48a3c;stroke:#f3ead6}
+.ausgang text{fill:#fff}
+</style>
+</head>
+<body>
+<h1>Entscheidungsnetz – Entwurf</h1>
+<div class="legende">Tippe auf eine Karte oder einen Ausgang.
+  <span style="background:#7fa6d1"></span>verändert Optionen
+  <span style="background:#cfc3a3"></span>ergänzt die Lage
+  <span style="background:#d9665c"></span>Grenze (neu entscheiden)
+  <span style="background:#e0b55a"></span>führt zum Ausgang · gefüllter Buchstabe = 1914</div>
+<div id="netz"></div>
+<div id="info"><h2>Was ist hier zu sehen?</h2><p>Spalten sind die fünf Runden, Zeilen die sechs Tische. Jede Linie führt von einer Entscheidung zu der Karte, die sich dadurch ändert. Unten stehen die frühen Ausgänge.</p></div>
+
+<script type="module">
+import { RUNDEN, STAATEN, TEAMS } from "./content.js";
+import { VARIANTEN, LAGE, GRENZEN, AUSGAENGE } from "./netz.js";
+
+const W = 200, H = 96, X0 = 30, Y0 = 20, DX = 250, DY = 120;
+const pos = (r, s) => { const t = TEAMS.findIndex(t => t.staat[r] === s); return { x: X0 + (r - 1) * DX, y: Y0 + t * DY }; };
+const ausgPos = a => ({ x: X0 + (a.nachRunde - 1) * DX + 25, y: Y0 + 6 * DY + 20 });
+const FARBE = { variante: "#7fa6d1", lage: "#cfc3a3", grenze: "#d9665c", ausgang: "#e0b55a" };
+
+const kanten = [];
+const quelle = k => { const [r, s] = k.split("."); return { r: +r, s }; };
+VARIANTEN.forEach((v, i) => Object.keys(v.wenn).forEach(k => kanten.push({ typ: "variante", von: quelle(k), zu: { r: v.runde, s: v.staat }, i })));
+LAGE.forEach((l, i) => Object.keys(l.wenn).forEach(k => {
+  const ziele = l.fuer === "alle" ? [] : l.fuer;
+  ziele.forEach(s => kanten.push({ typ: "lage", von: quelle(k), zu: { r: l.runde, s }, i }));
+}));
+GRENZEN.forEach((g, i) => kanten.push({ typ: "grenze", von: { r: g.runde, s: g.staat }, zu: { r: g.runde, s: g.staat }, i }));
+AUSGAENGE.forEach((a, i) => Object.keys(a.wenn).forEach(k => kanten.push({ typ: "ausgang", von: quelle(k), zu: { ausgang: i }, i })));
+
+const ns = "http://www.w3.org/2000/svg";
+const el = (n, a = {}, p) => { const e = document.createElementNS(ns, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); p && p.append(e); return e; };
+const svg = el("svg", { viewBox: `0 0 ${X0 + 4 * DX + W + 30} ${Y0 + 6 * DY + 100}` });
+document.getElementById("netz").append(svg);
+const gK = el("g", {}, svg), gN = el("g", {}, svg);
+
+const pfade = kanten.map(k => {
+  const a = pos(k.von.r, k.von.s);
+  let d;
+  if (k.typ === "grenze") { d = `M${a.x + W - 30},${a.y} c 20,-26 50,-6 30,18`; }
+  else {
+    const b = k.zu.ausgang !== undefined ? ausgPos(AUSGAENGE[k.zu.ausgang]) : pos(k.zu.r, k.zu.s);
+    const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + (k.zu.ausgang !== undefined ? 0 : H / 2);
+    const gleich = k.zu.r === k.von.r;
+    d = gleich ? `M${a.x + W / 2},${a.y + (b.y > a.y ? H : 0)} C ${a.x + W + 40},${(a.y + b.y) / 2 + H / 2} ${b.x + W + 40},${(a.y + b.y) / 2 + H / 2} ${b.x + W / 2},${b.y + (b.y > a.y ? 0 : H)}`
+               : `M${x1},${y1} C ${x1 + 60},${y1} ${x2 - 60},${y2} ${x2},${y2}`;
+  }
+  return el("path", { d, class: "kante", stroke: FARBE[k.typ] }, gK);
+});
+
+function knoten(r, s) {
+  const { x, y } = pos(r, s);
+  const g = el("g", { class: "knoten", transform: `translate(${x},${y})` }, gN);
+  el("rect", { width: W, height: H, rx: 4 }, g);
+  el("text", { x: 12, y: 24 }, g).textContent = `${STAATEN[s].name}`;
+  el("text", { x: 12, y: 42, style: "font-weight:400;font-size:12px" }, g).textContent = `Runde ${r} · ${RUNDEN[r - 1].titel}`;
+  const hist = RUNDEN[r - 1].staaten[s].historisch;
+  ["A", "B", "C"].forEach((b, i) => {
+    const c = el("circle", { cx: 26 + i * 34, cy: 70, r: 13, fill: b === hist ? "#b48a3c" : "none", stroke: "#5a5043" }, g);
+    el("text", { x: 26 + i * 34, y: 74.5, "text-anchor": "middle", class: "chip", fill: b === hist ? "#fff" : "#5a5043" }, g).textContent = b;
+  });
+  const anz = kanten.filter(k => k.zu.r === r && k.zu.s === s).length;
+  if (anz) el("text", { x: W - 12, y: 74, "text-anchor": "end", style: "font-weight:400;font-size:12px;fill:#5a5043" }, g).textContent = `${anz}× abhängig`;
+  g.onclick = () => zeige(g, k => (k.zu.r === r && k.zu.s === s) || (k.von.r === r && k.von.s === s), () => infoKarte(r, s));
+}
+for (const rd of RUNDEN) for (const s of Object.keys(rd.staaten)) knoten(rd.nr, s);
+
+AUSGAENGE.forEach((a, i) => {
+  const { x, y } = ausgPos(a);
+  const g = el("g", { class: "knoten ausgang", transform: `translate(${x},${y})` }, gN);
+  el("rect", { width: W + 40, height: 48, rx: 24 }, g);
+  el("text", { x: 18, y: 29, style: "font-size:13px" }, g).textContent = `Ausgang nach Runde ${a.nachRunde}`;
+  g.onclick = () => zeige(g, k => k.zu.ausgang === i, () => infoAusgang(a));
+});
+
+function zeige(g, filter, info) {
+  document.querySelectorAll(".knoten").forEach(n => n.classList.remove("aktiv"));
+  g.classList.add("aktiv");
+  kanten.forEach((k, i) => { const an = filter(k); pfade[i].classList.toggle("hell", an); pfade[i].classList.toggle("dim", !an); });
+  document.getElementById("info").innerHTML = info();
+}
+
+const opt = (k) => { const [r, s, extra] = k.split("."); return extra ? `${STAATEN[s].kurz} R${r} Zeitpunkt` : `${STAATEN[s].kurz} R${r}`; };
+const wennText = (wenn) => Object.entries(wenn).map(([k, w]) => {
+  const [r, s, extra] = k.split(".");
+  if (extra) return `${opt(k)}: ${w.join(" / ")}`;
+  return `${opt(k)} = ${w.map(b => `${b} („${RUNDEN[r - 1].staaten[s].optionen[b].text}“)`).join(" oder ")}`;
+}).join(" <b>und</b> ") || "immer";
+
+function infoKarte(r, s) {
+  let h = `<h2>${STAATEN[s].name} · Runde ${r}</h2>`;
+  const vs = VARIANTEN.filter(v => v.runde === r && v.staat === s);
+  const ls = LAGE.filter(l => l.runde === r && (l.fuer === "alle" || l.fuer.includes(s)));
+  const gs = GRENZEN.filter(g => g.runde === r && g.staat === s);
+  if (!vs.length && !ls.length && !gs.length) h += `<p>Diese Karte bleibt immer wie auf Papier.</p>`;
+  if (vs.length) h += `<h3>Optionen ändern sich</h3>` + vs.map(v => `<div class="wenn">wenn ${wennText(v.wenn)}${v.auch1914 ? " · auch 1914" : ""}</div>` +
+    Object.entries(v.optionen || {}).map(([b, o]) => `<div class="opt"><b>${b}</b>${(v.kurswechsel || []).includes(b) ? ' <span class="kw">KURSWECHSEL</span>' : ""}${o.text ? " " + o.text : ""}${o.pro ? `<br>Dafür: ${o.pro}` : ""}${o.contra ? `<br>Dagegen: ${o.contra}` : ""}</div>`).join("") +
+    (v.zusatz ? `<div class="opt">Zeitpunkt: ${v.zusatz.wahl.join(" / ")}</div>` : "")).join("");
+  if (ls.length) h += `<h3>Lage</h3>` + ls.map(l => `<div class="wenn">wenn ${wennText(l.wenn)}${l.fuer === "alle" ? " · für alle" : ""}${l.ersetzt ? " · ersetzt den Lagetext" : ""}</div><p>${l.text}</p>`).join("");
+  if (gs.length) h += `<h3>Grenze</h3>` + gs.map(g => `<div class="wenn">wenn ${wennText(g.wenn)} → neu wählen: ${g.neu.join(", ")}</div><p><b>${g.titel}.</b> ${g.text}</p><p style="font-size:13px;color:#5a5043">Beleg: ${g.beleg}</p>`).join("");
+  return h;
+}
+
+function infoAusgang(a) {
+  return `<h2>${a.titel}</h2><div class="wenn">nach Runde ${a.nachRunde}, wenn ${wennText(a.wenn)}</div>
+    <h3>Konkret, weil …</h3>${a.weil.map(w => `<div class="wenn">${Object.keys(w.wenn).length ? "wenn " + wennText(w.wenn) : "immer"}</div><p>${w.text}</p>`).join("")}
+    <h3>Aber</h3><p>${a.aber}</p><h3>1914</h3><p>${a.war1914}</p>
+    <p style="font-size:13px;color:#5a5043">Danach: Übergang in die Akte 1914 – die übrigen Runden beginnen vom Stand 1914.</p>`;
+}
+</script>
+</body>
+</html>

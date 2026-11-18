@@ -22,7 +22,12 @@ Grenzen** sowie **beabsichtigten und unbeabsichtigten Folgen** beurteilen
 - **Dekonstruktion:** Die Reflexion im Unterricht reicht vorerst. Eine Seite „Wo das Spiel vereinfacht“ kann später
   am Ende der Auswertung ergänzt werden.
 - **Rahmen:** 1:1-iPads, Laptop an der Tafel. Ein eigener WLAN-Test ist nicht nötig.
-- **Grafik:** sehr ansprechend, wichtig.
+- **Grafik:** sehr ansprechend, wichtig. Stilprobe „Kabinettstisch“ gefällt (18.11.). Mehr mit Bildern arbeiten:
+  historische Flagge je Delegation in der Kopfzeile, gemeinfreie historische Bilder zur Lage jeder Runde.
+- **Früher Ausgang:** angekündigter Übergang in die „Akte 1914“. Vorher nennt die Ausgangskarte **konkret**, an welcher
+  Stelle und durch welche Entscheidung der Krieg (vorerst) verhindert wurde.
+- **Freitext in Noten:** streng begrenzt, etwa so lang wie das Telegramm in der Stilprobe (höchstens 100 Zeichen).
+- **Framing Controls:** viel mehr davon; Stimmungsanzeigen in drei Stufen sind gut.
 - **Grundidee bleibt:** gelenktes Spiel in fünf Runden, keine Kämpfe, Ende mit den Kriegserklärungen Anfang August 1914.
 
 ## Das Problem aus der Erprobung
@@ -68,8 +73,14 @@ geht dann – **als vorher angekündigte Regel** – in die „Akte 1914“ übe
 gespielt. Das Zurücksetzen passiert also höchstens einmal, an einer klar erkennbaren Stelle, und der abweichende Weg
 bleibt in der Auswertung sichtbar.
 
-**Offen für Rob:** Ist dieser eine angekündigte Übergang akzeptabel, oder soll ein früher Ausgang das Spiel beenden
-(dann Restzeit für Reflexion)?
+Von Rob bestätigt (18.11.). Die Ausgangskarte setzt sich aus Sätzen zusammen, die genau zu den Entscheidungen der
+Klasse passen („… weil Österreich-Ungarn Serbiens Antwort angenommen hat“), dazu „Aber …“ (was offen bleibt) und
+„1914 …“ (was tatsächlich geschah). Umsetzung: `AUSGAENGE` in `netz.js`.
+
+**Umsetzung des Netzes:** `netz.js` (Daten, editierbar wie `content.js`), `logik.js` (wertet aus), Ansicht `netz.html`
+(Netz zum Antippen), Tests in `tests/planspiel-julikrise-netz.test.js`: Bedingungen nur auf bereits gefallene
+Entscheidungen, auf dem Weg von 1914 bleibt jede Karte wie auf Papier, jede Karte hat in jeder Lage drei vollständige
+Optionen, jeder Ausgang ist erreichbar und nennt immer einen konkreten Grund.
 
 ### 4. Framing Controls (Lenkung ohne Vorgabe)
 Grundsatz: Die Lenkung kommt aus **historisch belegten Kräften**, nicht aus einer Spielleitung, die „richtig“ sagt.
@@ -85,6 +96,24 @@ gekennzeichnet sein. Erfundene Zitate werden nicht als Quellen ausgegeben.
 | **Zeitdruck** | Uhr und Kalender laufen, Noten kommen verspätet | Ultimatum 48 Stunden; Schlieffen-Plan |
 | **Ungleiches Wissen** | Jede Delegation sieht nur, was ihr Staat wusste | Entente erfährt nichts vom Blankoscheck |
 | **Folgenkarte** | Abweichung bekommt eine Folge, gemessen an den eigenen Interessen | „Was würde das für euer Ansehen als Großmacht bedeuten?“ |
+
+**Weitere Ideen (Sammlung, noch auszuarbeiten):**
+- *Stimmungsanzeigen (drei Stufen, mit Wortbegründung):* Serbien „Rückhalt der Regierung“ (Wahlkampf, Nationalisten);
+  Ö-U „Ansehen als Großmacht“ und „Geduld der Generäle“; Russland „Ansehen des Zaren“ (panslawistische Presse, Streiks);
+  Deutschland „Vertrauen Wiens“; Frankreich „Festigkeit des Bündnisses“; GB „Kabinett geeint/gespalten“, „Irland“.
+- *Stimmen ohne Delegation:* Monarchen (Franz Joseph, Wilhelm II., Nikolaus II.), Generalstäbe (Conrad, Moltke,
+  Januschkewitsch), Kriegsminister, Botschafterberichte (Lichnowsky aus London, Szögyény aus Berlin), Parlament,
+  Zeitungsschlagzeilen, Börse (Kurse fallen Ende Juli).
+- *Erinnerungskarten an Präzedenzfälle:* „1908/09: Russland wich zurück, weil Berlin hinter Wien stand“, „1912/13:
+  Konferenz in London“, „Marokko 1911“. So argumentierten die Regierenden selbst.
+- *Unser Wort:* Öffentliche Erklärungen und Zusagen binden; spätere Abweichung erscheint als „Kurswechsel“
+  (schon im Netz angelegt).
+- *Uhren:* Fristen sichtbar (48 Stunden), Tage bis zur Kampfbereitschaft je Armee, Ernteurlaub, Kaiser auf Nordlandreise
+  (Antwort aus Berlin kommt später), Poincaré auf See (schlecht erreichbar).
+- *Unsicheres Wissen:* Gerüchte als „unbestätigt“ markiert; Missverständnisse (Lichnowsky-Telegramm 1. August).
+- *Stimmen im Kabinett:* zwei Positionen innerhalb der eigenen Regierung (Bethmann Hollweg gegen Moltke, Tisza gegen
+  Conrad, Grey gegen die Kriegsgegner im Kabinett).
+- *Reihenfolge und Sichtbarkeit:* wer zuerst entscheidet, wer wessen Entscheidung sieht.
 
 **Zum Beispiel Serbien (Wahlkampf):** Meinungsumfragen gab es 1914 noch nicht; im Spiel wären sie ein Anachronismus.
 Besser: Schlagzeilen und Berichte aus dem Wahlkampf. Die Skupština war im Juni 1914 aufgelöst worden, die Wahl stand
@@ -102,10 +131,15 @@ Automatisch: je Runde Wahl, Begründung, Prognose, was geheim war, und „Hier s
 weiter“. **Keine Quote „wie 1914“.**
 
 ## Grafik (Stilprobe in `stilprobe.html`)
-Richtung „Kabinettstisch 1914“: dunkelgrüner Tisch, Papierakten, roter Stempel „Geheim“, Telegrammstreifen,
+Richtung „Kabinettstisch 1914“ (von Rob angenommen): dunkelgrüner Tisch, Papierakten, roter Stempel „Geheim“, Telegrammstreifen,
 Siegel der Delegation, Kalenderband 28. Juni – 4. August. Eigene Grafik, keine Vorlagen aus anderen Spielen.
 Geplant: Europakarte 1914 als eigene SVG-Zeichnung, Telegrammlinien zwischen Hauptstädten, Mobilmachungsketten als
-Animation, Siegel je Staat (stilisiert, keine echten Hoheitszeichen), passende Schriften (OFL) in `shared/fonts/`.
+Animation, passende Schriften (OFL) in `shared/fonts/`.
+- **Flaggen:** historische Flaggen von 1914 als eigene SVG-Zeichnungen in der Kopfzeile (Deutsches Reich
+  schwarz-weiß-rot, Österreich-Ungarn, Serbien, Belgien, Russland, Frankreich, Großbritannien).
+- **Bilder zur Lage:** je Runde ein gemeinfreies historisches Foto oder Plakat (z. B. Festnahme in Sarajevo,
+  Poincaré in St. Petersburg, Mobilmachungsaufrufe, Menschenmengen August 1914). Herkunft und Lizenz in `NACHWEISE.md`;
+  Bildunterschrift mit Datum, Ort und Hinweis, ob es eine Quelle (zeitgenössisches Foto) ist.
 
 ## Roadmap (nach Aufgaben)
 Jeder Block endet mit etwas, das Rob prüfen kann. Die Papierfassung bleibt Notfallplan, bis das Spiel einmal
@@ -119,14 +153,15 @@ erfolgreich gelaufen ist.
 - [ ] Rob prüft `content.js` gegen seine PDFs
 
 ### B. Entscheidungsnetz (Inhalt)
-- [ ] Merkmale festlegen (Liste oben) und je Option eintragen, welche Merkmale sie setzt
-- [ ] Je Runde und Staat: Welche Merkmale ändern Lage und Optionen? Varianten schreiben
-- [ ] Ausgänge festlegen und Ausgangskarten schreiben
-- [ ] Prüfwerkzeug: alle erreichbaren Kombinationen durchspielen, Tabelle „was sieht wer wann“ zum Gegenlesen
-- [ ] Rob liest gegen
+- [x] Entwurf in `netz.js`: Varianten, Lagebausteine, Grenzen, drei frühe Ausgänge, Ende; Ansicht `netz.html`; Tests
+- [ ] Rob liest gegen (in `netz.html` Karte antippen)
+- [ ] Lücken schließen: Weg „Deutschland wartet in Runde 4 trotz russischer Mobilmachung“, Varianten für Runde 5
+      nach abweichendem Runde-4-Verlauf, Wirkung der Noten (z. B. „Halt in Belgrad“) auf die Karten
+- [ ] Belege der Grenzen prüfen (Feld `beleg`)
 
 ### C. Framing Controls (Inhalt)
-- [ ] Je Runde und Staat ein bis zwei Anstöße auswählen (Stimmen, Stimmung, Grenzen, Interessen-Marken)
+- [ ] Sammlung oben ausarbeiten und deutlich erweitern (Rob: „viel mehr“)
+- [ ] Je Runde und Staat zwei bis drei Anstöße auswählen (Stimmen, Stimmung, Grenzen, Interessen-Marken)
 - [ ] Stimmungsanzeigen für Serbien, Russland, Großbritannien, Österreich-Ungarn (drei Stufen, Wortbegründung)
 - [ ] Ereignisse für harte Grenzen (Teilmobilmachung, Krieg nur im Osten, Angriff ohne bereite Armee)
 - [ ] Folgenkarten für Abweichungen
@@ -138,7 +173,9 @@ erfolgreich gelaufen ist.
 - [ ] Bildnachweise in `NACHWEISE.md`
 
 ### E. Grafik
-- [ ] Rob gibt die Stilrichtung frei (Stilprobe)
+- [x] Rob gibt die Stilrichtung frei (Stilprobe)
+- [ ] Flaggen 1914 als SVG
+- [ ] Gemeinfreie Bilder zur Lage suchen (Claude schlägt vor, Rob wählt), `NACHWEISE.md`
 - [ ] Schriften auswählen und in `shared/fonts/` ablegen
 - [ ] Europakarte 1914 (SVG) mit Hauptstädten, Bündnissen, Belgien
 - [ ] Siegel, Stempel, Telegramm, Akte, Kalender als Bausteine
@@ -184,10 +221,7 @@ erfolgreich gelaufen ist.
 Reihenfolge: B, C und E zuerst (brauchen Robs Urteil), F parallel. G und H, sobald B steht. I und J zuletzt.
 
 ## Was von Rob noch gebraucht wird
-1. Entscheidungsnetz: Merkmale und Ausgänge so in Ordnung? Ein angekündigter Übergang in die „Akte 1914“ oder
-   Spielende beim frühen Ausgang?
-2. Framing Controls: eigene Ideen je Staat (wie Serbien/Wahlkampf), und ob Stimmungsanzeigen in drei Stufen passen.
-3. Stilprobe: Richtung ja/nein, was fehlt.
-4. Freitext in Noten: wie lang höchstens?
-5. Prüfen, ob `content.js` mit den PDFs übereinstimmt (es fehlen die ersten drei Seiten des Spielleitungsskripts,
-   die Regeln/Phasen – bei Bedarf nachreichen).
+1. Entscheidungsnetz in `netz.html` gegenlesen: Stimmen die Varianten, Grenzen und Ausgangstexte?
+2. Ideen für weitere Framing Controls je Staat.
+3. Bilder: Soll Claude Kandidaten auf Wikimedia Commons heraussuchen?
+4. Erste drei Seiten des Spielleitungsskripts (Regeln/Phasen), falls vorhanden.
