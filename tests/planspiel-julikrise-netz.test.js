@@ -31,7 +31,7 @@ test("Weg 1914: alle Karten wie auf Papier, keine Grenze, kein früher Ausgang, 
     for (const [s, k] of Object.entries(r.staaten)) {
       const kk = karte(r.nr, s, z);
       if (!kk.varianten.some(i => VARIANTEN[i].auch1914)) for (const b of ABC) {
-        const { setzt, ...ohne } = kk.optionen[b];
+        const { setzt, richtung, ...ohne } = kk.optionen[b];
         assert.deepEqual(ohne, k.optionen[b], `${r.nr}.${s} ${b}`);
       }
       assert.equal(grenze(r.nr, s, z), null, `${r.nr}.${s}`);

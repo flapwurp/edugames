@@ -2,7 +2,7 @@
    zustand = Entscheidungen der Klasse, z. B. { "1.d": "C", "1.oeu": "B", "2.oeu.wann": "nach dem Staatsbesuch" }.
    Daraus werden Welle für Welle die Merkmale berechnet (netz.js). */
 import { RUNDEN } from "./content.js";
-import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE, KIPPPUNKTE } from "./netz.js";
+import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE, KIPPPUNKTE, RICHTUNG } from "./netz.js";
 import { STIMMEN, ERINNERUNGEN, UHREN } from "./framing.js";
 
 export const passt = (wenn = {}, m) => Object.entries(wenn).every(([k, werte]) => werte.includes(m[k]));
@@ -13,7 +13,7 @@ const wellenIndex = (runde, staat) => RUNDEN[runde - 1].wellen.findIndex(w => w.
 export function karteAus(runde, staat, m) {
   const basis = RUNDEN[runde - 1].staaten[staat];
   const optionen = {};
-  for (const b of ["A", "B", "C"]) optionen[b] = { ...basis.optionen[b], setzt: SETZT[`${runde}.${staat}`]?.[b] || {} };
+  for (const b of ["A", "B", "C"]) optionen[b] = { ...basis.optionen[b], setzt: SETZT[`${runde}.${staat}`]?.[b] || {}, richtung: RICHTUNG[`${runde}.${staat}`]?.[b] };
   const k = { optionen, kurswechsel: [], zusatz: basis.zusatz ? { ...basis.zusatz } : null, varianten: [] };
   VARIANTEN.forEach((v, i) => {
     if (v.runde !== runde || v.staat !== staat || !passt(v.wenn, m)) return;

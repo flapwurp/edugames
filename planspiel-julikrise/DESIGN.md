@@ -164,7 +164,43 @@ es vorzuschreiben. Echte Schlagzeilen nur mit Beleg; sonst als Darstellung geken
 Automatisch: je Runde Wahl, Begründung, Prognose, was geheim war, und „Hier seid ihr abgebogen – hier ging es 1914
 weiter“. **Keine Quote „wie 1914“.**
 
+## Spielkern (`spiel.js`, 18.11.)
+Ereignisbasiert: Der Spielstand entsteht aus einer Liste kleiner Aktionen (beitreten, stimme, wann, begruendung,
+prognose, beschliessen, note, antwort; Lehrkraft: weiter, lehrerWahl, aktenOeffnen, entfernen). Gleiche Aktionen ergeben
+überall denselben Stand. `sicht(spiel, team)` liefert genau das, was eine Delegation sehen darf; `lehrerSicht` alles;
+`auswertung` die Übersicht „Unsere Entscheidungen und 1914“ mit Prognosen (getroffen ja/nein). Tests:
+`tests/planspiel-julikrise-spiel.test.js`.
+
+Detailentscheidungen (Claude, im Rahmen der Freigabe):
+- **Ablauf je Runde:** Lage → Fenster (Diplomatie) vor Welle 1 immer, vor weiteren Wellen nur, wenn dort Noten
+  vorgesehen sind → Welle(n) → Auflösung → ggf. Ausgang. Nur die Lehrkraft schaltet weiter. Eine Welle endet erst,
+  wenn alle Delegationen der Welle beschlossen haben; sonst entscheidet die Lehrkraft im Notfall (`lehrerWahl`).
+- **Kabinettsbeschluss:** Alle Geräte der Delegation stimmen für dieselbe Option, die Verkündung („Wir wählen …,
+  weil …“, mindestens 10 Zeichen) steht. Begründungsfelder höchstens 300 Zeichen.
+- **Prognose:** vor dem eigenen Beschluss, für höchstens zwei Staaten, die noch nicht entschieden haben; vorhergesagt
+  wird die **Richtung** (lenkt ein / wartet ab / verschärft), nicht der Buchstabe – so bleibt die fremde Karte
+  geheim. Jede Option hat dafür eine Richtung (`RICHTUNG` in `netz.js`).
+- **Noten:** nur in der Diplomatiephase; Vorlagen aus dem Papiermaterial (Pflicht/Vorschlag) je einmal, dazu eine
+  freie Note pro Runde; höchstens 100 Zeichen; Antwort je Empfänger einmal. Private Noten sehen nur Absender und
+  Empfänger; öffentliche Erklärungen alle.
+- **Grenzen** greifen einmal pro Entscheidung; die Neuentscheidung ist endgültig.
+- **Geheime Entscheidungen** (`GEHEIM` in `netz.js`, Entwurf – mit Robs Liste aus dem Tafel-Tool abgleichen) werden
+  nach der Welle nicht verkündet, nur die genannten Staaten erfahren sie; alle anderen in den Geheimakten.
+- **Mehrere Ausgänge möglich:** Nach einem Ausgang geht es mit der Akte 1914 weiter; biegt die Klasse danach wieder
+  ab, gibt es einen weiteren Ausgang mit eigener Karte. Jede Weiche, die die Klasse genommen hat, bleibt im Verlauf.
+
+**Netz und Geheimhaltung (Entscheidung für Block F, Verbindung):** Der **Lehrer-Laptop ist die einzige Stelle mit dem
+vollen Spielstand.** Die iPads schicken ihre Aktionen nur an den Laptop; der Laptop schickt jeder Delegation nur ihre
+`sicht`. Gründe: (1) Geheimes (Blankoscheck, private Noten) erreicht fremde Geräte gar nicht erst – auch nicht über die
+Entwicklerwerkzeuge des Browsers. (2) Nachrichtenmenge: Eine realistische Partie hat rund 540 Aktionen. Würde jede an
+alle 26 Geräte gehen, wären es in einer dichten Welle etwa 70 Nachrichten/s (Grenze des Gratis-Kontingents: 100/s).
+Über den Laptop sind es etwa 7 Nachrichten pro Aktion, in der Spitze unter 20/s. Der Laptop speichert die
+Aktionsliste in `sessionStorage` und kann nach dem Neuladen alles mit `nachspielen` wiederherstellen.
+
 ## Grafik (Stilprobe in `stilprobe.html`)
+Vorschau ohne Webserver: `python3 scripts/einzeldatei.py planspiel-julikrise/galerie.html ziel.html` bündelt eine Seite
+mit ihren Modulen zu einer Datei, die per Doppelklick läuft (Browser laden Module nicht aus lokalen Dateien).
+
 Richtung „Kabinettstisch 1914“ (von Rob angenommen): dunkelgrüner Tisch, Papierakten, roter Stempel „Geheim“, Telegrammstreifen,
 Siegel der Delegation, Kalenderband 28. Juni – 4. August. Eigene Grafik, keine Vorlagen aus anderen Spielen.
 Geplant: Europakarte 1914 als eigene SVG-Zeichnung, Telegrammlinien zwischen Hauptstädten, Mobilmachungsketten als
@@ -236,12 +272,10 @@ erfolgreich gelaufen ist.
 
 ### F. Technik
 - [x] `logik.js` Teil Netz: Varianten, Lage, Grenzen, Ausgänge, Akte 1914 (mit Tests)
-- [ ] `logik.js` ohne DOM, Rest: Runden, Phasen, Wellen, Merkmale, Varianten, Ausgänge, Sichtbarkeit, Kabinettsbeschluss
-- [ ] Tests: jede Runde durchspielbar, Geheimes erreicht nie fremde Delegationen, immer drei Optionen,
-      Kabinettsbeschluss nur bei Einigkeit, Ausgänge erreichbar
-- [ ] Verbindung über `shared/sync.js` (Supabase Realtime, aufbauend auf `labor/08-klasse/`): Raumcode,
+- [x] Spielkern `spiel.js`: Phasen, Wellen, Kabinettsbeschluss, Prognosen, Noten, Grenzen, Ausgänge, Sichtbarkeit, Notfall, Auswertung (12 Tests, 300 Zufallspartien)
+- [x] Nachrichtenmenge berechnet → Lehrer-Laptop als einzige Instanz mit vollem Stand (siehe „Spielkern“)
+- [ ] Verbindung über `shared/sync.js` (Supabase Realtime, aufbauend auf `labor/08-klasse/`; Laptop als Instanz, je Delegation ein Kanal): Raumcode,
       Delegation wählen, Wiederverbinden nach Neuladen, Lehrer-Laptop als maßgeblicher Stand
-- [ ] Nachrichtenmenge gegen das Kontingent prüfen (100 Nachrichten/s): nur Ereignisse, keine Dauerströme
 - [ ] Simulation mit 30 Testgeräten in Node
 - [ ] Notfall: Lehrkraft kann eine Wahl am Laptop eintragen
 

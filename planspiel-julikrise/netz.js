@@ -196,11 +196,11 @@ export const VARIANTEN = [
     optionen: {
       A: { text: "Die Beratung abbrechen und doch ein Ultimatum stellen, das tief in Serbiens Eigenständigkeit eingreift.", pro: "Wir handeln selbst, statt andere entscheiden zu lassen.", contra: "Wir stehen vor Europa als wortbrüchig da." },
       B: { text: "Das Ergebnis der Beratung der Großmächte abwarten.", pro: "Ein großer Krieg wird unwahrscheinlich.", contra: "Andere entscheiden über unseren Streit – auch Russland redet mit.",
-           setzt: { ultimatum: "keins", wiensKurs: "grossmaechte", ansehenWien: "schwach" } } } },
+           setzt: { ultimatum: "keins", wiensKurs: "grossmaechte", ansehenWien: "schwach" }, richtung: "ab" } } },
   { runde: 2, staat: "oeu", wenn: { wiensKurs: ["ermittlung"] },
     optionen: {
       B: { text: "Die gemeinsame Ermittlung fortsetzen und abwarten.", pro: "Die Täter werden gefunden, ohne dass es Krieg gibt.", contra: "Serbien kann die Ermittlungen verschleppen; unsere Generäle verlieren die Geduld.",
-           setzt: { ultimatum: "keins", wiensKurs: "ermittlung", ansehenWien: "schwach" } } } },
+           setzt: { ultimatum: "keins", wiensKurs: "ermittlung", ansehenWien: "schwach" }, richtung: "ab" } } },
   { runde: 2, staat: "oeu", wenn: { wiensKurs: ["ermittlung"], serbienHaltung: ["ermittelt"] },
     optionen: { B: { pro: "Serbien hat schon Verdächtige festgenommen – die Ermittlung kommt voran." } } },
   { runde: 2, staat: "oeu", wenn: { staatsbesuch: ["abgesagt"] },
@@ -248,9 +248,10 @@ export const VARIANTEN = [
     optionen: { C: { contra: "Paris drängt zur Zurückhaltung – ohne Frankreich sind wir gegen Deutschland zu schwach." } } },
   { runde: 4, staat: "d", wenn: { mobRussland: ["keine"] },
     optionen: {
-      A: { text: "Russland auffordern, seine Kriegsvorbereitungen einzustellen.", pro: "Wir zeigen Stärke, ohne selbst mobilzumachen.", contra: "Russland könnte das als Drohung sehen.", setzt: {} },
+      A: { text: "Russland auffordern, seine Kriegsvorbereitungen einzustellen.", pro: "Wir zeigen Stärke, ohne selbst mobilzumachen.", contra: "Russland könnte das als Drohung sehen.", setzt: {}, richtung: "hart" },
       B: { text: "Wien drängen, in Belgrad anzuhalten und zu verhandeln.", pro: "Der Krieg bleibt vielleicht auf den Balkan begrenzt.", contra: "Wien könnte sich im Stich gelassen fühlen.",
-           setzt: { deutscheLinie: "maessigung" } } } },
+           setzt: { deutscheLinie: "maessigung" }, richtung: "ein" },
+      C: { richtung: "ab" } } },
   { runde: 4, staat: "gb", wenn: { frankreichAuftreten: ["mobil"] },
     optionen: { B: { contra: "Frankreich hat zuerst mobilgemacht – das Parlament wird uns kaum folgen." } } },
   { runde: 4, staat: "gb", wenn: { frankreichAuftreten: ["defensiv"] }, auch1914: true,
@@ -264,8 +265,8 @@ export const VARIANTEN = [
   { runde: 5, staat: "bel", wenn: { westen: ["keinAngriff", "direkt"] },
     optionen: {
       A: { text: "Neutral bleiben und abwarten.", pro: "Wir halten uns aus dem Krieg heraus.", contra: "Wir wissen nicht, ob Deutschland seine Pläne ändert.", setzt: { belgien: "neutral" } },
-      B: { text: "Frankreich und England um eine Garantie bitten.", pro: "Wir hätten mächtige Beschützer.", contra: "Deutschland könnte das als Parteinahme sehen.", setzt: { belgien: "anlehnung" } },
-      C: { text: "Die Armee an die Grenzen schicken und neutral bleiben.", pro: "Wir zeigen allen: Wir verteidigen unser Land.", contra: "Unsere kleine Armee wird teuer – und kann kaum bestehen.", setzt: { belgien: "bewaffnet" } } } },
+      B: { text: "Frankreich und England um eine Garantie bitten.", pro: "Wir hätten mächtige Beschützer.", contra: "Deutschland könnte das als Parteinahme sehen.", setzt: { belgien: "anlehnung" }, richtung: "ab" },
+      C: { text: "Die Armee an die Grenzen schicken und neutral bleiben.", pro: "Wir zeigen allen: Wir verteidigen unser Land.", contra: "Unsere kleine Armee wird teuer – und kann kaum bestehen.", setzt: { belgien: "bewaffnet" }, richtung: "hart" } } },
   { runde: 5, staat: "gb", wenn: { westen: ["keinAngriff", "direkt"] },
     optionen: { A: { text: "Frankreich beistehen und Deutschland ein Ultimatum stellen.", contra: "Belgien wurde nicht angegriffen – das Parlament hat keinen klaren Grund." } } },
   { runde: 5, staat: "gb", wenn: { belgien: ["durchlass"] },
@@ -366,4 +367,33 @@ export const ENDE = {
     { wenn: { englandHaltung: ["krieg"], westen: ["durchBelgien"], belgien: ["zoegert", "durchlass"] }, text: "England tritt in den Krieg ein, weil Deutschland Belgiens Neutralität verletzt." }
   ],
   war1914: "Am 4. August 1914 marschierten deutsche Truppen in Belgien ein. England erklärte Deutschland am Abend den Krieg."
+};
+
+/* ---------- Für Prognose und Auswertung ----------
+   RICHTUNG: wohin eine Option zielt. Die Delegationen sagen vor ihrer Entscheidung voraus, in welche Richtung
+   ein anderer Staat gehen wird (ohne dessen Karte zu sehen). Eine Variante kann mit „richtung“ abweichen.
+     ein = lenkt ein / deeskaliert · ab = wartet ab / hält sich zurück · hart = verschärft */
+export const RICHTUNGEN = { ein: "lenkt ein", ab: "wartet ab", hart: "verschärft" };
+export const RICHTUNG = {
+  "1.oeu": { A: "ein", B: "hart", C: "ein" }, "1.d": { A: "ein", B: "ab", C: "hart" }, "1.srb": { A: "ab", B: "ein", C: "hart" },
+  "1.r": { A: "ein", B: "hart", C: "ab" }, "1.f": { A: "ab", B: "hart", C: "ein" }, "1.gb": { A: "ein", B: "ein", C: "ab" },
+  "2.oeu": { A: "hart", B: "hart", C: "ein" }, "2.d": { A: "hart", B: "ein", C: "hart" }, "2.srb": { A: "ein", B: "ab", C: "hart" },
+  "2.r": { A: "ein", B: "hart", C: "hart" }, "2.f": { A: "hart", B: "ab", C: "ein" }, "2.gb": { A: "ab", B: "ab", C: "ein" },
+  "3.srb": { A: "ein", B: "hart", C: "ein" }, "3.r": { A: "ein", B: "ein", C: "hart" }, "3.f": { A: "hart", B: "ein", C: "ein" },
+  "3.gb": { A: "ab", B: "hart", C: "ein" }, "3.oeu": { A: "ein", B: "hart", C: "ein" }, "3.d": { A: "hart", B: "ein", C: "hart" },
+  "4.oeu": { A: "ein", B: "hart", C: "ab" }, "4.bel": { A: "ein", B: "ab", C: "hart" }, "4.r": { A: "ab", B: "ein", C: "hart" },
+  "4.f": { A: "ein", B: "ab", C: "hart" }, "4.d": { A: "hart", B: "hart", C: "ein" }, "4.gb": { A: "ab", B: "hart", C: "ein" },
+  "5.d": { A: "hart", B: "ab", C: "hart" }, "5.f": { A: "ein", B: "ab", C: "hart" }, "5.r": { A: "hart", B: "hart", C: "ab" },
+  "5.oeu": { A: "ab", B: "ab", C: "hart" }, "5.bel": { A: "ab", B: "hart", C: "ein" }, "5.gb": { A: "hart", B: "ab", C: "ab" }
+};
+
+/* Geheime Entscheidungen: werden nach der Welle NICHT verkündet, nur die genannten Staaten erfahren sie.
+   Alle anderen sehen sie erst in den Geheimakten am Ende. Entwurf – mit Robs Liste aus dem Tafel-Tool abgleichen. */
+export const GEHEIM = {
+  "1.d": ["oeu"],   // Blankoscheck: nur Wien kennt die Antwort aus Berlin
+  "2.d": ["oeu"],   // Rat an Wien
+  "2.oeu": [],      // Inhalt und Zeitpunkt des Ultimatums (wird in Runde 3 durch die Übergabe bekannt)
+  "2.r": ["f"],     // Absprache beim Staatsbesuch
+  "2.f": ["r"],
+  "3.r": ["srb"]    // Rat an Belgrad; Kriegsvorbereitungen bleiben geheim
 };
