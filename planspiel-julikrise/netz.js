@@ -67,7 +67,32 @@ export const MERKMALE = {
                      anzeige: { fuer: ["srb"], titel: "Rückhalt der Regierung (Wahlkampf)", text: {
                        stark: "Der Wahlkampf läuft gut. Die Regierung wirkt fest und unabhängig.",
                        mittel: "Die Wahl steht bevor. Die Nationalisten beobachten jeden Schritt gegenüber Wien.",
-                       schwach: "Die Nationalisten werfen Pašić vor, vor Wien einzuknicken. Die Wahl ist in Gefahr." } } }
+                       schwach: "Die Nationalisten werfen Pašić vor, vor Wien einzuknicken. Die Wahl ist in Gefahr." } } },
+  druckGeneralstabD: { name: "Druck des deutschen Generalstabs", start: "mittel", werte: { stark: "stark", mittel: "mittel", schwach: "schwach" },
+                     anzeige: { fuer: ["d"], titel: "Druck des Generalstabs", text: {
+                       stark: "Moltke drängt: Jeder Tag, den Russland mobilmacht, gefährdet den Schlieffen-Plan.",
+                       mittel: "Der Generalstab beobachtet Russland genau. Noch ist Zeit.",
+                       schwach: "Der Generalstab sieht keinen Grund zur Eile." } } },
+  druckArmeeR:     { name: "Druck der russischen Armeeführung", start: "schwach", werte: { stark: "stark", mittel: "mittel", schwach: "schwach" },
+                     anzeige: { fuer: ["r"], titel: "Druck der Armeeführung", text: {
+                       stark: "Die Generäle drängen: Unsere Mobilmachung dauert Wochen – wer zu spät beginnt, verliert.",
+                       mittel: "Die Generäle bereiten sich vor und fragen, wann der Zar entscheidet.",
+                       schwach: "Die Armeeführung hält sich zurück." } } },
+  vertrauenRF:     { name: "Vertrauen Russlands in Frankreich", start: "mittel", werte: { stark: "stark", mittel: "mittel", schwach: "schwach" },
+                     anzeige: { fuer: ["f"], titel: "Vertrauen unseres Verbündeten Russland", text: {
+                       stark: "St. Petersburg verlässt sich fest auf Paris.",
+                       mittel: "St. Petersburg wartet, wie fest Paris zum Bündnis steht.",
+                       schwach: "In St. Petersburg fragt man, ob auf Frankreich Verlass ist. Ohne Russland stehen wir allein gegen Deutschland." } } },
+  parlamentGB:     { name: "Bereitschaft des britischen Parlaments zum Krieg", start: "schwach", werte: { stark: "stark", mittel: "mittel", schwach: "schwach" },
+                     anzeige: { fuer: ["gb"], titel: "Parlament und Öffentlichkeit", text: {
+                       stark: "Die Stimmung kippt: Viele Abgeordnete sehen einen klaren Grund, einzugreifen.",
+                       mittel: "Das Kabinett ist gespalten. Ein klarer Grund würde vieles ändern.",
+                       schwach: "Parlament und Zeitungen reden über Irland. Für einen Krieg auf dem Balkan gäbe es keine Mehrheit." } } },
+  vertrauenBEL:    { name: "Vertrauen Belgiens in die Garantiemächte", start: "mittel", werte: { stark: "stark", mittel: "mittel", schwach: "schwach" },
+                     anzeige: { fuer: ["bel"], titel: "Vertrauen in unsere Garantiemächte", text: {
+                       stark: "London hat deutlich gemacht: Belgiens Neutralität ist ihm wichtig.",
+                       mittel: "Frankreich hat zugesagt, unsere Neutralität zu achten. Aus London kommt nichts Genaues.",
+                       schwach: "Es sieht so aus, als würde uns niemand beistehen." } } }
 };
 
 /* Was jede Entscheidung setzt. "2.oeu.wann" ist die Zusatzfrage zum Zeitpunkt des Ultimatums. */
@@ -75,34 +100,34 @@ export const SETZT = {
   "1.d":   { A: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, B: { deutscheLinie: "diplomatisch" }, C: { deutscheLinie: "freieHand", vertrauenWiens: "stark" } },
   "1.srb": { A: { serbienHaltung: "leugnen", rueckhaltPasic: "mittel" }, B: { serbienHaltung: "ermittelt", rueckhaltPasic: "schwach" }, C: { serbienHaltung: "russlandGerufen" } },
   "1.r":   { A: { russlandHaltung: "nachgiebig", ansehenZar: "schwach" }, B: { russlandHaltung: "hinterSerbien", ansehenZar: "stark" }, C: { russlandHaltung: "abwartend" } },
-  "1.f":   { A: { frankreichEngland: "ja" }, B: { staatsbesuch: "ja" }, C: { staatsbesuch: "abgesagt" } },
+  "1.f":   { A: { frankreichEngland: "ja" }, B: { staatsbesuch: "ja" }, C: { staatsbesuch: "abgesagt", vertrauenRF: "schwach" } },
   "1.gb":  { A: { englandHaltung: "mahnend" }, B: { englandHaltung: "vermittelnd" }, C: { englandHaltung: "abseits" } },
   "1.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach" }, B: { wiensKurs: "hart", ansehenWien: "stark" }, C: { wiensKurs: "ermittlung" } },
 
   "2.d":   { A: { deutscheLinie: "freieHand", vertrauenWiens: "stark" }, B: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, C: { deutscheLinie: "freieHand", vertrauenWiens: "stark" } },
   "2.srb": { A: { rueckhaltPasic: "schwach" }, B: { rueckhaltPasic: "stark" }, C: { rueckhaltPasic: "stark" } },
   "2.r":   { A: { russlandHaltung: "vermittelnd" }, B: { russlandHaltung: "hinterSerbien", ansehenZar: "stark" }, C: { russlandHaltung: "hinterSerbien" } },
-  "2.f":   { A: { buendnisFR: "fest" }, B: { buendnisFR: "bedingt" }, C: { buendnisFR: "zurueckhaltend" } },
+  "2.f":   { A: { buendnisFR: "fest", vertrauenRF: "stark" }, B: { buendnisFR: "bedingt", vertrauenRF: "mittel" }, C: { buendnisFR: "zurueckhaltend", vertrauenRF: "schwach" } },
   "2.gb":  { A: { englandHaltung: "nachfragend" }, B: { englandHaltung: "abseits" }, C: { englandHaltung: "mahnend" } },
   "2.oeu": { A: { ultimatum: "unannehmbar", wiensKurs: "hart", ansehenWien: "stark" }, B: { ultimatum: "angriff", wiensKurs: "hart" }, C: { ultimatum: "erfuellbar", wiensKurs: "einlenkend", ansehenWien: "schwach" } },
   "2.oeu.wann": { "sofort": { uebergabe: "vorBesuch" }, "während des Staatsbesuchs": { uebergabe: "waehrendBesuch" }, "nach dem Staatsbesuch": { uebergabe: "nachBesuch" }, "später": { uebergabe: "nachBesuch" } },
 
   "3.srb": { A: { serbAntwort: "fastAlles" }, B: { serbAntwort: "abgelehnt", rueckhaltPasic: "stark" }, C: { serbAntwort: "alles", rueckhaltPasic: "schwach" } },
-  "3.r":   { A: { russlandHaltung: "vermittelnd" }, B: { russlandHaltung: "nachgiebig", ansehenZar: "schwach" }, C: { russlandHaltung: "hinterSerbien", ansehenZar: "stark" } },
-  "3.f":   { A: { buendnisFR: "fest" }, B: { buendnisFR: "bedingt" }, C: { buendnisFR: "zurueckhaltend" } },
+  "3.r":   { A: { russlandHaltung: "vermittelnd" }, B: { russlandHaltung: "nachgiebig", ansehenZar: "schwach" }, C: { russlandHaltung: "hinterSerbien", ansehenZar: "stark", druckArmeeR: "mittel", druckGeneralstabD: "stark" } },
+  "3.f":   { A: { buendnisFR: "fest", vertrauenRF: "stark" }, B: { buendnisFR: "bedingt", vertrauenRF: "mittel" }, C: { buendnisFR: "zurueckhaltend", vertrauenRF: "schwach" } },
   "3.gb":  { A: { englandHaltung: "abseits" }, B: { englandHaltung: "entente" }, C: { englandHaltung: "vermittelnd", konferenz: "vorgeschlagen" } },
-  "3.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach" }, B: { wiensKurs: "hart", krieg: "ja", ansehenWien: "stark" }, C: { wiensKurs: "einlenkend", ansehenWien: "schwach" } },
+  "3.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach" }, B: { wiensKurs: "hart", krieg: "ja", ansehenWien: "stark", druckArmeeR: "stark" }, C: { wiensKurs: "einlenkend", ansehenWien: "schwach" } },
   "3.d":   { A: { deutscheLinie: "freieHand", vertrauenWiens: "stark" }, B: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, C: { deutscheLinie: "freieHand" } },
 
   "4.oeu": { A: { wiensKurs: "grossmaechte" }, B: { wiensKurs: "hart" }, C: { wiensKurs: "einlenkend" } },
   "4.bel": { A: { belgien: "nachgiebig" }, B: { belgien: "anlehnung" }, C: { belgien: "bewaffnet" } },
-  "4.r":   { A: { mobRussland: "teil" }, B: { mobRussland: "keine", ansehenZar: "schwach" }, C: { mobRussland: "allgemein" } },
-  "4.f":   { A: { frankreichAuftreten: "bremst" }, B: { frankreichAuftreten: "defensiv" }, C: { frankreichAuftreten: "mobil" } },
+  "4.r":   { A: { mobRussland: "teil" }, B: { mobRussland: "keine", ansehenZar: "schwach", druckGeneralstabD: "mittel" }, C: { mobRussland: "allgemein", druckGeneralstabD: "stark" } },
+  "4.f":   { A: { frankreichAuftreten: "bremst", vertrauenRF: "schwach" }, B: { frankreichAuftreten: "defensiv", parlamentGB: "mittel" }, C: { frankreichAuftreten: "mobil", parlamentGB: "schwach" } },
   "4.d":   { A: { grosserKrieg: "ja" }, B: { grosserKrieg: "ja" }, C: { deutscheLinie: "maessigung" } },
-  "4.gb":  { A: { englandHaltung: "offen" }, B: { englandHaltung: "beistandF" }, C: { englandHaltung: "neutralZugesagt" } },
+  "4.gb":  { A: { englandHaltung: "offen" }, B: { englandHaltung: "beistandF", vertrauenBEL: "stark" }, C: { englandHaltung: "neutralZugesagt", vertrauenBEL: "schwach" } },
 
-  "5.d":   { A: { westen: "durchBelgien" }, B: { westen: "keinAngriff" }, C: { westen: "direkt" } },
-  "5.bel": { A: { belgien: "zoegert" }, B: { belgien: "widerstand" }, C: { belgien: "durchlass" } },
+  "5.d":   { A: { westen: "durchBelgien", parlamentGB: "stark" }, B: { westen: "keinAngriff" }, C: { westen: "direkt" } },
+  "5.bel": { A: { belgien: "zoegert" }, B: { belgien: "widerstand", parlamentGB: "stark" }, C: { belgien: "durchlass", parlamentGB: "mittel" } },
   "5.gb":  { A: { englandHaltung: "krieg" }, B: { englandHaltung: "neutral" }, C: { englandHaltung: "kueste" } },
   "5.f": {}, "5.r": {}, "5.oeu": {}
 };

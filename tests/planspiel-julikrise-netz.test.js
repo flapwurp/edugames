@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { RUNDEN } from "../planspiel-julikrise/content.js";
 import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "../planspiel-julikrise/netz.js";
-import { karte, lage, grenze, ausgang, ende, akte1914, anzeigen, merkmaleBis } from "../planspiel-julikrise/logik.js";
+import { karte, lage, grenze, ausgang, ende, akte1914, anzeigen, merkmaleBis, framing } from "../planspiel-julikrise/logik.js";
+import { STIMMEN, ERINNERUNGEN, UHREN } from "../planspiel-julikrise/framing.js";
 
 const ABC = ["A", "B", "C"];
 const welle = (r, s) => RUNDEN[r - 1].wellen.findIndex(w => w.includes(s));
@@ -84,5 +85,26 @@ test("Netz: Grenzen lassen nur gültige Optionen zur Neuentscheidung", () => {
     assert.ok(g.neu.length >= 2 && g.neu.every(b => ABC.includes(b)), g.titel);
     assert.ok(g.text && g.beleg, g.titel);
     assert.ok(welle(g.runde, g.staat) >= 0);
+  }
+});
+
+test("Framing: Kennzeichnung, Belege und gültige Bedingungen", () => {
+  const ARTEN = ["zitat", "sinngemäß", "bericht", "gerücht"];
+  for (const x of STIMMEN) {
+    assert.ok(RUNDEN[x.runde - 1].staaten[x.staat], `${x.runde}.${x.staat}`);
+    assert.ok(ARTEN.includes(x.art), x.art);
+    assert.ok(x.wer && x.text && x.beleg, x.text);
+    for (const [k, ws] of Object.entries(x.wenn || {})) for (const w of ws) assert.ok(w in MERKMALE[k].werte, `${k}=${w}`);
+  }
+  for (const x of [...ERINNERUNGEN, ...UHREN]) for (const [k, ws] of Object.entries(x.wenn || {})) for (const w of ws) assert.ok(w in MERKMALE[k].werte, `${k}=${w}`);
+});
+
+test("Framing: auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens drei Anstöße", () => {
+  const z = akte1914(5);
+  for (const r of RUNDEN) for (const s of Object.keys(r.staaten)) {
+    const f = framing(r.nr, s, z);
+    const n = f.anzeigen.length + f.stimmen.length + f.erinnerungen.length + f.uhren.length;
+    assert.ok(n >= 3, `${r.nr}.${s}: nur ${n}`);
+    assert.ok(f.anzeigen.length >= 1, `${r.nr}.${s}: keine Stimmungsanzeige`);
   }
 });

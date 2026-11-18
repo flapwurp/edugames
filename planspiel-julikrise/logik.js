@@ -3,6 +3,7 @@
    Daraus werden Welle für Welle die Merkmale berechnet (netz.js). */
 import { RUNDEN } from "./content.js";
 import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "./netz.js";
+import { STIMMEN, ERINNERUNGEN, UHREN } from "./framing.js";
 
 export const passt = (wenn = {}, m) => Object.entries(wenn).every(([k, werte]) => werte.includes(m[k]));
 export const startMerkmale = () => Object.fromEntries(Object.entries(MERKMALE).map(([k, v]) => [k, v.start]));
@@ -86,6 +87,18 @@ export const anzeigen = (runde, staat, zustand) => {
   return Object.entries(MERKMALE).filter(([, v]) => v.anzeige?.fuer.includes(staat))
     .map(([k, v]) => ({ id: k, titel: v.anzeige.titel, stufe: m[k], text: v.anzeige.text[m[k]] }));
 };
+
+/* Alle Framing Controls, die ein Staat beim Entscheiden sieht. */
+export function framing(runde, staat, zustand) {
+  const m = vorher(zustand, runde, staat);
+  const fuer = x => x.fuer === "alle" || x.fuer.includes(staat);
+  return {
+    anzeigen: anzeigen(runde, staat, zustand),
+    stimmen: STIMMEN.filter(x => x.runde === runde && x.staat === staat && passt(x.wenn, m)),
+    erinnerungen: ERINNERUNGEN.filter(x => fuer(x) && runde >= x.ab),
+    uhren: UHREN.filter(x => x.runde === runde && fuer(x) && passt(x.wenn, m))
+  };
+}
 
 /* Akte 1914: alle Entscheidungen bis einschließlich bisRunde so, wie sie 1914 fielen. */
 export function akte1914(bisRunde) {

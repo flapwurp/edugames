@@ -105,18 +105,27 @@ jede Grenze und jeder Ausgang wird mindestens einmal erreicht.
 
 ### 4. Framing Controls (Lenkung ohne Vorgabe)
 Grundsatz: Die Lenkung kommt aus **historisch belegten Kräften**, nicht aus einer Spielleitung, die „richtig“ sagt.
-Fachlich: Anstöße, die als Information aus der Zeit erscheinen, müssen echt oder klar als vereinfachte Darstellung
-gekennzeichnet sein. Erfundene Zitate werden nicht als Quellen ausgegeben.
+Sie wirkt in der Summe Richtung 1914, enthält aber auch die Gegenstimmen, die es gab (Tisza, der Kaiser am 28. Juli,
+Kriegsgegner im britischen Kabinett). Das macht die Entscheidung ehrlich und gibt der Reflexion Stoff.
 
-| Mittel | Wirkung | Beispiel |
+**Umgesetzt (Entwurf, 18.11.):** `framing.js` und Stimmungsanzeigen in `netz.js`, Anzeige über `framing()` in `logik.js`,
+zu sehen in `stilprobe.html` (Leiste unter dem Kopf, Stimmen und Erinnerungen links).
+
+| Baustein | Umfang | Wie es lenkt |
 |---|---|---|
-| **Stimmen ohne Delegation** | Druck von Kräften, die niemand am Tisch spielt | Conrad drängt in Wien auf Krieg; Moltke drängt auf Tempo; russische Generäle; britisches Kabinett gespalten |
-| **Stimmung im Land** | Innenpolitik als Grenze, qualitativ (drei Stufen, keine Zahlen) | Serbien: Wahlkampf, nationalistische Presse; Russland: Ansehen des Zaren; GB: Irland |
-| **Interessen-Bezug an Optionen** | kleine Marke „passt zu unserem Ziel: …“ aus dem Dossier | D: „Verbündeten erhalten“ an der Zusage |
-| **Harte Grenzen als Ereignis** | Wahl ist möglich, aber die Wirklichkeit antwortet | R wählt Teilmobilmachung → die Generäle melden: nicht vorbereitet, Chaos (so 1914 am 29./30. Juli) |
-| **Zeitdruck** | Uhr und Kalender laufen, Noten kommen verspätet | Ultimatum 48 Stunden; Schlieffen-Plan |
-| **Ungleiches Wissen** | Jede Delegation sieht nur, was ihr Staat wusste | Entente erfährt nichts vom Blankoscheck |
-| **Folgenkarte** | Abweichung bekommt eine Folge, gemessen an den eigenen Interessen | „Was würde das für euer Ansehen als Großmacht bedeuten?“ |
+| **Stimmungsanzeigen** (Leiste, drei Stufen, Satz statt Zahl) | 9: Ansehen Ö-U, Vertrauen Wiens (D), Druck des Generalstabs (D), Ansehen des Zaren, Druck der Armeeführung (R), Rückhalt der Regierung (SRB), Vertrauen Russlands (F), Parlament und Öffentlichkeit (GB), Vertrauen in die Garantiemächte (BEL) | steigen bei Entscheidungen Richtung 1914, fallen bei anderen; Druck wächst mit dem Handeln der anderen |
+| **Stimmen ohne Delegation** | 38, jede Delegation jede Runde | Generalstäbe, Monarchen, Minister, Presse, Botschafter; teils mit Bedingung (z. B. Kaiser am 28.7. nur, wenn Serbien fast alles angenommen hat) |
+| **Erinnerungskarten** | 7 (1839, 1870/71, 1905, 1908/09, 1912/13, Londoner Konferenz, Marokko) | So argumentierten die Regierenden selbst mit früheren Krisen |
+| **Uhren und Fristen** | 8 | Staatsbesuch, Nordlandreise, 48-Stunden-Frist, Mobilmachungszeiten, Schlieffen-Plan, 12-Stunden-Frist an Belgien |
+| **Grenzen** | 4 (in `netz.js`) | Wahl möglich, die Wirklichkeit antwortet |
+| **Kurswechsel-Stempel** | in `netz.js` | Zusagen binden |
+
+**Kennzeichnung (Fachbegriffe):** Jede Stimme trägt ein Schild: „Zitat“ (nur echt und belegt = Quelle), „sinngemäß“
+(Darstellung), „Bericht“ (vereinfachte Nachricht, Darstellung), „unbestätigt“ (Gerücht). Bisher sind nur zwei Zitate
+eingetragen (Wilhelm II.: „Jetzt oder nie.“, „Damit fällt jeder Kriegsgrund fort.“); beide müssen am Original geprüft
+werden. Alle Belege stehen als Arbeitsnotiz im Feld `beleg` (Block D).
+
+Test: Auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens drei Anstöße, darunter eine Stimmungsanzeige.
 
 **Weitere Ideen (Sammlung, noch auszuarbeiten):**
 - *Stimmungsanzeigen (drei Stufen, mit Wortbegründung):* Serbien „Rückhalt der Regierung“ (Wahlkampf, Nationalisten);
@@ -184,10 +193,13 @@ erfolgreich gelaufen ist.
 - [ ] Belege der Grenzen prüfen (Feld `beleg`)
 
 ### C. Framing Controls (Inhalt)
-- [ ] Sammlung oben ausarbeiten und deutlich erweitern (Rob: „viel mehr“)
-- [ ] Je Runde und Staat zwei bis drei Anstöße auswählen (Stimmen, Stimmung, Grenzen, Interessen-Marken)
-- [ ] Stimmungsanzeigen für Serbien, Russland, Großbritannien, Österreich-Ungarn (drei Stufen, Wortbegründung)
-- [ ] Ereignisse für harte Grenzen (Teilmobilmachung, Krieg nur im Osten, Angriff ohne bereite Armee)
+- [x] Stimmungsanzeigen: 9, jede Delegation mindestens eine (Leiste in der Stilprobe)
+- [x] Stimmen ohne Delegation (38), Erinnerungskarten (7), Uhren und Fristen (8) in `framing.js`, mit Kennzeichnung
+- [x] Ereignisse für harte Grenzen (4, in `netz.js`)
+- [ ] Rob liest Stimmen und Anzeigetexte gegen
+- [ ] Interessen-Marken an den Optionen („passt zu unserem Ziel: …“)
+- [ ] Gegenstimmen ausbalancieren: Wo lenkt die Summe zu stark oder zu schwach Richtung 1914?
+- [ ] Layout: Stimmen und Erinnerungen als aufklappbare Mappe, damit die linke Spalte nicht zu lang wird
 - [ ] Folgenkarten für Abweichungen
 - [ ] Rob prüft
 

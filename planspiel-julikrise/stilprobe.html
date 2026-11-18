@@ -77,6 +77,22 @@ main{flex:1;display:grid;grid-template-columns:minmax(300px,0.9fr) 1.4fr;gap:18p
 .kabinett p{margin:0;font-size:15px;opacity:.9}
 .knopf{margin-left:auto;background:var(--gold);color:#fff;border:0;border-radius:6px;padding:14px 22px;font:700 16px/1 -apple-system,system-ui,sans-serif;letter-spacing:.5px;opacity:.45}
 
+/* Leiste: Stimmungsanzeigen, Uhr, Erinnerungen */
+.leiste{display:flex;gap:12px;flex-wrap:wrap;padding:2px 18px 8px;align-items:stretch}
+.anzeige{flex:1 1 260px;background:rgba(243,234,214,.08);border:1px solid rgba(239,230,207,.18);border-radius:6px;padding:8px 12px;color:#efe6cf}
+.anzeige .t{display:flex;justify-content:space-between;align-items:center;font:700 11px/1.4 -apple-system,system-ui,sans-serif;letter-spacing:1.3px;text-transform:uppercase;opacity:.85}
+.stufen{display:flex;gap:3px}.stufen i{width:22px;height:8px;border-radius:2px;background:rgba(239,230,207,.18)}
+.stufen.stark i{background:#c9a24e}.stufen.mittel i:nth-child(-n+2){background:#c9a24e}.stufen.schwach i:first-child{background:#c4463d}
+.anzeige p{margin:4px 0 0;font-size:14px;line-height:1.35}
+.uhr{flex:0 1 230px;display:flex;gap:10px;align-items:center;background:rgba(158,43,37,.25);border:1px solid rgba(196,70,61,.5);border-radius:6px;padding:8px 12px;color:#f6e7c8;font:14px/1.35 -apple-system,system-ui,sans-serif}
+.uhr svg{flex:none}
+.stimme{margin-top:16px;padding:10px 14px;background:#e6dcc3;border-left:4px solid #5a5043;position:relative}
+.stimme blockquote{margin:0;font-size:16px;line-height:1.45}
+.stimme .wer{display:block;margin-top:4px;font:12px/1.4 -apple-system,system-ui,sans-serif;color:var(--tinte2)}
+.stimme .art{position:absolute;right:10px;top:-9px;background:#5a5043;color:#f3ead6;font:700 10px/1 -apple-system,system-ui,sans-serif;letter-spacing:1px;padding:4px 7px;border-radius:3px;text-transform:uppercase}
+.stimme.zitat .art{background:var(--blau)}
+.erinnerungen{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.erinnerung{background:transparent;border:1.5px dashed var(--tinte2);border-radius:16px;padding:6px 12px;font:600 13px -apple-system,system-ui,sans-serif;color:var(--tinte2)}
 .hinweis{color:#efe6cfaa;font:13px/1.4 -apple-system,system-ui,sans-serif;text-align:center;padding:0 18px 12px}
 @media (max-width:900px){ main{grid-template-columns:1fr} .kalender .tag:nth-child(odd){display:none} }
 </style>
@@ -89,6 +105,8 @@ main{flex:1;display:grid;grid-template-columns:minmax(300px,0.9fr) 1.4fr;gap:18p
   <div class="kal-text sans">Runde 3 · Die Antwort<b>27. Juli 1914</b></div>
 </header>
 
+<div class="leiste" id="leiste"></div>
+
 <main>
   <section class="blatt lage">
     <div class="klein sans">Die Lage</div>
@@ -98,6 +116,8 @@ main{flex:1;display:grid;grid-template-columns:minmax(300px,0.9fr) 1.4fr;gap:18p
       <div class="klein sans" style="margin-bottom:6px">Nur für euch</div>
       <p id="geheim"></p>
     </div>
+    <div id="stimmen"></div>
+    <div class="erinnerungen" id="erinnerungen"></div>
     <div class="telegramm">
       <div class="kopf"><span>TELEGRAMM · AUS LONDON</span><span>26.7. · 14.20 UHR</span></div>
       <span class="streifen">Würdet ihr einer Konferenz der Botschafter zustimmen? Stop. Antwort erbeten. Stop.</span>
@@ -116,11 +136,20 @@ main{flex:1;display:grid;grid-template-columns:minmax(300px,0.9fr) 1.4fr;gap:18p
     <button class="knopf" disabled>Beschluss fassen</button>
   </div>
 </div>
-<p class="hinweis">Stilprobe – nur Aussehen, noch keine Funktion. Texte aus content.js (Runde 3, Deutsches Reich).</p>
+<p class="hinweis">Stilprobe – nur Aussehen, noch keine Funktion. Texte aus content.js, Framing aus netz.js und framing.js (Runde 3, Deutsches Reich, Weg von 1914).</p>
 
 <script type="module">
 import { RUNDEN } from "./content.js";
+import { framing, akte1914 } from "./logik.js";
 const r = RUNDEN[2], k = r.staaten.d;
+const z = { ...akte1914(2), "3.srb": "A", "3.r": "C", "3.f": "A", "3.gb": "C" };
+const f = framing(3, "d", z);
+document.getElementById("leiste").innerHTML =
+  f.anzeigen.map(a => `<div class="anzeige"><div class="t"><span>${a.titel}</span><span class="stufen ${a.stufe}"><i></i><i></i><i></i></span></div><p>${a.text}</p></div>`).join("") +
+  f.uhren.map(u => `<div class="uhr"><svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#f6e7c8" stroke-width="2"/><path d="M15 7v8l6 4" stroke="#f6e7c8" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span>${u.text}</span></div>`).join("");
+document.getElementById("stimmen").innerHTML = f.stimmen.map(s =>
+  `<div class="stimme ${s.art === "zitat" ? "zitat" : ""}"><span class="art">${{ zitat: "Zitat", "sinngemäß": "sinngemäß", bericht: "Bericht", "gerücht": "unbestätigt" }[s.art]}</span><blockquote>${s.art === "zitat" ? "„" + s.text + "“" : s.text}</blockquote><span class="wer">${s.wer}</span></div>`).join("");
+document.getElementById("erinnerungen").innerHTML = f.erinnerungen.map(e => `<button class="erinnerung" title="${e.text}">${e.titel}</button>`).join("");
 document.getElementById("lage").innerHTML = r.lage.map(t => `<p>${t}</p>`).join("");
 document.getElementById("geheim").textContent = k.geheim[0];
 const box = document.getElementById("optionen");
