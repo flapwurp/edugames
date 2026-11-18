@@ -155,6 +155,7 @@ erfolgreich gelaufen ist.
 ### B. Entscheidungsnetz (Inhalt)
 - [x] Entwurf in `netz.js`: Varianten, Lagebausteine, Grenzen, drei frühe Ausgänge, Ende; Ansicht `netz.html`; Tests
 - [ ] Rob liest gegen (in `netz.html` Karte antippen)
+- [ ] `netz.html` übersichtlicher machen (z. B. nur eine Runde oder einen Staat zeigen, Weg 1914 hervorheben)
 - [ ] Lücken schließen: Weg „Deutschland wartet in Runde 4 trotz russischer Mobilmachung“, Varianten für Runde 5
       nach abweichendem Runde-4-Verlauf, Wirkung der Noten (z. B. „Halt in Belgrad“) auf die Karten
 - [ ] Belege der Grenzen prüfen (Feld `beleg`)
@@ -184,7 +185,8 @@ erfolgreich gelaufen ist.
 - [ ] Grafik-Galerie zur Abnahme (wie beim Nil)
 
 ### F. Technik
-- [ ] `logik.js` ohne DOM: Runden, Phasen, Wellen, Merkmale, Varianten, Ausgänge, Sichtbarkeit, Kabinettsbeschluss
+- [x] `logik.js` Teil Netz: Varianten, Lage, Grenzen, Ausgänge, Akte 1914 (mit Tests)
+- [ ] `logik.js` ohne DOM, Rest: Runden, Phasen, Wellen, Merkmale, Varianten, Ausgänge, Sichtbarkeit, Kabinettsbeschluss
 - [ ] Tests: jede Runde durchspielbar, Geheimes erreicht nie fremde Delegationen, immer drei Optionen,
       Kabinettsbeschluss nur bei Einigkeit, Ausgänge erreichbar
 - [ ] Verbindung über `shared/sync.js` (Supabase Realtime, aufbauend auf `labor/08-klasse/`): Raumcode,
