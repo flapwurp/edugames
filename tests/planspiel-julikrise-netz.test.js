@@ -11,7 +11,7 @@ const welle = (r, s) => RUNDEN[r - 1].wellen.findIndex(w => w.includes(s));
 test("Merkmale: alle Werte in SETZT, Varianten und Bedingungen sind bekannt", () => {
   const pruefeWerte = (obj, ort) => { for (const [k, v] of Object.entries(obj || {})) {
     assert.ok(MERKMALE[k], `${ort}: Merkmal ${k} unbekannt`);
-    for (const w of [].concat(v)) assert.ok(w in MERKMALE[k].werte, `${ort}: ${k}=${w} unbekannt`);
+    for (const w of [].concat(v)) assert.ok(w in MERKMALE[k].werte || (MERKMALE[k].stufen && (w === "+1" || w === "-1")), `${ort}: ${k}=${w} unbekannt`);
   } };
   for (const [k, m] of Object.entries(MERKMALE)) assert.ok(m.start in m.werte, k);
   for (const [k, opts] of Object.entries(SETZT)) for (const [b, s] of Object.entries(opts)) pruefeWerte(s, `SETZT ${k} ${b}`);
@@ -99,12 +99,27 @@ test("Framing: Kennzeichnung, Belege und gültige Bedingungen", () => {
   for (const x of [...ERINNERUNGEN, ...UHREN]) for (const [k, ws] of Object.entries(x.wenn || {})) for (const w of ws) assert.ok(w in MERKMALE[k].werte, `${k}=${w}`);
 });
 
-test("Framing: auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens drei Anstöße", () => {
+test("Framing: auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens zwei Stimmungsanzeigen", () => {
   const z = akte1914(5);
   for (const r of RUNDEN) for (const s of Object.keys(r.staaten)) {
     const f = framing(r.nr, s, z);
-    const n = f.anzeigen.length + f.stimmen.length + f.erinnerungen.length + f.uhren.length;
-    assert.ok(n >= 3, `${r.nr}.${s}: nur ${n}`);
-    assert.ok(f.anzeigen.length >= 1, `${r.nr}.${s}: keine Stimmungsanzeige`);
+    const n = f.anzeigen.length + f.erinnerungen.length + f.uhren.length;
+    assert.ok(n >= 2, `${r.nr}.${s}: nur ${n}`);
+    assert.ok(f.anzeigen.length >= 2, `${r.nr}.${s}: weniger als zwei Stimmungsanzeigen`);
   }
+});
+
+test("Kipppunkte: jede schrittweise Anzeige hat Texte für alle Stufen und kann in Partien kippen", () => {
+  const stufig = Object.entries(MERKMALE).filter(([, v]) => v.stufen);
+  for (const [k, v] of stufig) {
+    for (const w of ["stark", "mittel", "schwach", "gekippt"]) assert.ok(v.anzeige.text[w], `${k} ${w}`);
+  }
+  const rnd = zufall(4711), gekippt = new Set();
+  for (let i = 0; i < 3000; i++) {
+    const z = {};
+    for (const r of RUNDEN) for (const s of Object.keys(r.staaten)) { z[`${r.nr}.${s}`] = waehle(rnd, ABC); }
+    const m = merkmaleBis(z, 5, Infinity);
+    for (const [k] of stufig) if (m[k] === "gekippt") gekippt.add(k);
+  }
+  for (const [k] of stufig) assert.ok(gekippt.has(k), `${k} kippt nie`);
 });

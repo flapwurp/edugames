@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planspiel Julikrise – Grafik-Galerie</title>
+<style>
+body{margin:0;background:radial-gradient(ellipse at 50% 20%,#3b4a40,#2f3b33 60%,#26302a);color:#efe6cf;font:15px/1.45 -apple-system,system-ui,"Segoe UI",sans-serif;padding:18px 22px 40px}
+h1{font:400 26px Georgia,serif;margin:0 0 4px}
+h2{font:400 20px Georgia,serif;margin:28px 0 10px;border-bottom:1px solid rgba(239,230,207,.2);padding-bottom:4px}
+.klein{opacity:.75;font-size:13px}
+.flaggen{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.flaggen figure{margin:0;display:flex;gap:12px;align-items:center}
+.flaggen figcaption{font-size:13px;line-height:1.35}
+.flaggen figcaption b{display:block;font:400 17px Georgia,serif}
+.flagge{filter:drop-shadow(0 3px 5px rgba(0,0,0,.45));flex:none;border-radius:1px}
+.anzeigen{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.anzeige{background:rgba(243,234,214,.08);border:1px solid rgba(239,230,207,.18);border-radius:6px;padding:10px 12px}
+.anzeige .t{display:flex;justify-content:space-between;align-items:center;font:700 11px/1.4 -apple-system,system-ui,sans-serif;letter-spacing:1.3px;text-transform:uppercase;opacity:.9}
+.anzeige .wer{font:600 12px -apple-system,system-ui,sans-serif;opacity:.6;margin-bottom:6px}
+.zeile{display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:start;margin:6px 0;font:14px/1.35 Georgia,serif}
+.stufen{display:flex;gap:3px;margin-top:3px}.stufen i{width:22px;height:8px;border-radius:2px;background:rgba(239,230,207,.18)}
+.stufen.stark i{background:#c9a24e}.stufen.mittel i:nth-child(-n+2){background:#c9a24e}.stufen.schwach i:first-child{background:#c4463d}
+.stufen.gekippt i{background:transparent;border:1px solid #c4463d}
+.zeile.gekippt{color:#ffb4a8}
+.kipp{font:700 10px -apple-system,system-ui,sans-serif;letter-spacing:1px;color:#ffb4a8;margin-left:6px}
+</style>
+</head>
+<body>
+<h1>Grafik-Galerie</h1>
+<div class="klein">Zur Abnahme durch Rob. Flaggen: eigene Zeichnungen. Stimmungsanzeigen: alle Stufen mit ihren Texten.</div>
+
+<h2>Flaggen im Sommer 1914</h2>
+<div class="flaggen" id="flaggen"></div>
+
+<h2>Stimmungsanzeigen</h2>
+<div class="klein">Gekippt = unter „schwach“ gefallen. Nur die Anzeigen mit Kipppunkt können kippen.</div>
+<div class="anzeigen" id="anzeigen" style="margin-top:12px"></div>
+
+<script type="module">
+import { STAATEN } from "./content.js";
+import { MERKMALE } from "./netz.js";
+import { FLAGGEN, flagge } from "./flaggen.js";
+
+document.getElementById("flaggen").innerHTML = ["oeu", "d", "srb", "bel", "r", "f", "gb"].map(s => {
+  const [name, rest] = FLAGGEN[s].titel.split(": ");
+  return `<figure>${flagge(s, 90)}<figcaption><b>${STAATEN[s].name}</b>${rest}</figcaption></figure>`;
+}).join("");
+
+document.getElementById("anzeigen").innerHTML = Object.values(MERKMALE).filter(m => m.anzeige).map(m => {
+  const stufen = m.stufen ? ["stark", "mittel", "schwach", "gekippt"] : ["stark", "mittel", "schwach"];
+  return `<div class="anzeige"><div class="t"><span>${m.anzeige.titel}${m.stufen ? '<span class="kipp">MIT KIPPPUNKT</span>' : ""}</span></div>
+    <div class="wer">sieht: ${m.anzeige.fuer.map(s => STAATEN[s].name).join(", ")} · Start: ${m.start}</div>
+    ${stufen.map(w => `<div class="zeile ${w}"><span class="stufen ${w}"><i></i><i></i><i></i></span><span>${m.anzeige.text[w]}</span></div>`).join("")}</div>`;
+}).join("");
+</script>
+</body>
+</html>

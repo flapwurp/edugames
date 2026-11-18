@@ -2,7 +2,7 @@
    zustand = Entscheidungen der Klasse, z. B. { "1.d": "C", "1.oeu": "B", "2.oeu.wann": "nach dem Staatsbesuch" }.
    Daraus werden Welle für Welle die Merkmale berechnet (netz.js). */
 import { RUNDEN } from "./content.js";
-import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "./netz.js";
+import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE, KIPPPUNKTE } from "./netz.js";
 import { STIMMEN, ERINNERUNGEN, UHREN } from "./framing.js";
 
 export const passt = (wenn = {}, m) => Object.entries(wenn).every(([k, werte]) => werte.includes(m[k]));
@@ -35,12 +35,24 @@ export function lageAus(runde, staat, m) {
   return saetze;
 }
 
+/* Schritte für Anzeigen mit „stufen“: "+1" / "-1". Unter „schwach“ kippt die Anzeige (Kipppunkt). */
+const STUFEN = ["gekippt", "schwach", "mittel", "stark"];
+export function setze(m, werte) {
+  for (const [k, v] of Object.entries(werte || {})) {
+    if (v !== "+1" && v !== "-1") { m[k] = v; continue; }
+    const neu = STUFEN[Math.max(0, Math.min(3, STUFEN.indexOf(m[k]) + (v === "+1" ? 1 : -1)))];
+    const kippt = neu === "gekippt" && m[k] !== "gekippt";
+    m[k] = neu;
+    if (kippt) setze(m, KIPPPUNKTE[k]?.setzt);
+  }
+}
+
 /* Wirkung einer Entscheidung auf die Merkmale. */
 function anwenden(m, runde, staat, wahl, zustand, kennt) {
   if (!wahl) return;
-  Object.assign(m, karteAus(runde, staat, kennt).optionen[wahl].setzt);
+  setze(m, karteAus(runde, staat, kennt).optionen[wahl].setzt);
   const wann = zustand[`${runde}.${staat}.wann`];
-  if (wann) Object.assign(m, SETZT[`${runde}.${staat}.wann`]?.[wann] || {});
+  if (wann) setze(m, SETZT[`${runde}.${staat}.wann`]?.[wann]);
 }
 
 /* Merkmale vor einer Welle (runde, welle) bzw. nach einer ganzen Runde (welle = Infinity). */
@@ -88,13 +100,16 @@ export const anzeigen = (runde, staat, zustand) => {
     .map(([k, v]) => ({ id: k, titel: v.anzeige.titel, stufe: m[k], text: v.anzeige.text[m[k]] }));
 };
 
+/* Stimmen (Zitate, sinngemäß, Berichte, Gerüchte) liegen auf Eis (Rob, 18.11.): Gefahr der Überfrachtung. */
+export const STIMMEN_AKTIV = false;
+
 /* Alle Framing Controls, die ein Staat beim Entscheiden sieht. */
 export function framing(runde, staat, zustand) {
   const m = vorher(zustand, runde, staat);
   const fuer = x => x.fuer === "alle" || x.fuer.includes(staat);
   return {
     anzeigen: anzeigen(runde, staat, zustand),
-    stimmen: STIMMEN.filter(x => x.runde === runde && x.staat === staat && passt(x.wenn, m)),
+    stimmen: STIMMEN_AKTIV ? STIMMEN.filter(x => x.runde === runde && x.staat === staat && passt(x.wenn, m)) : [],
     erinnerungen: ERINNERUNGEN.filter(x => fuer(x) && runde >= x.ab),
     uhren: UHREN.filter(x => x.runde === runde && fuer(x) && passt(x.wenn, m))
   };

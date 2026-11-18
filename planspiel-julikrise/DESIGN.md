@@ -114,7 +114,8 @@ zu sehen in `stilprobe.html` (Leiste unter dem Kopf, Stimmen und Erinnerungen li
 | Baustein | Umfang | Wie es lenkt |
 |---|---|---|
 | **Stimmungsanzeigen** (Leiste, drei Stufen, Satz statt Zahl) | 9: Ansehen Ö-U, Vertrauen Wiens (D), Druck des Generalstabs (D), Ansehen des Zaren, Druck der Armeeführung (R), Rückhalt der Regierung (SRB), Vertrauen Russlands (F), Parlament und Öffentlichkeit (GB), Vertrauen in die Garantiemächte (BEL) | steigen bei Entscheidungen Richtung 1914, fallen bei anderen; Druck wächst mit dem Handeln der anderen |
-| **Stimmen ohne Delegation** | 38, jede Delegation jede Runde | Generalstäbe, Monarchen, Minister, Presse, Botschafter; teils mit Bedingung (z. B. Kaiser am 28.7. nur, wenn Serbien fast alles angenommen hat) |
+| **Anzeigen mit Kipppunkt** (Rob, 18.11.) | 5: Zusammenhalt des Reiches (Ö-U), Souveränität (SRB), Englands Bindung an uns (F), Lage in Irland (GB), Souveränität und Neutralität (BEL) | ändern sich schrittweise (+1/−1). Fallen sie unter „schwach“, kippen sie: Ein Ereignistext erscheint und eine Folge tritt ein (z. B. Irland kippt → Parlament „schwach“). Auf dem Weg von 1914 kippt keine |
+| **Stimmen ohne Delegation** | 38 – **auf Eis** (Rob, 18.11.): Gefahr der Überfrachtung. Daten bleiben in `framing.js`, Schalter `STIMMEN_AKTIV` in `logik.js` | Generalstäbe, Monarchen, Minister, Presse, Botschafter |
 | **Erinnerungskarten** | 7 (1839, 1870/71, 1905, 1908/09, 1912/13, Londoner Konferenz, Marokko) | So argumentierten die Regierenden selbst mit früheren Krisen |
 | **Uhren und Fristen** | 8 | Staatsbesuch, Nordlandreise, 48-Stunden-Frist, Mobilmachungszeiten, Schlieffen-Plan, 12-Stunden-Frist an Belgien |
 | **Grenzen** | 4 (in `netz.js`) | Wahl möglich, die Wirklichkeit antwortet |
@@ -125,7 +126,10 @@ zu sehen in `stilprobe.html` (Leiste unter dem Kopf, Stimmen und Erinnerungen li
 eingetragen (Wilhelm II.: „Jetzt oder nie.“, „Damit fällt jeder Kriegsgrund fort.“); beide müssen am Original geprüft
 werden. Alle Belege stehen als Arbeitsnotiz im Feld `beleg` (Block D).
 
-Test: Auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens drei Anstöße, darunter eine Stimmungsanzeige.
+Tests: Auf dem Weg von 1914 sieht jede Delegation in jeder Runde mindestens zwei Stimmungsanzeigen. Jede Anzeige mit
+Kipppunkt hat Texte für alle Stufen und kippt in Zufallspartien mindestens einmal.
+
+Jede Delegation hat jetzt zwei bis drei Anzeigen. Alle Texte und Stufen zum Gegenlesen: `galerie.html`.
 
 **Weitere Ideen (Sammlung, noch auszuarbeiten):**
 - *Stimmungsanzeigen (drei Stufen, mit Wortbegründung):* Serbien „Rückhalt der Regierung“ (Wahlkampf, Nationalisten);
@@ -196,7 +200,11 @@ erfolgreich gelaufen ist.
 - [x] Stimmungsanzeigen: 9, jede Delegation mindestens eine (Leiste in der Stilprobe)
 - [x] Stimmen ohne Delegation (38), Erinnerungskarten (7), Uhren und Fristen (8) in `framing.js`, mit Kennzeichnung
 - [x] Ereignisse für harte Grenzen (4, in `netz.js`)
-- [ ] Rob liest Stimmen und Anzeigetexte gegen
+- [x] Anzeigen mit Kipppunkt (Ö-U Zusammenhalt, SRB Souveränität, F Bindung Englands, GB Irland, BEL Souveränität)
+- [ ] Rob liest die Anzeigetexte in `galerie.html` gegen
+- [ ] Kipppunkte stärker wirken lassen? Bisher: Text und Folge für eine andere Anzeige. Möglich: eigene Variante
+      oder Grenze (z. B. GB muss nach dem Irland-Kipppunkt eine Runde lang Truppen nach Irland schicken)
+- [ ] Stimmen (auf Eis): später eventuell nur als aufklappbare Mappe
 - [ ] Interessen-Marken an den Optionen („passt zu unserem Ziel: …“)
 - [ ] Gegenstimmen ausbalancieren: Wo lenkt die Summe zu stark oder zu schwach Richtung 1914?
 - [ ] Layout: Stimmen und Erinnerungen als aufklappbare Mappe, damit die linke Spalte nicht zu lang wird
@@ -210,8 +218,15 @@ erfolgreich gelaufen ist.
 
 ### E. Grafik
 - [x] Rob gibt die Stilrichtung frei (Stilprobe)
-- [ ] Flaggen 1914 als SVG
-- [ ] Gemeinfreie Bilder zur Lage suchen (Claude schlägt vor, Rob wählt), `NACHWEISE.md`
+- [x] Flaggen 1914 als SVG (`flaggen.js`), in der Kopfzeile der Stilprobe; Ö-U und Serbien vereinfacht ohne Wappen
+- [x] Grafik-Galerie `galerie.html` (Flaggen, alle Stimmungsanzeigen in allen Stufen)
+- [ ] Gemeinfreie Bilder zur Lage (Wikimedia Commons ist aus Claudes Umgebung gesperrt: Rob sucht, oder die
+      Umgebung bekommt Zugriff auf commons.wikimedia.org und upload.wikimedia.org). Kandidaten, je zu prüfen:
+      R1 Franz Ferdinand und Sophie am 28.6.1914 vor dem Rathaus Sarajevo; die bekannte „Festnahme Princips“
+      zeigt vermutlich Ferdinand Behr – nur mit diesem Hinweis verwenden. R2 Poincaré beim Zaren, Juli 1914.
+      R3 Text des Ultimatums (Faksimile) oder Zeitungsausgabe 24.7.1914. R4 Mobilmachungsplakat (Deutschland
+      „Allerhöchste Kabinetts-Ordre“ 1.8. oder französisches „Ordre de mobilisation générale“). R5 Menschenmengen
+      in Berlin oder Paris Anfang August 1914; Odeonsplatz München 2.8.1914 meiden (Hitler-Bild, Echtheit umstritten)
 - [ ] Schriften auswählen und in `shared/fonts/` ablegen
 - [ ] Europakarte 1914 (SVG) mit Hauptstädten, Bündnissen, Belgien
 - [ ] Siegel, Stempel, Telegramm, Akte, Kalender als Bausteine

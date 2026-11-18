@@ -9,6 +9,8 @@
    3. Eine Variante kann bei einer Option mit „setzt“ festlegen, was diese Option bewirkt – dann gilt das statt SETZT.
 
    Merkmale mit „anzeige“ sind Stimmungsanzeigen (drei Stufen), die nur der genannte Staat sieht (Framing Controls).
+   Anzeigen mit „stufen: true“ ändern sich schrittweise: In SETZT steht dann "+1" oder "-1".
+   Fällt eine solche Anzeige unter „schwach“, ist sie „gekippt“: Dann tritt der KIPPPUNKT ein (Text und Folgen).
    auch1914: true = Variante greift auch auf dem Weg von 1914 (sonst bleibt dort jede Karte wie auf Papier).
    Texte in „beleg“ sind Arbeitsnotizen (Herkunft prüfen), sie erscheinen nicht im Spiel. */
 
@@ -92,7 +94,39 @@ export const MERKMALE = {
                      anzeige: { fuer: ["bel"], titel: "Vertrauen in unsere Garantiemächte", text: {
                        stark: "London hat deutlich gemacht: Belgiens Neutralität ist ihm wichtig.",
                        mittel: "Frankreich hat zugesagt, unsere Neutralität zu achten. Aus London kommt nichts Genaues.",
-                       schwach: "Es sieht so aus, als würde uns niemand beistehen." } } }
+                       schwach: "Es sieht so aus, als würde uns niemand beistehen." } } },
+
+  /* Stimmungsanzeigen mit Kipppunkt (schrittweise, Rob 18.11.) */
+  zusammenhaltOeu: { name: "Zusammenhalt des Vielvölkerreichs", start: "mittel", stufen: true, werte: { stark: "stark", mittel: "mittel", schwach: "schwach", gekippt: "gekippt" },
+                     anzeige: { fuer: ["oeu"], titel: "Zusammenhalt unseres Reiches", text: {
+                       stark: "Die Völker des Reiches sehen: Wien handelt. Die serbischen Nationalisten im eigenen Land werden leiser.",
+                       mittel: "In Bosnien und Kroatien beobachtet man genau, ob Wien sich von Serbien herausfordern lässt.",
+                       schwach: "Südslawische Nationalisten im Reich werden lauter. Tschechen und Ungarn fordern mehr Rechte.",
+                       gekippt: "Unruhen in Bosnien und Kroatien. In Wien heißt es: Das Reich beginnt zu zerfallen." } } },
+  souveraenitaetSrb: { name: "Serbiens Souveränität", start: "stark", stufen: true, werte: { stark: "stark", mittel: "mittel", schwach: "schwach", gekippt: "gekippt" },
+                     anzeige: { fuer: ["srb"], titel: "Unsere Souveränität", text: {
+                       stark: "Serbien entscheidet allein über seine Polizei, seine Armee und seine Zeitungen.",
+                       mittel: "Wien mischt sich in unsere inneren Angelegenheiten ein.",
+                       schwach: "Fremde Beamte reden in Belgrad mit. Viele sagen: Wir sind nicht mehr Herr im eigenen Land.",
+                       gekippt: "Offiziere der „Schwarzen Hand“ drohen der Regierung offen. Pašić muss um seine Macht fürchten." } } },
+  bindungEngland:  { name: "Englands Bindung an Frankreich", start: "mittel", stufen: true, werte: { stark: "stark", mittel: "mittel", schwach: "schwach", gekippt: "gekippt" },
+                     anzeige: { fuer: ["f"], titel: "Englands Bindung an uns", text: {
+                       stark: "London rückt näher. Ein festes Bündnis mit England wäre unsere größte Sicherheit.",
+                       mittel: "Unsere Generäle sprechen sich mit den britischen ab – ein Bündnis ist das nicht.",
+                       schwach: "London hält sich zurück. Ohne England ist ein Krieg gegen Deutschland sehr riskant.",
+                       gekippt: "In London heißt es: Frankreichs Streit ist nicht Englands Streit. Wir stehen ohne England da." } } },
+  irlandGB:        { name: "Innenpolitische Stabilität (Irland)", start: "mittel", stufen: true, werte: { stark: "stark", mittel: "mittel", schwach: "schwach", gekippt: "gekippt" },
+                     anzeige: { fuer: ["gb"], titel: "Lage in Irland", text: {
+                       stark: "Die Regierung kümmert sich um Irland. Die Lage beruhigt sich etwas.",
+                       mittel: "In Irland stehen sich bewaffnete Gruppen gegenüber. Die Regierung verhandelt.",
+                       schwach: "Während London auf den Kontinent schaut, rüsten in Irland beide Seiten weiter auf.",
+                       gekippt: "In Irland fallen Schüsse. Truppen werden gebraucht, das Kabinett ist mit sich selbst beschäftigt." } } },
+  souveraenitaetBel: { name: "Belgiens Souveränität", start: "stark", stufen: true, werte: { stark: "stark", mittel: "mittel", schwach: "schwach", gekippt: "gekippt" },
+                     anzeige: { fuer: ["bel"], titel: "Unsere Souveränität und Neutralität", text: {
+                       stark: "Belgien ist neutral und entscheidet selbst.",
+                       mittel: "Die Großmächte behandeln Belgien wie ein Durchgangsland.",
+                       schwach: "Belgien gilt kaum noch als neutral. Wer uns schützen soll, ist unklar.",
+                       gekippt: "Belgien hat seine Neutralität verspielt. Keine Garantiemacht fühlt sich mehr verpflichtet." } } }
 };
 
 /* Was jede Entscheidung setzt. "2.oeu.wann" ist die Zusatzfrage zum Zeitpunkt des Ultimatums. */
@@ -100,36 +134,45 @@ export const SETZT = {
   "1.d":   { A: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, B: { deutscheLinie: "diplomatisch" }, C: { deutscheLinie: "freieHand", vertrauenWiens: "stark" } },
   "1.srb": { A: { serbienHaltung: "leugnen", rueckhaltPasic: "mittel" }, B: { serbienHaltung: "ermittelt", rueckhaltPasic: "schwach" }, C: { serbienHaltung: "russlandGerufen" } },
   "1.r":   { A: { russlandHaltung: "nachgiebig", ansehenZar: "schwach" }, B: { russlandHaltung: "hinterSerbien", ansehenZar: "stark" }, C: { russlandHaltung: "abwartend" } },
-  "1.f":   { A: { frankreichEngland: "ja" }, B: { staatsbesuch: "ja" }, C: { staatsbesuch: "abgesagt", vertrauenRF: "schwach" } },
-  "1.gb":  { A: { englandHaltung: "mahnend" }, B: { englandHaltung: "vermittelnd" }, C: { englandHaltung: "abseits" } },
-  "1.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach" }, B: { wiensKurs: "hart", ansehenWien: "stark" }, C: { wiensKurs: "ermittlung" } },
+  "1.f":   { A: { frankreichEngland: "ja", bindungEngland: "+1" }, B: { staatsbesuch: "ja" }, C: { staatsbesuch: "abgesagt", vertrauenRF: "schwach" } },
+  "1.gb":  { A: { englandHaltung: "mahnend", irlandGB: "-1" }, B: { englandHaltung: "vermittelnd", irlandGB: "-1" }, C: { englandHaltung: "abseits", irlandGB: "+1" } },
+  "1.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach", zusammenhaltOeu: "-1" }, B: { wiensKurs: "hart", ansehenWien: "stark", zusammenhaltOeu: "+1" }, C: { wiensKurs: "ermittlung", souveraenitaetSrb: "-1" } },
 
   "2.d":   { A: { deutscheLinie: "freieHand", vertrauenWiens: "stark" }, B: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, C: { deutscheLinie: "freieHand", vertrauenWiens: "stark" } },
-  "2.srb": { A: { rueckhaltPasic: "schwach" }, B: { rueckhaltPasic: "stark" }, C: { rueckhaltPasic: "stark" } },
+  "2.srb": { A: { rueckhaltPasic: "schwach", souveraenitaetSrb: "-1" }, B: { rueckhaltPasic: "stark" }, C: { rueckhaltPasic: "stark" } },
   "2.r":   { A: { russlandHaltung: "vermittelnd" }, B: { russlandHaltung: "hinterSerbien", ansehenZar: "stark" }, C: { russlandHaltung: "hinterSerbien" } },
   "2.f":   { A: { buendnisFR: "fest", vertrauenRF: "stark" }, B: { buendnisFR: "bedingt", vertrauenRF: "mittel" }, C: { buendnisFR: "zurueckhaltend", vertrauenRF: "schwach" } },
-  "2.gb":  { A: { englandHaltung: "nachfragend" }, B: { englandHaltung: "abseits" }, C: { englandHaltung: "mahnend" } },
-  "2.oeu": { A: { ultimatum: "unannehmbar", wiensKurs: "hart", ansehenWien: "stark" }, B: { ultimatum: "angriff", wiensKurs: "hart" }, C: { ultimatum: "erfuellbar", wiensKurs: "einlenkend", ansehenWien: "schwach" } },
+  "2.gb":  { A: { englandHaltung: "nachfragend", irlandGB: "-1" }, B: { englandHaltung: "abseits", irlandGB: "+1" }, C: { englandHaltung: "mahnend", irlandGB: "-1" } },
+  "2.oeu": { A: { ultimatum: "unannehmbar", wiensKurs: "hart", ansehenWien: "stark", zusammenhaltOeu: "+1", souveraenitaetSrb: "-1" }, B: { ultimatum: "angriff", wiensKurs: "hart" }, C: { ultimatum: "erfuellbar", wiensKurs: "einlenkend", ansehenWien: "schwach", zusammenhaltOeu: "-1" } },
   "2.oeu.wann": { "sofort": { uebergabe: "vorBesuch" }, "während des Staatsbesuchs": { uebergabe: "waehrendBesuch" }, "nach dem Staatsbesuch": { uebergabe: "nachBesuch" }, "später": { uebergabe: "nachBesuch" } },
 
-  "3.srb": { A: { serbAntwort: "fastAlles" }, B: { serbAntwort: "abgelehnt", rueckhaltPasic: "stark" }, C: { serbAntwort: "alles", rueckhaltPasic: "schwach" } },
+  "3.srb": { A: { serbAntwort: "fastAlles" }, B: { serbAntwort: "abgelehnt", rueckhaltPasic: "stark", souveraenitaetSrb: "+1" }, C: { serbAntwort: "alles", rueckhaltPasic: "schwach", souveraenitaetSrb: "-1" } },
   "3.r":   { A: { russlandHaltung: "vermittelnd" }, B: { russlandHaltung: "nachgiebig", ansehenZar: "schwach" }, C: { russlandHaltung: "hinterSerbien", ansehenZar: "stark", druckArmeeR: "mittel", druckGeneralstabD: "stark" } },
-  "3.f":   { A: { buendnisFR: "fest", vertrauenRF: "stark" }, B: { buendnisFR: "bedingt", vertrauenRF: "mittel" }, C: { buendnisFR: "zurueckhaltend", vertrauenRF: "schwach" } },
-  "3.gb":  { A: { englandHaltung: "abseits" }, B: { englandHaltung: "entente" }, C: { englandHaltung: "vermittelnd", konferenz: "vorgeschlagen" } },
-  "3.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach" }, B: { wiensKurs: "hart", krieg: "ja", ansehenWien: "stark", druckArmeeR: "stark" }, C: { wiensKurs: "einlenkend", ansehenWien: "schwach" } },
+  "3.f":   { A: { buendnisFR: "fest", vertrauenRF: "stark" }, B: { buendnisFR: "bedingt", vertrauenRF: "mittel", bindungEngland: "+1" }, C: { buendnisFR: "zurueckhaltend", vertrauenRF: "schwach" } },
+  "3.gb":  { A: { englandHaltung: "abseits", irlandGB: "+1", bindungEngland: "-1" }, B: { englandHaltung: "entente", irlandGB: "-1", bindungEngland: "+1" }, C: { englandHaltung: "vermittelnd", konferenz: "vorgeschlagen", irlandGB: "-1" } },
+  "3.oeu": { A: { wiensKurs: "grossmaechte", ansehenWien: "schwach", zusammenhaltOeu: "-1" }, B: { wiensKurs: "hart", krieg: "ja", ansehenWien: "stark", druckArmeeR: "stark", zusammenhaltOeu: "+1" }, C: { wiensKurs: "einlenkend", ansehenWien: "schwach", zusammenhaltOeu: "-1" } },
   "3.d":   { A: { deutscheLinie: "freieHand", vertrauenWiens: "stark" }, B: { deutscheLinie: "maessigung", vertrauenWiens: "schwach" }, C: { deutscheLinie: "freieHand" } },
 
   "4.oeu": { A: { wiensKurs: "grossmaechte" }, B: { wiensKurs: "hart" }, C: { wiensKurs: "einlenkend" } },
-  "4.bel": { A: { belgien: "nachgiebig" }, B: { belgien: "anlehnung" }, C: { belgien: "bewaffnet" } },
+  "4.bel": { A: { belgien: "nachgiebig", souveraenitaetBel: "-1" }, B: { belgien: "anlehnung", souveraenitaetBel: "-1" }, C: { belgien: "bewaffnet" } },
   "4.r":   { A: { mobRussland: "teil" }, B: { mobRussland: "keine", ansehenZar: "schwach", druckGeneralstabD: "mittel" }, C: { mobRussland: "allgemein", druckGeneralstabD: "stark" } },
-  "4.f":   { A: { frankreichAuftreten: "bremst", vertrauenRF: "schwach" }, B: { frankreichAuftreten: "defensiv", parlamentGB: "mittel" }, C: { frankreichAuftreten: "mobil", parlamentGB: "schwach" } },
+  "4.f":   { A: { frankreichAuftreten: "bremst", vertrauenRF: "schwach" }, B: { frankreichAuftreten: "defensiv", parlamentGB: "mittel", bindungEngland: "+1" }, C: { frankreichAuftreten: "mobil", parlamentGB: "schwach", bindungEngland: "-1" } },
   "4.d":   { A: { grosserKrieg: "ja" }, B: { grosserKrieg: "ja" }, C: { deutscheLinie: "maessigung" } },
-  "4.gb":  { A: { englandHaltung: "offen" }, B: { englandHaltung: "beistandF", vertrauenBEL: "stark" }, C: { englandHaltung: "neutralZugesagt", vertrauenBEL: "schwach" } },
+  "4.gb":  { A: { englandHaltung: "offen", irlandGB: "-1" }, B: { englandHaltung: "beistandF", vertrauenBEL: "stark", irlandGB: "-1" }, C: { englandHaltung: "neutralZugesagt", vertrauenBEL: "schwach", irlandGB: "+1" } },
 
-  "5.d":   { A: { westen: "durchBelgien", parlamentGB: "stark" }, B: { westen: "keinAngriff" }, C: { westen: "direkt" } },
-  "5.bel": { A: { belgien: "zoegert" }, B: { belgien: "widerstand", parlamentGB: "stark" }, C: { belgien: "durchlass", parlamentGB: "mittel" } },
+  "5.d":   { A: { westen: "durchBelgien", parlamentGB: "stark", souveraenitaetBel: "-1" }, B: { westen: "keinAngriff" }, C: { westen: "direkt" } },
+  "5.bel": { A: { belgien: "zoegert" }, B: { belgien: "widerstand", parlamentGB: "stark" }, C: { belgien: "durchlass", parlamentGB: "mittel", souveraenitaetBel: "-1" } },
   "5.gb":  { A: { englandHaltung: "krieg" }, B: { englandHaltung: "neutral" }, C: { englandHaltung: "kueste" } },
   "5.f": {}, "5.r": {}, "5.oeu": {}
+};
+
+/* Kipppunkte: Fällt eine schrittweise Anzeige unter „schwach“, tritt das ein. Der Text steht in der Anzeige („gekippt“). */
+export const KIPPPUNKTE = {
+  zusammenhaltOeu:   { setzt: { ansehenWien: "schwach" } },
+  souveraenitaetSrb: { setzt: { rueckhaltPasic: "schwach" } },
+  bindungEngland:    { setzt: { vertrauenRF: "schwach" } },
+  irlandGB:          { setzt: { parlamentGB: "schwach" } },
+  souveraenitaetBel: { setzt: { vertrauenBEL: "schwach" } }
 };
 
 export const VARIANTEN = [
