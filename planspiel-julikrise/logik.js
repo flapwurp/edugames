@@ -1,19 +1,21 @@
 /* Planspiel Julikrise 1914 – Spiellogik ohne DOM (testbar in Node).
-   Zustand = Objekt aus Entscheidungen, z. B. { "1.d": "C", "1.oeu": "B", "2.oeu.wann": "nach dem Staatsbesuch" }. */
+   zustand = Entscheidungen der Klasse, z. B. { "1.d": "C", "1.oeu": "B", "2.oeu.wann": "nach dem Staatsbesuch" }.
+   Daraus werden Welle für Welle die Merkmale berechnet (netz.js). */
 import { RUNDEN } from "./content.js";
-import { VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "./netz.js";
+import { MERKMALE, SETZT, VARIANTEN, LAGE, GRENZEN, AUSGAENGE, ENDE } from "./netz.js";
 
-export const passt = (wenn = {}, zustand) =>
-  Object.entries(wenn).every(([k, werte]) => werte.includes(zustand[k]));
+export const passt = (wenn = {}, m) => Object.entries(wenn).every(([k, werte]) => werte.includes(m[k]));
+export const startMerkmale = () => Object.fromEntries(Object.entries(MERKMALE).map(([k, v]) => [k, v.start]));
+const wellenIndex = (runde, staat) => RUNDEN[runde - 1].wellen.findIndex(w => w.includes(staat));
 
-/* Karte eines Staates in einer Runde, mit allen passenden Varianten (in Reihenfolge der Liste). */
-export function karte(runde, staat, zustand) {
+/* Karte aus Merkmalen (m = Merkmale, wie der Staat sie beim Entscheiden kennt). */
+export function karteAus(runde, staat, m) {
   const basis = RUNDEN[runde - 1].staaten[staat];
   const optionen = {};
-  for (const b of ["A", "B", "C"]) optionen[b] = { ...basis.optionen[b] };
+  for (const b of ["A", "B", "C"]) optionen[b] = { ...basis.optionen[b], setzt: SETZT[`${runde}.${staat}`]?.[b] || {} };
   const k = { optionen, kurswechsel: [], zusatz: basis.zusatz ? { ...basis.zusatz } : null, varianten: [] };
   VARIANTEN.forEach((v, i) => {
-    if (v.runde !== runde || v.staat !== staat || !passt(v.wenn, zustand)) return;
+    if (v.runde !== runde || v.staat !== staat || !passt(v.wenn, m)) return;
     for (const [b, o] of Object.entries(v.optionen || {})) Object.assign(optionen[b], o);
     for (const b of v.kurswechsel || []) if (!k.kurswechsel.includes(b)) k.kurswechsel.push(b);
     if (v.zusatz && k.zusatz) Object.assign(k.zusatz, v.zusatz);
@@ -22,30 +24,70 @@ export function karte(runde, staat, zustand) {
   return k;
 }
 
-/* Lagetext, wie ihn ein Staat sieht. */
-export function lage(runde, staat, zustand) {
+export function lageAus(runde, staat, m) {
   let saetze = [...RUNDEN[runde - 1].lage];
   for (const l of LAGE) {
-    if (l.runde !== runde || !passt(l.wenn, zustand)) continue;
+    if (l.runde !== runde || !passt(l.wenn, m)) continue;
     if (l.fuer !== "alle" && !l.fuer.includes(staat)) continue;
     saetze = l.ersetzt ? [l.text] : [...saetze, l.text];
   }
   return saetze;
 }
 
-/* Grenze nach einer Entscheidung (oder null). */
-export const grenze = (runde, staat, zustand) =>
-  GRENZEN.find(g => g.runde === runde && g.staat === staat && passt(g.wenn, zustand)) || null;
-
-/* Früher Ausgang nach einer Runde (oder null), mit den passenden Begründungen. */
-export function ausgang(runde, zustand) {
-  const a = AUSGAENGE.find(x => x.nachRunde === runde && passt(x.wenn, zustand));
-  return a ? { ...a, saetze: a.weil.filter(w => passt(w.wenn, zustand)).map(w => w.text) } : null;
+/* Wirkung einer Entscheidung auf die Merkmale. */
+function anwenden(m, runde, staat, wahl, zustand, kennt) {
+  if (!wahl) return;
+  Object.assign(m, karteAus(runde, staat, kennt).optionen[wahl].setzt);
+  const wann = zustand[`${runde}.${staat}.wann`];
+  if (wann) Object.assign(m, SETZT[`${runde}.${staat}.wann`]?.[wann] || {});
 }
 
-export const ende = (zustand) => ({ ...ENDE, saetze: ENDE.weil.filter(w => passt(w.wenn, zustand)).map(w => w.text) });
+/* Merkmale vor einer Welle (runde, welle) bzw. nach einer ganzen Runde (welle = Infinity). */
+export function merkmaleBis(zustand, runde, welle) {
+  const m = startMerkmale();
+  for (const r of RUNDEN) {
+    for (let w = 0; w < r.wellen.length; w++) {
+      if (r.nr > runde || (r.nr === runde && w >= welle)) return m;
+      const kennt = { ...m };
+      for (const s of r.wellen[w]) anwenden(m, r.nr, s, zustand[`${r.nr}.${s}`], zustand, kennt);
+    }
+  }
+  return m;
+}
 
-/* Akte 1914: alle Entscheidungen bis einschließlich abRunde so, wie sie 1914 fielen. */
+export const vorher = (zustand, runde, staat) => merkmaleBis(zustand, runde, wellenIndex(runde, staat));
+export const karte = (runde, staat, zustand) => karteAus(runde, staat, vorher(zustand, runde, staat));
+export const lage = (runde, staat, zustand) => lageAus(runde, staat, vorher(zustand, runde, staat));
+
+/* Grenze direkt nach der eigenen Entscheidung (oder null). */
+export function grenze(runde, staat, zustand) {
+  const kennt = vorher(zustand, runde, staat);
+  const m = { ...kennt };
+  anwenden(m, runde, staat, zustand[`${runde}.${staat}`], zustand, kennt);
+  return GRENZEN.find(g => g.runde === runde && g.staat === staat && passt(g.wenn, m)) || null;
+}
+
+const saetze = (liste, m) => liste.filter(w => passt(w.wenn, m)).map(w => w.text);
+
+export function ausgang(runde, zustand) {
+  const m = merkmaleBis(zustand, runde, Infinity);
+  const a = AUSGAENGE.find(x => x.nachRunde === runde && passt(x.wenn, m));
+  return a ? { ...a, saetze: saetze(a.weil, m) } : null;
+}
+
+export const ende = (zustand) => {
+  const m = merkmaleBis(zustand, 5, Infinity);
+  return { ...ENDE, saetze: saetze(ENDE.weil, m) };
+};
+
+/* Stimmungsanzeigen, die ein Staat beim Entscheiden sieht. */
+export const anzeigen = (runde, staat, zustand) => {
+  const m = vorher(zustand, runde, staat);
+  return Object.entries(MERKMALE).filter(([, v]) => v.anzeige?.fuer.includes(staat))
+    .map(([k, v]) => ({ id: k, titel: v.anzeige.titel, stufe: m[k], text: v.anzeige.text[m[k]] }));
+};
+
+/* Akte 1914: alle Entscheidungen bis einschließlich bisRunde so, wie sie 1914 fielen. */
 export function akte1914(bisRunde) {
   const z = {};
   for (const r of RUNDEN.slice(0, bisRunde)) {
@@ -54,6 +96,3 @@ export function akte1914(bisRunde) {
   }
   return z;
 }
-
-/* Alle Entscheidungen, von denen eine Bedingung abhängt (für das Netz und für Tests). */
-export const schluessel = (wenn = {}) => Object.keys(wenn);

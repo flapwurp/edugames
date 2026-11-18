@@ -377,7 +377,7 @@ export const RUNDEN = [
       d: {
         geheim: ["Der Kaiser geht auf Reise, damit in Europa niemand Verdacht schöpft."],
         optionen: {
-          A: { text: "England über die Pläne Wiens informieren und um Vermittlung bitten.", pro: "England könnte einen großen Krieg verhindern.", contra: "Wien fühlt sich verraten; unsere Zusage verliert an Wert." },
+          A: { text: "Russland schon jetzt warnen, sich aus einem Streit zwischen Wien und Belgrad herauszuhalten.", pro: "Russland weiß, dass wir hinter Wien stehen – vielleicht weicht es zurück wie 1909.", contra: "Wir verraten, dass Wien etwas plant; Russland kann sich vorbereiten." },
           B: { text: "Österreich-Ungarn zur Mäßigung drängen.", pro: "Das Risiko eines großen Krieges sinkt.", contra: "Wir widersprechen unserer eigenen Zusage an Wien." },
           C: { text: "Österreich-Ungarn zu schnellem Handeln drängen und nach außen Ruhe zeigen.", pro: "Je schneller Wien handelt, desto eher bleibt der Konflikt auf den Balkan begrenzt.", contra: "Greift Russland doch ein, stecken wir mitten in einem Krieg." }
         },
@@ -396,7 +396,7 @@ export const RUNDEN = [
         geheim: [],
         optionen: {
           A: { text: "Mit Frankreich gemeinsam eine Vermittlung vorschlagen.", pro: "Zusammen haben wir mehr Gewicht als allein.", contra: "Vermitteln kann als Schwäche gelten – nach den Rückziehern 1909 und 1913." },
-          B: { text: "Frankreich nicht einbinden und allein handeln.", pro: "Wir behalten volle Freiheit.", contra: "Ohne Frankreich sind wir gegen Deutschland zu schwach." },
+          B: { text: "Wien direkt warnen: Russland wird Serbien nicht im Stich lassen.", pro: "Wien weiß, woran es ist, und überlegt es sich vielleicht.", contra: "Wir legen uns fest, ohne zu wissen, ob Frankreich mitgeht." },
           C: { text: "Frankreich um die feste Zusage bitten, im Ernstfall an unserer Seite zu stehen.", pro: "Mit Frankreich im Rücken können wir fest auftreten.", contra: "Eine feste Zusage kann uns beide in einen Krieg ziehen." }
         },
         historisch: "C"
@@ -474,7 +474,7 @@ export const RUNDEN = [
         optionen: {
           A: { text: "Den Konferenzvorschlag ablehnen und Österreich-Ungarn den Rücken stärken.", pro: "Wir halten unser Wort gegenüber Wien.", contra: "Wir lehnen eine Chance auf Frieden ab – vor den Augen Europas." },
           B: { text: "Österreich-Ungarn drängen, Serbiens Antwort anzunehmen.", pro: "Der Kaiser selbst sieht keinen Grund mehr für einen Krieg.", contra: "Wien könnte sich verraten fühlen; unser Wort verliert an Wert." },
-          C: { text: "Den Konferenzvorschlag unterstützen.", pro: "Wir zeigen England, dass wir Frieden wollen.", contra: "Auf einer Konferenz könnten Wien und wir überstimmt werden." }
+          C: { text: "Russland warnen: Weitere Kriegsvorbereitungen zwingen uns, selbst mobilzumachen.", pro: "Russland weiß, was auf dem Spiel steht – vielleicht hält es still.", contra: "Russland könnte das als Drohung verstehen – die Krise wächst." }
         },
         historisch: "A"
       },
@@ -677,7 +677,7 @@ export const RUNDEN = [
         geheim: [],
         hinweis: "Ihr entscheidet, nachdem Deutschland entschieden hat.",
         optionen: {
-          A: { text: "Den Durchmarsch erlauben.", pro: "Unser Land bleibt vielleicht vom Krieg verschont.", contra: "Wir brechen unsere Neutralität und verlieren unsere Ehre." },
+          A: { text: "Zeit gewinnen: Deutschland um Bedenkzeit bitten und die Garantiemächte fragen.", pro: "Vielleicht greifen England und Frankreich ein, bevor wir entscheiden müssen.", contra: "Deutschland stellt nur eine kurze Frist – vielleicht wartet es gar nicht." },
           B: { text: "Den Durchmarsch ablehnen und uns verteidigen.", pro: "Wir bleiben neutral und unabhängig.", contra: "Die deutsche Armee ist viel stärker als unsere." },
           C: { text: "Den Durchmarsch erlauben, wenn Deutschland Entschädigung zusagt.", pro: "Wir bekommen wenigstens etwas für den Schaden.", contra: "Wir wären Deutschlands Helfer im Krieg gegen Frankreich." }
         },

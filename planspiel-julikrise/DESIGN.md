@@ -37,33 +37,52 @@ anderen nicht mehr (Beispiel: Deutschland rät Wien in Runde 1 zur Mäßigung �
 wie „eure Entscheidung zählt nicht“.
 
 ## Vorschlag: Entscheidungsnetz statt fester Karten
-### 1. Weltzustand aus wenigen Merkmalen
-Jede Entscheidung setzt ein oder zwei **Merkmale** der Welt, z. B.:
+### 0. Grundsatz für jede Karte (Rob, 18.11.)
+Jede Delegation hat in jeder Runde **drei Optionen**: **eine historische**, die bei gründlicher Analyse von Dossier,
+Lage und Handeln der anderen (und mit Hilfe der Framing Controls) die überzeugendste ist, und **zwei weitere**, die in
+**andere Richtungen** gehen, aber für die Zeit plausibel sind. Das Papiermaterial ist dafür Ausgangspunkt, nicht
+Vorgabe: Passt eine Option nicht, wird sie ersetzt.
 
-| Merkmal | mögliche Werte (Beispiel) | gesetzt von |
-|---|---|---|
-| `zusage` | voll · nur diplomatisch · Mäßigung | D, Runde 1 |
-| `vorgehen` | militärisch · Großmächte · gemeinsame Ermittlung | Ö-U, Runde 1 |
-| `ultimatum` | unannehmbar · erfüllbar · Angriff ohne Ultimatum | Ö-U, Runde 2 |
-| `uebergabe` | sofort · während · nach dem Staatsbesuch | Ö-U, Runde 2 |
-| `buendnisFR` | volle Treue · nur bei Angriff · Zurückhaltung | F, Runde 2/3 |
-| `antwort` | fast alles · Ablehnung · alles | SRB, Runde 3 |
-| `krieg_srb` | erklärt · Konferenz · angenommen | Ö-U, Runde 3 |
-| `mob_r` | allgemein · teilweise · keine | R, Runde 4 |
-| `gb_haltung` | offen · Beistand F · Neutralität | GB, Runde 4 |
+Geprüft am 18.11., vier Optionen ersetzt, weil zwei Optionen in dieselbe Richtung gingen oder eine Option zu vage war:
 
-Die Merkmale sind **für die SuS unsichtbar** (keine Zahlen, keine Regler). Sichtbar ist nur, was daraus folgt:
-Lagetext, Optionen, Telegramme.
+| Karte | alt | neu | Grund |
+|---|---|---|---|
+| D, Runde 2, A | England über Wiens Pläne informieren | Russland schon jetzt warnen, sich herauszuhalten | A und B waren beide „Mäßigung“; England einzuweihen hieße, den Verbündeten zu verraten. Neu: Abschreckung (Lokalisierungsgedanke) |
+| R, Runde 2, B | Frankreich nicht einbinden, allein handeln | Wien direkt warnen: Russland lässt Serbien nicht im Stich | „allein handeln“ war zu vage |
+| D, Runde 3, C | Konferenzvorschlag unterstützen | Russland warnen: weitere Kriegsvorbereitungen zwingen uns zur Mobilmachung | B und C waren beide „Mäßigung“; neu die Richtung Abschreckung |
+| BEL, Runde 5, A | Durchmarsch erlauben | Zeit gewinnen: Bedenkzeit, Garantiemächte fragen | A und C waren beide „Durchmarsch erlauben“ |
+
+Alle übrigen Karten erfüllen den Grundsatz. Grenzfälle, die bleiben: Ö-U Runde 1 A („Großmächte beraten lassen“)
+widerspricht Wiens Interessen stark, ist als Gegenrichtung aber gewollt; R Runde 3 A (Den Haag) schlug 1914 Serbien
+vor, nicht Russland.
+
+### 1. Weltzustand aus Merkmalen
+Jede Entscheidung setzt **Merkmale** der Welt (`SETZT` in `netz.js`), z. B. D wählt in Runde 1 „Mäßigung“ →
+„Berlins Linie gegenüber Wien: Rat zur Mäßigung“. Die letzte Entscheidung zählt: Gibt Berlin in Runde 2 doch freie
+Hand, ändert sich das Merkmal. Karten, Lage, Grenzen und Ausgänge fragen **nur Merkmale** ab, nie einzelne
+Buchstaben. So bedeutet „Mäßigung“ dasselbe, egal in welcher Runde Berlin dazu geraten hat.
+
+Derzeit 22 Merkmale, darunter: Berlins Linie, Wiens Kurs, Ultimatum, Zeitpunkt, Serbiens Haltung und Antwort,
+Russlands Haltung, Staatsbesuch, Frankreich zu Russland, Englands Haltung, Konferenz, Krieg Wien–Belgrad, russische
+Mobilmachung, Belgiens Haltung, Deutschlands Vorgehen im Westen. Die vollständige Liste mit Werten und dem Stand von
+1914 nach jeder Runde zeigt `netz.html`.
+
+**Stimmungsanzeigen** sind ebenfalls Merkmale (drei Stufen), die nur ein Staat sieht: Ansehen Österreich-Ungarns,
+Vertrauen Wiens in Berlin (für D), Ansehen des Zaren, Rückhalt der serbischen Regierung. Sie steigen bei Entscheidungen
+in Richtung 1914 und fallen bei den anderen (Entwurf, Block C).
+
+Die Merkmale selbst sind **für die SuS unsichtbar** (keine Zahlen, keine Regler). Sichtbar ist nur, was daraus folgt:
+Lagetext, Optionen, Telegramme, Stimmungsanzeigen in Worten.
 
 ### 2. Karten mit Varianten
 - **Lage** besteht aus Bausteinen: Jeder Satz kann an Merkmale gebunden sein („Serbien hat das Ultimatum vollständig
   angenommen …“).
-- **Optionen** haben Varianten mit Bedingung. Beispiel D, Runde 3, wenn `zusage` = Mäßigung:
+- **Optionen** haben Varianten mit Bedingung. Beispiel D, Runde 3, wenn Berlins Linie = Mäßigung:
   A wird zu „Kurswechsel: Wien jetzt doch den Rücken stärken und die Konferenz ablehnen“, Contra „Wien hat unseren
   Rat gehört – ein Kurswechsel macht uns unberechenbar.“
 - Eine Option kann wegfallen oder durch eine passende ersetzt werden, es bleiben aber immer **drei**.
-- Damit das beherrschbar bleibt, hängt jede Karte von **höchstens zwei bis drei Merkmalen** ab. Ein Test prüft für
-  jede erreichbare Merkmalskombination, dass jede Delegation drei sinnvolle Optionen bekommt.
+- Eine Variante kann festlegen, was eine Option in diesem Fall bewirkt („setzt“). Dann hängt nichts mehr davon ab,
+  dass ein Buchstabe überall dasselbe bedeutet.
 
 ### 3. Ausgänge
 Nicht jeder Weg führt zum 4. August. Vorgesehen sind wenige benannte Ausgänge, z. B. „Krise beigelegt“
@@ -77,10 +96,12 @@ Von Rob bestätigt (18.11.). Die Ausgangskarte setzt sich aus Sätzen zusammen, 
 Klasse passen („… weil Österreich-Ungarn Serbiens Antwort angenommen hat“), dazu „Aber …“ (was offen bleibt) und
 „1914 …“ (was tatsächlich geschah). Umsetzung: `AUSGAENGE` in `netz.js`.
 
-**Umsetzung des Netzes:** `netz.js` (Daten, editierbar wie `content.js`), `logik.js` (wertet aus), Ansicht `netz.html`
-(Netz zum Antippen), Tests in `tests/planspiel-julikrise-netz.test.js`: Bedingungen nur auf bereits gefallene
-Entscheidungen, auf dem Weg von 1914 bleibt jede Karte wie auf Papier, jede Karte hat in jeder Lage drei vollständige
-Optionen, jeder Ausgang ist erreichbar und nennt immer einen konkreten Grund.
+**Umsetzung des Netzes:** `netz.js` (Merkmale, SETZT, Varianten, Lage, Grenzen, Ausgänge; editierbar wie
+`content.js`), `logik.js` (berechnet Welle für Welle die Merkmale; eine Karte sieht nur, was vorher entschieden wurde),
+Ansicht `netz.html` (Entscheidungen → Merkmale → was sich ändert). Tests in `tests/planspiel-julikrise-netz.test.js`:
+alle Werte bekannt; auf dem Weg von 1914 bleibt jede Karte wie auf Papier, ohne Grenze und frühen Ausgang;
+4000 zufällige Partien mit immer drei vollständigen Optionen, jeder Ausgang mit konkretem Grund, und jede Variante,
+jede Grenze und jeder Ausgang wird mindestens einmal erreicht.
 
 ### 4. Framing Controls (Lenkung ohne Vorgabe)
 Grundsatz: Die Lenkung kommt aus **historisch belegten Kräften**, nicht aus einer Spielleitung, die „richtig“ sagt.
@@ -154,8 +175,10 @@ erfolgreich gelaufen ist.
 
 ### B. Entscheidungsnetz (Inhalt)
 - [x] Entwurf in `netz.js`: Varianten, Lagebausteine, Grenzen, drei frühe Ausgänge, Ende; Ansicht `netz.html`; Tests
+- [x] Umbau auf Merkmale (Entscheidung → Merkmal → Wirkung), Stimmungsanzeigen als Merkmale
+- [x] Alle 30 Karten auf „1 historisch + 2 plausible andere Richtungen“ geprüft, 4 Optionen ersetzt
 - [ ] Rob liest gegen (in `netz.html` Karte antippen)
-- [ ] `netz.html` übersichtlicher machen (z. B. nur eine Runde oder einen Staat zeigen, Weg 1914 hervorheben)
+- [x] `netz.html` übersichtlicher (drei Spalten)
 - [ ] Lücken schließen: Weg „Deutschland wartet in Runde 4 trotz russischer Mobilmachung“, Varianten für Runde 5
       nach abweichendem Runde-4-Verlauf, Wirkung der Noten (z. B. „Halt in Belgrad“) auf die Karten
 - [ ] Belege der Grenzen prüfen (Feld `beleg`)
